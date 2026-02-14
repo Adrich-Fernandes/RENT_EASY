@@ -20,7 +20,7 @@ export default function App() {
                 {/* CENTER LINKS */}
                 <div className="hidden md:flex items-center gap-8">
                     {["Home", "Products", "MyRents"].map((item) => (
-                        <a key={item} href="#" className="px-4 py-2 font-bold text-green-500 rounded-xl transition-all duration-300 hover:bg-green-100 ">{item}</a>
+                        <a key={item} href="#" className="px-4 py-2 font-bold text-green-500 bg-green-50 rounded-xl transition-all duration-300 hover:bg-green-100 ">{item}</a>
                     ))}
                 </div>
 
@@ -40,8 +40,8 @@ export default function App() {
                 </div>
             </nav>
             <div>
-                <Homepage />
-                {/* <ProductList /> */}
+                {/* <Homepage /> */}
+                <ProductList />
                 {/* <OrderList /> */}
             </div>
         </div>

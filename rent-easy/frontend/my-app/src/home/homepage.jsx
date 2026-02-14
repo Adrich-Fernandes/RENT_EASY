@@ -1,4 +1,4 @@
-import { work_flow, Features, Category } from './working'
+import { work_flow, Features, Category } from './Alldata'
 export default function Homepage() {
     return (
         <div className="pt-10">

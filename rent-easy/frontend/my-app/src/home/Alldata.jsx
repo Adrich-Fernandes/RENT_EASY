@@ -26,7 +26,7 @@ export const work_flow = [
     }
 ];
 
-// features card data 
+// fecilities card data 
 export const Features = [
     {
         img: "https://i.pinimg.com/1200x/0d/52/4c/0d524c72632e3e2991ff487171934626.jpg",
@@ -87,3 +87,51 @@ export const Category = [
         title: "Table and Chair",
     }
 ];
+
+
+// products card data
+export const productsCard =[
+    {
+        img: "https://www.orangetree.in/cdn/shop/files/Gallery-1ChiyoL-ShapedSofaBuyOnline.jpg?v=1722852692",
+        title: "luxury sofa",
+        discription:"3-seat sofa fabric type : leather",
+        price:"₹2,999/mo",
+        deposit:"₹5,997",
+        
+    },
+    {
+        img: "https://cdn.prod.website-files.com/5f2b10811da7064399ed3a1c/61ac6377b6963b12b0b36475_1st-Venus1920x1000.webp",
+        title: "sofa-seater",
+        discription:"Premium quality fabric sofa with comfortable cushioning. Perfect for living rooms.",
+        price:"₹1,999/mo",
+        deposit:"₹5,997",
+    },
+    {
+        img: "https://casagold.in/cdn/shop/products/Coastal_Chic_Blue_Luxury_Sofa.jpg?v=1735904752&width=1500",
+        title: "blue sofa",
+        discription:"",
+        price:"₹2,999/mo",
+        deposit:"₹5,997",
+    },
+    {
+        img: "https://furnishio.in/cdn/shop/files/chime-3-2-1-sofa-set-269_1000x604.webp?v=1728060370",
+        title: "sofa set",
+        discription:"",
+        price:"₹2,999/mo",
+        deposit:"₹5,997",
+    },
+    {
+        img: "https://pelicanessentials.com/cdn/shop/files/3seatersofa_1_08d9b16d-6aa7-40b4-b2d3-1a45e417ca6e.jpg?v=1751593289&width=2048",
+        title: "soft sofa",
+        discription:"",
+        price:"₹3,999/mo",
+        deposit:"₹7,997",
+    },
+    {
+        img: "https://media.architecturaldigest.com/photos/64de634d02916e5d018e0c81/2:1/w_1280%2Cc_limit/AD1022_BERKUS_BRENT_7.jpg",
+        title: "leather sofa",
+        discription:"",
+        price:"₹2,999/mo",
+        deposit:"₹6,997",
+    }
+]
