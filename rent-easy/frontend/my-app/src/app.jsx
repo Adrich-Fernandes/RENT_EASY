@@ -3,6 +3,8 @@ import Homepage from './home/homepage';
 import ProductList from './products/productlist';
 import OrderList from './admin/orderList';
 import ProductView from './products/productView';
+import Cart from './products/cart';
+
 
 export default function App() {
     return (
@@ -44,7 +46,8 @@ export default function App() {
                 {/* <Homepage /> */}
                 {/* <ProductList /> */}
                 {/* <OrderList /> */}
-                <ProductView />
+                {/* <ProductView /> */}
+                <Cart />
             </div>
         </div>
     );
