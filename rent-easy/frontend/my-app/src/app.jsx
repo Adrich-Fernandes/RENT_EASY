@@ -2,6 +2,7 @@ import React from 'react';
 import Homepage from './home/homepage';
 import ProductList from './products/productlist';
 import OrderList from './admin/orderList';
+import ProductView from './products/productView';
 
 export default function App() {
     return (
@@ -41,8 +42,9 @@ export default function App() {
             </nav>
             <div>
                 {/* <Homepage /> */}
-                <ProductList />
+                {/* <ProductList /> */}
                 {/* <OrderList /> */}
+                <ProductView />
             </div>
         </div>
     );
