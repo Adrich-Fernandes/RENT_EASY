@@ -135,3 +135,35 @@ export const productsCard =[
         deposit:"₹6,997",
     }
 ]
+
+
+export const adminTableRents = [
+    {
+        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title:"Modern Sofa",
+        category:"Furniture",
+        rent:"₹1,000/mo",
+        deposit:"₹5,000"
+    },
+    {
+        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title:"Modern Sofa",
+        category:"Furniture",
+        rent:"₹1,000/mo",
+        deposit:"₹5,000"
+    },
+    {
+        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title:"Modern Sofa",
+        category:"Furniture",
+        rent:"₹1,000/mo",
+        deposit:"₹5,000"
+    },
+    {
+        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title:"Modern Sofa",
+        category:"Furniture",
+        rent:"₹1,000/mo",
+        deposit:"₹5,000"
+    },
+]
