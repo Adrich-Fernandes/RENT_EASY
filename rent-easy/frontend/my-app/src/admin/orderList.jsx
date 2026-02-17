@@ -3,13 +3,14 @@ import { adminTableRents } from '../home/Alldata'
 
 export default function OrderList() {
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isAddOpen, setIsAddOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [activeTab, setActiveTab] = useState("Products")
 
   const handleEditClick = (product) => {
     setSelectedProduct(product)
-    setIsOpen(true)
+    setIsEditOpen(true)
   }
 
   return (
@@ -34,7 +35,7 @@ export default function OrderList() {
 
       <div className="flex justify-end">
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsAddOpen(true)}
           className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
         >
           Add New Product
@@ -44,6 +45,7 @@ export default function OrderList() {
       {/* ================= TABLE ================= */}
       <div className="bg-white shadow-md rounded-xl overflow-x-auto">
         <table className="w-full min-w-[700px] text-left border-collapse">
+
           <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
             <tr>
               <th className="p-4">Product</th>
@@ -64,12 +66,23 @@ export default function OrderList() {
               />
             ))}
           </tbody>
+
         </table>
       </div>
 
-      {/* ================= ADD PRODUCT MODAL ================= */}
-      {isOpen && (
-        <AddProductModal onClose={() => setIsOpen(false)} />
+      {/* ================= EDIT MODAL ================= */}
+      {isEditOpen && (
+        <EditModal
+          product={selectedProduct}
+          onClose={() => setIsEditOpen(false)}
+        />
+      )}
+
+      {/* ================= ADD MODAL ================= */}
+      {isAddOpen && (
+        <AddProductModal
+          onClose={() => setIsAddOpen(false)}
+        />
       )}
 
     </div>
@@ -121,6 +134,32 @@ function Tablerow({ data, onEdit }) {
 }
 
 
+/* ================= EDIT MODAL ================= */
+
+function EditModal({ product, onClose }) {
+
+  const [formData, setFormData] = useState(product)
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  return (
+    <ModalLayout title="Edit Product" onClose={onClose}>
+      <FormFields formData={formData} handleChange={handleChange} />
+      <button className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition">
+        Update Product
+      </button>
+    </ModalLayout>
+  )
+}
+
+
+/* ================= ADD MODAL ================= */
+
 function AddProductModal({ onClose }) {
 
   const [formData, setFormData] = useState({
@@ -141,8 +180,21 @@ function AddProductModal({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <ModalLayout title="Add New Product" onClose={onClose}>
+      <FormFields formData={formData} handleChange={handleChange} />
+      <button className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition">
+        Create Product
+      </button>
+    </ModalLayout>
+  )
+}
 
+
+/* ================= REUSABLE LAYOUT ================= */
+
+function ModalLayout({ title, children, onClose }) {
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white w-[90%] md:w-[700px] rounded-xl p-6 shadow-lg relative">
 
         <button
@@ -152,103 +204,104 @@ function AddProductModal({ onClose }) {
           ×
         </button>
 
-        <h2 className="text-2xl font-semibold mb-6">
-          Add New Product
+        <h2 className="text-xl font-semibold mb-6">
+          {title}
         </h2>
 
         <div className="space-y-4">
-
-          <div>
-            <label className="block mb-1 font-medium">Product Name</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-3"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-3"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Category</label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-3 py-3"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Subcategory</label>
-              <input
-                type="text"
-                name="subcategory"
-                placeholder="e.g. sofa, bed, tv"
-                value={formData.subcategory}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-3 py-3"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Monthly Rent (₹)</label>
-              <input
-                type="number"
-                name="rent"
-                value={formData.rent}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-3 py-3"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Security Deposit (₹)</label>
-              <input
-                type="number"
-                name="deposit"
-                value={formData.deposit}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-3 py-3"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium">Image URL</label>
-            <input
-              type="text"
-              name="img"
-              placeholder="https://..."
-              value={formData.img}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-3"
-            />
-          </div>
-
-          <button
-            className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition"
-          >
-            Create Product
-          </button>
-
+          {children}
         </div>
 
       </div>
     </div>
+  )
+}
+
+
+/* ================= REUSABLE FORM FIELDS ================= */
+
+function FormFields({ formData, handleChange }) {
+  return (
+    <>
+      <div>
+        <label className="block mb-1 font-medium">Product Name</label>
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          className="w-full border rounded-lg px-3 py-2"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Description</label>
+        <textarea
+          name="description"
+          value={formData.description || ""}
+          onChange={handleChange}
+          className="w-full border rounded-lg px-3 py-2"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Category</label>
+          <input
+            type="text"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Subcategory</label>
+          <input
+            type="text"
+            name="subcategory"
+            value={formData.subcategory || ""}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Monthly Rent (₹)</label>
+          <input
+            type="number"
+            name="rent"
+            value={formData.rent}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Security Deposit (₹)</label>
+          <input
+            type="number"
+            name="deposit"
+            value={formData.deposit}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-3 py-2"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Image URL</label>
+        <input
+          type="text"
+          name="img"
+          value={formData.img}
+          onChange={handleChange}
+          className="w-full border rounded-lg px-3 py-2"
+        />
+      </div>
+    </>
   )
 }
