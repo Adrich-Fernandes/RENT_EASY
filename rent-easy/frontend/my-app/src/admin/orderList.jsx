@@ -1,15 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { adminTableRents } from '../home/Alldata'
 
 export default function OrderList() {
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [activeTab, setActiveTab] = useState("Products")
+
+  const handleEditClick = (product) => {
+    setSelectedProduct(product)
+    setIsOpen(true)
+  }
+
   return (
+    <div className="w-full p-4 md:p-8 space-y-6">
 
-    <div className="w-full p-8 ">
-      <div className="bg-white shadow-md rounded-xl overflow-hidden">
+      {/* ================= TABS ================= */}
+      <div className="inline-flex bg-gray-100 rounded-2xl p-1 shadow-sm">
+        {["Products", "Rentals", "Maintenance"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-6 py-2 text-sm font-medium rounded-xl transition
+              ${activeTab === tab
+                ? "bg-green-500 text-white shadow"
+                : "text-gray-600 hover:bg-gray-200"}
+            `}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
 
-        <table className="w-full text-left border-collapse">
+      <div className="flex justify-end">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+        >
+          Add New Product
+        </button>
+      </div>
 
-          {/* TABLE HEAD */}
+      {/* ================= TABLE ================= */}
+      <div className="bg-white shadow-md rounded-xl overflow-x-auto">
+        <table className="w-full min-w-[700px] text-left border-collapse">
           <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
             <tr>
               <th className="p-4">Product</th>
@@ -21,55 +55,200 @@ export default function OrderList() {
             </tr>
           </thead>
 
-          {/* TABLE BODY */}
           <tbody className="text-gray-700">
-            {
-              adminTableRents.map((v, i) => (
-                <Tablerow data={v} />
-              ))
-            }
+            {adminTableRents.map((v, i) => (
+              <Tablerow
+                key={i}
+                data={v}
+                onEdit={() => handleEditClick(v)}
+              />
+            ))}
           </tbody>
         </table>
-
       </div>
+
+      {/* ================= ADD PRODUCT MODAL ================= */}
+      {isOpen && (
+        <AddProductModal onClose={() => setIsOpen(false)} />
+      )}
+
     </div>
-
-
   )
 }
 
-function Tablerow({ data }) {
-  <tr className="border-t hover:bg-gray-50 transition">
-    {/* PRODUCT (Image + Title) */}
-    <td className="p-4">
-      <div className="flex items-center gap-4">
-        <img
-          src={data.img}
-          alt="product"
-          className="w-14 h-14 object-cover rounded-lg" />
-        <span className="font-semibold">{data.title}</span>
+
+function Tablerow({ data, onEdit }) {
+  return (
+    <tr className="border-t hover:bg-gray-50 transition">
+
+      <td className="p-4">
+        <div className="flex items-center gap-4">
+          <img
+            src={data.img}
+            alt="product"
+            className="w-14 h-14 object-cover rounded-lg"
+          />
+          <span className="font-semibold">{data.title}</span>
+        </div>
+      </td>
+
+      <td className="p-4">
+        <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">
+          {data.category}
+        </span>
+      </td>
+
+      <td className="p-4">{data.rent}</td>
+      <td className="p-4">{data.deposit}</td>
+
+      <td className="p-4">
+        <button
+          onClick={onEdit}
+          className="px-4 py-2 text-sm border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition"
+        >
+          Edit
+        </button>
+      </td>
+
+      <td className="p-4">
+        <button className="px-4 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition">
+          Delete
+        </button>
+      </td>
+
+    </tr>
+  )
+}
+
+
+function AddProductModal({ onClose }) {
+
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    category: "",
+    subcategory: "",
+    rent: "",
+    deposit: "",
+    img: ""
+  })
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+      <div className="bg-white w-[90%] md:w-[700px] rounded-xl p-6 shadow-lg relative">
+
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 text-xl"
+        >
+          ×
+        </button>
+
+        <h2 className="text-2xl font-semibold mb-6">
+          Add New Product
+        </h2>
+
+        <div className="space-y-4">
+
+          <div>
+            <label className="block mb-1 font-medium">Product Name</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-3"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-3"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 font-medium">Category</label>
+              <input
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-3"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Subcategory</label>
+              <input
+                type="text"
+                name="subcategory"
+                placeholder="e.g. sofa, bed, tv"
+                value={formData.subcategory}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-3"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 font-medium">Monthly Rent (₹)</label>
+              <input
+                type="number"
+                name="rent"
+                value={formData.rent}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-3"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">Security Deposit (₹)</label>
+              <input
+                type="number"
+                name="deposit"
+                value={formData.deposit}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-3"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium">Image URL</label>
+            <input
+              type="text"
+              name="img"
+              placeholder="https://..."
+              value={formData.img}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-3"
+            />
+          </div>
+
+          <button
+            className="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition"
+          >
+            Create Product
+          </button>
+
+        </div>
+
       </div>
-    </td>
-
-    {/* CATEGORY */}
-    <td className="p-4">
-      <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">{data.category}</span>
-    </td>
-
-    {/* MONTHLY RENT */}
-    <td className="p-4">{data.rent}</td>
-
-    {/* DEPOSIT */}
-    <td className="p-4">{data.deposit}</td>
-
-    {/* EDIT BUTTON */}
-    <td className="p-4">
-      <button className="px-4 py-2 text-sm border border-green-500 text-green-600 bg-white rounded-lg hover:bg-green-50 transition">Edit</button>
-    </td>
-
-    {/* DELETE BUTTON */}
-    <td className="p-4">
-      <button className="px-4 py-2 text-sm border border-red-400 text-red-500 bg-white rounded-lg hover:bg-red-50 transition">Delete</button>
-    </td>
-  </tr>
+    </div>
+  )
 }
