@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { CustomerRequest } from "../Alldata";
 
-export default function adminPage() {
+export default function AdminPage() {
   const [users, setUsers] = useState(CustomerRequest);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("Product");
 
   const statusOptions = ["Active", "Pending", "Completed", "Canceled"];
+  const tabs = ["Product", "Rents", "Maintenance"];
 
   const updateStatus = (index, newStatus) => {
     const updatedUsers = users.map((user, i) =>
@@ -32,7 +34,6 @@ export default function adminPage() {
     }
   };
 
-  // 🔎 Filter logic
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,14 +43,33 @@ export default function adminPage() {
   return (
     <div className="p-6">
 
-      {/* 🔎 Search Field */}
+      {/* ✅ Tabs */}
+      <div className="flex gap-3 mb-6">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition
+              ${
+                activeTab === tab
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }
+            `}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* 🔎 Search */}
       <div className="mb-4">
         <input
           type="text"
           placeholder="Search by name, email, or product..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
 
