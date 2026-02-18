@@ -3,7 +3,7 @@ import Homepage from './home/homepage';
 import ProductList from './products/productlist';
 import OrderList from './admin/orderList';
 import ProductView from './products/productView';
-import Rentals from './admin/rentals';
+import AdminPage from './admin/adminPage';
 
 
 export default function App() {
@@ -37,7 +37,7 @@ export default function App() {
                 {/* <ProductList /> */}
                 {/* <OrderList /> */}
                 {/* <ProductView /> */}
-                <Rentals />
+                <AdminPage />
             </div>
         </div>
     );

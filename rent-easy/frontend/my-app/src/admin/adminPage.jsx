@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CustomerRequest } from "../Alldata";
 
-export default function Rentals() {
+export default function adminPage() {
   const [users, setUsers] = useState(CustomerRequest);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
