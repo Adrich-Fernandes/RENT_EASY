@@ -90,80 +90,121 @@ export const Category = [
 
 
 // products card data
-export const productsCard =[
+export const productsCard = [
     {
         img: "https://www.orangetree.in/cdn/shop/files/Gallery-1ChiyoL-ShapedSofaBuyOnline.jpg?v=1722852692",
         title: "luxury sofa",
-        discription:"3-seat sofa fabric type : leather",
-        price:"₹2,999/mo",
-        deposit:"₹5,997",
-        
+        discription: "3-seat sofa fabric type : leather",
+        price: "₹2,999/mo",
+        deposit: "₹5,997",
+
     },
     {
         img: "https://cdn.prod.website-files.com/5f2b10811da7064399ed3a1c/61ac6377b6963b12b0b36475_1st-Venus1920x1000.webp",
         title: "sofa-seater",
-        discription:"Premium quality fabric sofa with comfortable cushioning. Perfect for living rooms.",
-        price:"₹1,999/mo",
-        deposit:"₹5,997",
+        discription: "Premium quality fabric sofa with comfortable cushioning. Perfect for living rooms.",
+        price: "₹1,999/mo",
+        deposit: "₹5,997",
     },
     {
         img: "https://casagold.in/cdn/shop/products/Coastal_Chic_Blue_Luxury_Sofa.jpg?v=1735904752&width=1500",
         title: "blue sofa",
-        discription:"",
-        price:"₹2,999/mo",
-        deposit:"₹5,997",
+        discription: "",
+        price: "₹2,999/mo",
+        deposit: "₹5,997",
     },
     {
         img: "https://furnishio.in/cdn/shop/files/chime-3-2-1-sofa-set-269_1000x604.webp?v=1728060370",
         title: "sofa set",
-        discription:"",
-        price:"₹2,999/mo",
-        deposit:"₹5,997",
+        discription: "",
+        price: "₹2,999/mo",
+        deposit: "₹5,997",
     },
     {
         img: "https://pelicanessentials.com/cdn/shop/files/3seatersofa_1_08d9b16d-6aa7-40b4-b2d3-1a45e417ca6e.jpg?v=1751593289&width=2048",
         title: "soft sofa",
-        discription:"",
-        price:"₹3,999/mo",
-        deposit:"₹7,997",
+        discription: "",
+        price: "₹3,999/mo",
+        deposit: "₹7,997",
     },
     {
         img: "https://media.architecturaldigest.com/photos/64de634d02916e5d018e0c81/2:1/w_1280%2Cc_limit/AD1022_BERKUS_BRENT_7.jpg",
         title: "leather sofa",
-        discription:"",
-        price:"₹2,999/mo",
-        deposit:"₹6,997",
+        discription: "",
+        price: "₹2,999/mo",
+        deposit: "₹6,997",
     }
 ]
 
 
 export const adminTableRents = [
     {
-        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title:"Modern Sofa",
-        category:"Furniture",
-        rent:"₹1,000/mo",
-        deposit:"₹5,000"
+        img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title: "Modern Sofa",
+        category: "Furniture",
+        rent: "₹1,000/mo",
+        deposit: "₹5,000"
     },
     {
-        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title:"Modern Sofa",
-        category:"Furniture",
-        rent:"₹1,000/mo",
-        deposit:"₹5,000"
+        img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title: "Modern Sofa",
+        category: "Furniture",
+        rent: "₹1,000/mo",
+        deposit: "₹5,000"
     },
     {
-        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title:"Modern Sofa",
-        category:"Furniture",
-        rent:"₹1,000/mo",
-        deposit:"₹5,000"
+        img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title: "Modern Sofa",
+        category: "Furniture",
+        rent: "₹1,000/mo",
+        deposit: "₹5,000"
     },
     {
-        img:"https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title:"Modern Sofa",
-        category:"Furniture",
-        rent:"₹1,000/mo",
-        deposit:"₹5,000"
+        img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
+        title: "Modern Sofa",
+        category: "Furniture",
+        rent: "₹1,000/mo",
+        deposit: "₹5,000"
     },
 ]
+
+
+
+
+// admin panal customer request (order)
+export const CustomerRequest = [
+    {
+        name: "Neil Sims",
+        email: "neil.sims@flowbite.com",
+        product: "MacBook Pro",
+        tenure: "6 Months",
+        total: "$2400",
+        status: "Active",
+    },
+    {
+      name: "Bonnie Green",
+      email: "bonnie@flowbite.com",
+      product: "iPhone 15",
+      tenure: "3 Months",
+      total: "$900",
+      status: "Pending",
+    },
+    {
+      name: "Jese Leos",
+      email: "jese@flowbite.com",
+      product: "iPad Air",
+      tenure: "12 Months",
+      total: "$1800",
+      status: "Completed",
+    },
+    {
+      name: "Jese Leos",
+      email: "jese@flowbite.com",
+      product: "iPad Air",
+      tenure: "12 Months",
+      total: "$1800",
+      status: "Completed",
+    },
+    
+
+];

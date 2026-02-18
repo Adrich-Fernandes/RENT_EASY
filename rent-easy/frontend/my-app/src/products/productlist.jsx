@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { productsCard } from "../home/Alldata";
+import { productsCard } from "../Alldata";
 export default function Layout() {
     const [selected, setSelected] = useState("");
 

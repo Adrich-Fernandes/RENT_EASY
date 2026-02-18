@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { adminTableRents } from '../home/Alldata'
+import { adminTableRents } from '../Alldata'
 
 export default function OrderList() {
 

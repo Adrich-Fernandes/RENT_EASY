@@ -35,9 +35,9 @@ export default function App() {
             <div>
                 {/* <Homepage /> */}
                 {/* <ProductList /> */}
-                <OrderList />
+                {/* <OrderList /> */}
                 {/* <ProductView /> */}
-                {/* <Rentals /> */}
+                <Rentals />
             </div>
         </div>
     );
