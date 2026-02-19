@@ -182,29 +182,58 @@ export const CustomerRequest = [
         status: "Active",
     },
     {
-      name: "Bonnie Green",
-      email: "bonnie@flowbite.com",
-      product: "iPhone 15",
-      tenure: "3 Months",
-      total: "$900",
-      status: "Pending",
+        name: "Bonnie Green",
+        email: "bonnie@flowbite.com",
+        product: "iPhone 15",
+        tenure: "3 Months",
+        total: "$900",
+        status: "Pending",
     },
     {
-      name: "Jese Leos",
-      email: "jese@flowbite.com",
-      product: "iPad Air",
-      tenure: "12 Months",
-      total: "$1800",
-      status: "Completed",
+        name: "Jese Leos",
+        email: "jese@flowbite.com",
+        product: "iPad Air",
+        tenure: "12 Months",
+        total: "$1800",
+        status: "Completed",
     },
     {
-      name: "Jese Leos",
-      email: "jese@flowbite.com",
-      product: "iPad Air",
-      tenure: "12 Months",
-      total: "$1800",
-      status: "Completed",
+        name: "Jese Leos",
+        email: "jese@flowbite.com",
+        product: "iPad Air",
+        tenure: "12 Months",
+        total: "$1800",
+        status: "Completed",
+    },
+
+
+];
+
+
+
+
+// maintainence request
+export const maintain = [
+    {
+        name: "Jese Leos",
+        email: "jese@flowbite.com",
+        product: "iPad Air",
+        issue: "broken",
+        status: "Completed",
+    },
+    {
+        name: "Jese Leos",
+        email: "jese@flowbite.com",
+        product: "iPad Air",
+        issue: "broken",
+        status: "Completed",
+    },
+    {
+        name: "Jese Leos",
+        email: "jese@flowbite.com",
+        product: "iPad Air",
+        issue: "broken",
+        status: "Completed",
     },
     
-
 ];

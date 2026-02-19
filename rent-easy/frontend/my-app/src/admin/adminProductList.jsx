@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { adminTableRents } from '../Alldata'
 
-export default function OrderList() {
+export default function AdminProductList() {
 
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
-  const [activeTab, setActiveTab] = useState("Products")
 
   const handleEditClick = (product) => {
     setSelectedProduct(product)
@@ -16,22 +15,6 @@ export default function OrderList() {
   return (
     <div className="w-full p-4 md:p-8 space-y-6">
 
-      {/* ================= TABS ================= */}
-      <div className="inline-flex bg-gray-100 rounded-2xl p-1 shadow-sm">
-        {["Products", "Rentals", "Maintenance"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2 text-sm font-medium rounded-xl transition
-              ${activeTab === tab
-                ? "bg-green-500 text-white shadow"
-                : "text-gray-600 hover:bg-gray-200"}
-            `}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
 
       <div className="flex justify-end">
         <button

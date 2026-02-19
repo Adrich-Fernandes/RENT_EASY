@@ -1,14 +1,13 @@
 import React from 'react';
 import Homepage from './home/homepage';
 import ProductList from './products/productlist';
-import OrderList from './admin/orderList';
 import ProductView from './products/productView';
-import AdminPage from './admin/adminPage';
+import AdminMain from './admin/adminPage';
 
 
 export default function App() {
     return (
-        <div className="">
+        <div>
             <nav className="w-full h-16  z-50 shadow-md px-8 flex items-center justify-between">
                 {/* LEFT SECTION */}
                 <div className="flex items-center rounded-full gap-3">
@@ -35,9 +34,8 @@ export default function App() {
             <div>
                 {/* <Homepage /> */}
                 {/* <ProductList /> */}
-                {/* <OrderList /> */}
                 {/* <ProductView /> */}
-                <AdminPage />
+                {/* <AdminMain /> */}
             </div>
         </div>
     );
