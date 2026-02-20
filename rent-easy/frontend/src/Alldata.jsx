@@ -137,6 +137,7 @@ export const productsCard = [
 ]
 
 
+// rents request recived in admin panal
 export const adminTableRents = [
     {
         img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
@@ -236,4 +237,30 @@ export const maintain = [
         status: "Completed",
     },
     
+];
+
+
+
+
+
+// category Furniture
+export const CategoryFurniture = [
+    {
+        name:"sofa"
+    },
+    {
+        name:"chair"
+    },
+    {
+        name:"table"
+    },
+    {
+        name:"wordrobe"
+    },
+    {
+        name:"bookshelf"
+    },
+    {
+        name:"bed"
+    },
 ];

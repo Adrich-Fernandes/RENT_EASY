@@ -33,7 +33,7 @@ export default function App() {
             </nav>
             <div>
                 {/* <Homepage /> */}
-                {/* <ProductList /> */}
+                <ProductList />
                 {/* <ProductView /> */}
                 {/* <AdminMain /> */}
             </div>
