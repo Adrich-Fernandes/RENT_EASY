@@ -3,9 +3,7 @@ import Homepage from './home/homepage';
 import ProductList from './products/productlist';
 import ProductView from './products/productView';
 import AdminMain from './admin/adminPage';
-import PropertyCard from './MyRentals/activeRentals';
-import PastCard from './MyRentals/pastRentals';
-import ProductMaintain from './MyRentals/maintenance';
+import MyRentalsMain from './MyRentals/myRentals';
 
 
 
@@ -36,13 +34,14 @@ export default function App() {
                 </div>
             </nav>
             <div>
-                {/* <Homepage /> */}
+                <Homepage />
                 {/* <ProductList /> */}
                 {/* <ProductView /> */}
+
+
                 {/* <AdminMain /> */}
-                {/* <PropertyCard/> */}
-                {/* <PastCard/> */}
-                <ProductMaintain/>
+
+                {/* <MyRentalsMain /> */}
             </div>
         </div>
     );

@@ -264,3 +264,42 @@ export const CategoryFurniture = [
         name:"bed"
     },
 ];
+
+
+
+
+// rentals card
+export const RentCard = [
+    {
+        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title:"Luxury Sofa",
+        duration:"3 months",
+        address:"123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate:"ends in 12.10.2026",
+        price:"./1000"
+    },
+    {
+        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title:"Luxury Sofa",
+        duration:"3 months",
+        address:"123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate:"ends in 12.10.2026",
+        price:"./1000"
+    },
+    {
+        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title:"Luxury Sofa",
+        duration:"3 months",
+        address:"123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate:"ends in 12.10.2026",
+        price:"./1000"
+    },
+    {
+        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title:"Luxury Sofa",
+        duration:"3 months",
+        address:"123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate:"ends in 12.10.2026",
+        price:"./1000"
+    }
+];

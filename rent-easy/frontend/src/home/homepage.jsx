@@ -1,88 +1,148 @@
 import { work_flow, Features, Category } from '../Alldata'
-export default function Homepage() {
-    return (
-        <div className="pt-10">
+import { motion } from "framer-motion"
 
+export default function Homepage() {
+
+    const fadeUp = {
+        hidden: { opacity: 0, y: 40 },
+        visible: { opacity: 1, y: 0 }
+    }
+
+    const staggerContainer = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.2
+            }
+        }
+    }
+
+    return (
+        <div className="pt-8 overflow-hidden">
 
             {/* top div*/}
-            <div className="min-h-[70vh] flex flex-col md:flex-row">
+            <motion.div 
+                className="min-h-[70vh] flex flex-col md:flex-row"
+                initial="hidden"
+                animate="visible"
+                variants={staggerContainer}
+            >
+                
 
                 {/* LEFT */}
-                <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start p-8">
+<motion.div 
+    variants={fadeUp}
+    transition={{ duration: 0.6 }}
+    className="w-full md:w-[30%] flex flex-col justify-center items-center md:items-start p-8"
+>
 
-                    <h1 className="text-5xl md:text-6xl font-extrabold text-center md:text-left leading-tight mb-4">
-                        Rent. Live.
-                        <br />
-                        <span className="text-green-600">Repeat</span>
-                    </h1>
+    <h1 className="text-8xl md:text-6xl font-extrabold text-center md:text-left leading-tight mb-4">
+        Rent. Live.
+        <br />
+        <span className="text-green-600">Repeat</span>
+    </h1>
 
-                    <p className="text-center md:text-left text-lg max-w-lg">
-                        Premium furniture & appliances on flexible monthly plans.
-                        No upfront costs, free delivery, and hassle-free maintenance.
-                    </p>
+    <p className="text-center md:text-left text-lg max-w-lg text-gray-600">
+        Premium furniture & appliances on flexible monthly plans.
+        No upfront costs, free delivery, and hassle-free maintenance.
+    </p>
 
-                    <div className="mt-6 flex gap-4 flex-wrap justify-center md:justify-start">
-                        <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded">
-                            Explore Products
-                        </button>
+    {/* BUTTONS */}
+    <div className="mt-6 flex gap-4 flex-wrap justify-center md:justify-start">
+        
+        <button className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition shadow-md">
+            Browse Products →
+        </button>
 
-                        <button className="border border-green-600 text-green-600 hover:bg-green-600 hover:text-white font-bold py-2 px-6 rounded transition">
-                            How it works
-                        </button>
-                    </div>
+        <button className="border border-green-600 text-green-600 hover:bg-green-600 hover:text-white font-semibold px-6 py-3 rounded-lg transition">
+            How It Works
+        </button>
 
-                </div>
+    </div>
+
+    {/* SMALL INFO CARDS */}
+    <div className="mt-8 flex gap-6 flex-wrap justify-center md:justify-start">
+
+        {/* Card 1 */}
+        <div className="flex items-center gap-3 bg-green-100/60 px-4 py-3 rounded-xl">
+            <div className="bg-green-200 p-3 rounded-lg">
+                🚚
+            </div>
+            <div>
+                <p className="font-semibold text-sm">Free Delivery</p>
+                <p className="text-xs text-gray-600">& Installation</p>
+            </div>
+        </div>
+
+        {/* Card 2 */}
+        <div className="flex items-center gap-3 bg-green-100/60 px-4 py-3 rounded-xl">
+            <div className="bg-green-200 p-3 rounded-lg">
+                🛋
+            </div>
+            <div>
+                <p className="font-semibold text-sm">500+ Items</p>
+                <p className="text-xs text-gray-600">Available</p>
+            </div>
+        </div>
+
+    </div>
+
+</motion.div>
 
                 {/* RIGHT */}
-                <div className="hidden md:flex md:w-1/2 items-center justify-center p-8">
+<motion.div 
+    variants={fadeUp}
+    transition={{ duration: 0.6 }}
+    className="hidden md:flex md:w-[70%] items-center justify-center p-8"
+>
+    <div className="relative w-full max-w-4xl">
 
-                    <div className="relative w-full h-full">
+        {/* Background Glow */}
+        <div className="absolute inset-0 bg-green-400/20 blur-3xl rounded-3xl -z-10"></div>
 
-                        {/* Glow */}
-                        <div className="absolute inset-0 bg-green-400/20 blur-3xl rounded-3xl -z-10"></div>
+        {/* Main Image */}
+        <img
+            src="https://plus.unsplash.com/premium_photo-1681046751108-a516bea00570?fm=jpg&q=60&w=3000&auto=format&fit=crop"
+            alt="Sofa"
+            className="w-full h-[500px] object-cover rounded-3xl"
+        />
 
-                        {/* Main Image */}
-                        <img
-                            src="https://plus.unsplash.com/premium_photo-1681046751108-a516bea00570?fm=jpg&q=60&w=3000&auto=format&fit=crop"
-                            alt="Sofa"
-                            className="w-full h-full object-cover rounded-3xl"
-                        />
-
-                        {/* Card 1 */}
-                        <div className="absolute top-6 left-6 bg-white shadow-lg rounded-xl px-4 py-3 flex items-center gap-3">
-                            <img
-                                src="https://www.lg.com/content/dam/channel/wcms/global/lg-experience/tech-hub/what-is-a-smart-tv/desktop/desktop-aem-what-is-a-smartv.jpg"
-                                alt="TV"
-                                className="w-12 h-12 rounded-lg object-cover"
-                            />
-                            <div>
-                                <p className="font-semibold">TV Table</p>
-                                <p className="text-green-600 text-sm">₹1000 / Month</p>
-                            </div>
-                        </div>
-
-                        {/* Card 2 */}
-                        <div className="absolute bottom-6 right-6 bg-white shadow-lg rounded-xl px-4 py-3 flex items-center gap-3">
-                            <img
-                                src="https://www.electroluxarabia.com/contentassets/a8462da74c384f7da463f95a3a2cfc20/how-to-clean-washing-machine-banner.jpg?width=464"
-                                alt="Washing Machine"
-                                className="w-12 h-12 rounded-lg object-cover"
-                            />
-                            <div>
-                                <p className="font-semibold">Washing Machine</p>
-                                <p className="text-green-600 text-sm">₹1000 / Month</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
+        {/* TOP LEFT CARD (half outside) */}
+        <motion.div
+            whileHover={{ y: -6, scale: 1.02 }}
+            className="absolute -left-10 top-20 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-4"
+        >
+            <img
+                src="https://plus.unsplash.com/premium_photo-1681046751108-a516bea00570?fm=jpg&q=60&w=3000&auto=format&fit=crop"
+                alt="Sofa small"
+                className="w-14 h-14 rounded-lg object-cover"
+            />
+            <div>
+                <p className="font-semibold">3-Seater Sofa</p>
+                <p className="text-green-600 font-semibold">₹899/mo</p>
             </div>
+        </motion.div>
 
+        {/* BOTTOM RIGHT CARD (half outside) */}
+        <motion.div
+            whileHover={{ y: -6, scale: 1.02 }}
+            className="absolute -right-10 bottom-16 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-4"
+        >
+            <div className="bg-green-100 p-3 rounded-xl text-green-600 text-xl">
+                📺
+            </div>
+            <div>
+                <p className="font-semibold">Smart TV 43"</p>
+                <p className="text-green-600 font-semibold">₹699/mo</p>
+            </div>
+        </motion.div>
 
+    </div>
+</motion.div>
 
-            {/* additional info about the company */}
+            </motion.div>
+
+{/* additional info about the company */}
             <div className="h-[40vh] flex flex-col items-center justify-center text-center px-6">
 
                 <span className="text-green-600 text-sm font-medium">Why RentEase</span>
@@ -90,23 +150,23 @@ export default function Homepage() {
                 <p className="text-base mt-3 text-gray-600 max-w-2xl">Experience the freedom of flexibility without the burden of ownership</p>
 
             </div>
-
-
-
-            {/* cards div for the feclitity's*/}
-            <div className="w-full py-16 flex flex-wrap justify-center gap-8">
-                {/* Card */}
+            {/* cards div for features */}
+            <motion.div 
+                className="w-full py-16 flex flex-wrap justify-center gap-8"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+            >
                 {
                     Features.map((v, i) => (
-                        <Featurecard data={v} />
+                        <Featurecard key={i} data={v} />
                     ))
                 }
-
-            </div>
-
+            </motion.div>
 
 
-            {/* head div for categories section  */}
+            {/* category cards */}
             <div className="w-full h-[20vh] px-8 flex flex-col justify-center md:flex-row md:items-end md:justify-between">
 
                 {/* Left Content */}
@@ -122,23 +182,23 @@ export default function Homepage() {
                 </div>
 
             </div>
-            {/* card of product category */}
-            <div className="w-full py-16 flex flex-wrap justify-center gap-8">
-
-                {/* n number of cards*/}
+            <motion.div 
+                className="w-full py-16 flex flex-wrap justify-center gap-8"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+            >
                 {
                     Category.map((v, i) => (
-                        <Categorycard data={v} />
+                        <Categorycard key={i} data={v} />
                     ))
                 }
-
-            </div>
-
+            </motion.div>
 
 
-
-            {/* how it works */}
-            <div className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-16 bg-white">
+            {/* workflow */}
+            <div className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-6 bg-white">
                 {/* TOP CENTER CONTENT */}
                 <div className="text-center max-w-2xl mb-14">
                     <span className="text-green-600 font-bold text-lg">
@@ -154,19 +214,18 @@ export default function Homepage() {
                         Getting started is simple. Four easy steps to a fully furnished space.
                     </span>
                 </div>
-
-                {/* CARDS CONTAINER */}
-                <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-4 gap-8">
-
-                    {/* card generator */}
-                    {work_flow.map((v, i) => (
-                        <Workcard item={v} />
-                    ))}
-                </div>
             </div>
-
-
-
+            <motion.div 
+                className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 py-16"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+            >
+                {work_flow.map((v, i) => (
+                    <Workcard key={i} item={v} />
+                ))}
+            </motion.div>
 
             {/* footer */}
             <div className="w-full bg-[#0e1829] text-white px-8 py-16">
@@ -246,62 +305,88 @@ export default function Homepage() {
 
             </div>
 
-
         </div>
-
     );
 }
 
+
 // workflow
 function Workcard({ item }) {
+
+    const fadeUp = {
+        hidden: { opacity: 0, y: 40 },
+        visible: { opacity: 1, y: 0 }
+    }
+
     return (
-        <div className="relative bg-white border border-gray-100 rounded-3xl p-8 shadow-md transition-all duration-300 hover:shadow-[0_0_40px_rgba(34,197,94,0.35)]">
+        <motion.div
+            variants={fadeUp}
+            transition={{ duration: 0.6 }}
+            whileHover={{ y: -10, scale: 1.03 }}
+            className="relative bg-white border border-gray-100 rounded-3xl p-8 shadow-md transition-all duration-300"
+        >
 
-            {/* Logo */}
             <img src={item.img} alt="step icon" className="w-18 h-18 mb-6 rounded-2xl object-cover" />
-
-            {/* Count */}
             <p className="text-5xl font-extrabold text-gray-300/70">{item.count}</p>
-
-            {/* Title */}
             <h2 className="text-xl font-bold mt-4">{item.title}</h2>
-
-            {/* Description */}
             <p className="text-gray-500 mt-3 leading-relaxed">{item.description}</p>
 
-        </div>
+        </motion.div>
     )
 }
 
+
 // features
 function Featurecard({ data }) {
+
+    const fadeUp = {
+        hidden: { opacity: 0, y: 40 },
+        visible: { opacity: 1, y: 0 }
+    }
+
     return (
-        <div className="w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] p-6 rounded-xl border border-green-500/80 flex flex-col transition-all duration-300 hover:shadow-[0_0_35px_rgba(34,197,94,0.35)]">
+        <motion.div
+            variants={fadeUp}
+            transition={{ duration: 0.6 }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            className="w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] p-6 rounded-xl border border-green-500/80 flex flex-col"
+        >
 
             <img src={data.img} alt="logo" className="w-15 h-15 mb-4 rounded-2xl" />
             <h2 className="text-2xl font-bold mb-2">{data.title}</h2>
             <p className="text-lg text-gray-600">{data.description}</p>
 
-        </div>
+        </motion.div>
     )
 }
 
+
 // category
 function Categorycard({ data }) {
+
+    const fadeUp = {
+        hidden: { opacity: 0, y: 40 },
+        visible: { opacity: 1, y: 0 }
+    }
+
     return (
-        <div className="relative w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] overflow-hidden rounded-xl group cursor-pointer">
+        <motion.div
+            variants={fadeUp}
+            transition={{ duration: 0.6 }}
+            whileHover={{ y: -8 }}
+            className="relative w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] overflow-hidden rounded-xl group cursor-pointer"
+        >
 
-            {/* Image */}
-            <a href=""><img src={data.img} alt="Flexible Plans" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" /> </a>
+            <a href="">
+                <img src={data.img} alt="Flexible Plans" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            </a>
 
-            {/* Dark overlay for readability */}
             <div className="absolute inset-0 bg-black/30"></div>
 
-            {/* Text Bottom Left */}
             <div className="absolute bottom-4 left-4 text-white">
                 <h2 className="text-3xl font-bold ">{data.title}</h2>
             </div>
 
-        </div>
+        </motion.div>
     )
 }
