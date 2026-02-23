@@ -165,7 +165,7 @@ function AddProductModal({ onClose }) {
   return (
     <ModalLayout title="Add New Product" onClose={onClose}>
       <FormFields formData={formData} handleChange={handleChange} />
-      <button className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition">
+      <button className="z-2000 w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition">
         Create Product
       </button>
     </ModalLayout>
@@ -177,7 +177,7 @@ function AddProductModal({ onClose }) {
 
 function ModalLayout({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-150">
       <div className="bg-white w-[90%] md:w-[700px] rounded-xl p-6 shadow-lg relative">
 
         <button

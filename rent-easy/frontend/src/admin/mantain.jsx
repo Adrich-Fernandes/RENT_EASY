@@ -2,7 +2,6 @@ import { useState } from "react";
 import { maintain } from "../Alldata";
 
 export default function MaintenanceRequests() {
-  // 🔥 Force all initial statuses to Pending
   const [users, setUsers] = useState(
     maintain.map((item) => ({
       ...item,
@@ -37,15 +36,15 @@ export default function MaintenanceRequests() {
     }
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.product.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="p-6">
-      {/* 🔎 Search */}
       <div className="mb-4">
         <input
           type="text"
@@ -81,7 +80,6 @@ export default function MaintenanceRequests() {
                 <td className="px-6 py-4">{user.product}</td>
                 <td className="px-6 py-4">{user.issue}</td>
 
-                {/* Status */}
                 <td className="px-6 py-4">
                   <span
                     className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusStyle(
@@ -92,7 +90,6 @@ export default function MaintenanceRequests() {
                   </span>
                 </td>
 
-                {/* Dropdown */}
                 <td className="px-6 py-4 relative overflow-visible">
                   <button
                     onClick={() =>
@@ -104,7 +101,7 @@ export default function MaintenanceRequests() {
                   </button>
 
                   {openDropdown === index && (
-                    <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
+                    <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
                       {statusOptions.map((option) => (
                         <button
                           key={option}
