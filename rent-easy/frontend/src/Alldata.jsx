@@ -236,7 +236,7 @@ export const maintain = [
         issue: "broken",
         status: "Completed",
     },
-    
+
 ];
 
 
@@ -246,22 +246,22 @@ export const maintain = [
 // category Furniture
 export const CategoryFurniture = [
     {
-        name:"sofa"
+        name: "sofa"
     },
     {
-        name:"chair"
+        name: "chair"
     },
     {
-        name:"table"
+        name: "table"
     },
     {
-        name:"wordrobe"
+        name: "wordrobe"
     },
     {
-        name:"bookshelf"
+        name: "bookshelf"
     },
     {
-        name:"bed"
+        name: "bed"
     },
 ];
 
@@ -271,69 +271,93 @@ export const CategoryFurniture = [
 // rentals card
 export const RentCard = [
     {
-        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
-        title:"Luxury Sofa",
-        duration:"3 months",
-        address:"123 Main St, Apt 4B, Springfield, IL 62704",
-        endDate:"ends in 12.10.2026",
-        price:"./1000"
+        img: "https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title: "Luxury Sofa",
+        duration: "3 months",
+        address: "123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate: "ends in 12.10.2026",
+        price: "./1000"
     },
     {
-        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
-        title:"Luxury Sofa",
-        duration:"3 months",
-        address:"123 Main St, Apt 4B, Springfield, IL 62704",
-        endDate:"ends in 12.10.2026",
-        price:"./1000"
+        img: "https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title: "Luxury Sofa",
+        duration: "3 months",
+        address: "123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate: "ends in 12.10.2026",
+        price: "./1000"
     },
     {
-        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
-        title:"Luxury Sofa",
-        duration:"3 months",
-        address:"123 Main St, Apt 4B, Springfield, IL 62704",
-        endDate:"ends in 12.10.2026",
-        price:"./1000"
+        img: "https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title: "Luxury Sofa",
+        duration: "3 months",
+        address: "123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate: "ends in 12.10.2026",
+        price: "./1000"
     },
     {
-        img:"https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
-        title:"Luxury Sofa",
-        duration:"3 months",
-        address:"123 Main St, Apt 4B, Springfield, IL 62704",
-        endDate:"ends in 12.10.2026",
-        price:"./1000"
+        img: "https://images.woodenstreet.de/image/cache/data/fabric-sofa/adrick-3-seater-sofa/product/jade-ivory/103-810x702.jpg",
+        title: "Luxury Sofa",
+        duration: "3 months",
+        address: "123 Main St, Apt 4B, Springfield, IL 62704",
+        endDate: "ends in 12.10.2026",
+        price: "./1000"
     }
 ];
 
 
 export const Total = [
     {
-        name:"sofa",
-        price:"2000",
-        security:"4000"  
+        name: "sofa",
+        price: 2000,
+        security: 4000
     },
     {
-        name:"chair",
-        price:"1000",
-        security:"2000"
+        name: "chair",
+        price: 1000,
+        security: 2000
     },
     {
-        name:"table",
-        price:"900",
-        security:"2000"
+        name: "table",
+        price: 900,
+        security: 2000
     },
     {
-        name:"wordrobe",
-        price:"1100",
-        security:"2000"
+        name: "wordrobe",
+        price: 1100,
+        security: 2000
     },
     {
-        name:"bookshelf",
-        price:"900",
-        security:"2000"
+        name: "bookshelf",
+        price: 900,
+        security: 2000
     },
     {
-        name:"bed",
-        price:"800",
-        security:"1500"
+        name: "bed",
+        price: 800,
+        security: 1500
+    },
+];
+
+
+
+
+
+
+export const CartCard = [
+    {
+        img: "https://ea-unboxed-assets.croma.com/cromaunboxed-as/2024/01/LG.png",
+        title: " LG 260L Double Door Refrigerator",
+        description: " Premium cooling solution for your home.",
+        price: 2000,
+        deposity: 5000
+
+    },
+    {
+        img: "https://www.lg.com/content/dam/channel/wcms/in/2025_ms_lg-com/tv/microsite/buying-guide/gp1/features/mobile/microsite-buying-guide-2025-ai-tv-01-feature-kv-m.jpg",
+        title: " Samsung 43-Inch Smart TV",
+        description: " Class Crystal UHD U8000F 4K Smart TV (2025 Model) Endless Free Content, Crystal Processor 4K, MetalStream Design, Knox Security, Alexa Built-in",
+        price: 4000,
+        deposity: 8000
+
     },
 ];
