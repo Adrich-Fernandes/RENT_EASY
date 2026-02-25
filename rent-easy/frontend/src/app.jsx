@@ -4,6 +4,7 @@ import ProductList from './products/productlist';
 import ProductView from './products/productView';
 import AdminMain from './admin/adminPage';
 import MyRentalsMain from './MyRentals/myRentals';
+import Cart from './home/cart';
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -97,11 +98,12 @@ export default function App() {
       </div>
 
       {/* PAGE */}
-      <Homepage />
+      {/* <Homepage /> */}
       {/* <ProductList /> */}
       {/* <ProductView /> */}
       {/* <AdminMain /> */}
       {/* <MyRentalsMain /> */}
+      <Cart />
     </>
   );
 }

@@ -141,7 +141,7 @@ export const productsCard = [
 export const adminTableRents = [
     {
         img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title: "Modern Sofa",
+        title: " Sofa",
         category: "Furniture",
         rent: "₹1,000/mo",
         deposit: "₹5,000"
@@ -155,14 +155,14 @@ export const adminTableRents = [
     },
     {
         img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title: "Modern Sofa",
+        title: " Sofa",
         category: "Furniture",
         rent: "₹1,000/mo",
         deposit: "₹5,000"
     },
     {
         img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png",
-        title: "Modern Sofa",
+        title: " Sofa",
         category: "Furniture",
         rent: "₹1,000/mo",
         deposit: "₹5,000"
@@ -302,4 +302,38 @@ export const RentCard = [
         endDate:"ends in 12.10.2026",
         price:"./1000"
     }
+];
+
+
+export const Total = [
+    {
+        name:"sofa",
+        price:"2000",
+        security:"4000"  
+    },
+    {
+        name:"chair",
+        price:"1000",
+        security:"2000"
+    },
+    {
+        name:"table",
+        price:"900",
+        security:"2000"
+    },
+    {
+        name:"wordrobe",
+        price:"1100",
+        security:"2000"
+    },
+    {
+        name:"bookshelf",
+        price:"900",
+        security:"2000"
+    },
+    {
+        name:"bed",
+        price:"800",
+        security:"1500"
+    },
 ];

@@ -43,44 +43,51 @@ export default function MaintenanceRequests() {
       user.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  return (
-    <div className="p-6">
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by name, email, or product..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-      </div>
+ return (
+  <div className="p-4 md:p-6">
+    <div className="mb-4">
+      <input
+        type="text"
+        placeholder="Search by name, email, or product..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full md:w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 text-sm md:text-base"
+      />
+    </div>
 
-      <div className="relative overflow-visible bg-white shadow rounded-lg border border-gray-200">
-        <table className="w-full text-sm text-left">
-          <thead className="text-sm bg-gray-100 border-b">
+    {/* Responsive wrapper */}
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[700px] bg-white shadow rounded-lg border border-gray-200">
+        <table className="w-full text-xs md:text-sm text-left">
+          <thead className="bg-gray-100 border-b">
             <tr>
-              <th className="px-6 py-3 font-medium">Customer</th>
-              <th className="px-6 py-3 font-medium">Product</th>
-              <th className="px-6 py-3 font-medium">Issue</th>
-              <th className="px-6 py-3 font-medium">Status</th>
-              <th className="px-6 py-3 font-medium">Actions</th>
+              <th className="px-4 md:px-6 py-3 font-medium">Customer</th>
+              <th className="px-4 md:px-6 py-3 font-medium">Product</th>
+              <th className="px-4 md:px-6 py-3 font-medium">Issue</th>
+              <th className="px-4 md:px-6 py-3 font-medium">Status</th>
+              <th className="px-4 md:px-6 py-3 font-medium">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {filteredUsers.map((user, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <div className="font-semibold">{user.name}</div>
-                  <div className="text-gray-500 text-sm">
+                  <div className="text-gray-500 text-xs md:text-sm">
                     {user.email}
                   </div>
                 </td>
 
-                <td className="px-6 py-4">{user.product}</td>
-                <td className="px-6 py-4">{user.issue}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4">
+                  {user.product}
+                </td>
 
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4">
+                  {user.issue}
+                </td>
+
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <span
                     className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusStyle(
                       user.status
@@ -90,23 +97,23 @@ export default function MaintenanceRequests() {
                   </span>
                 </td>
 
-                <td className="px-6 py-4 relative overflow-visible">
+                <td className="px-4 md:px-6 py-3 md:py-4 relative">
                   <button
                     onClick={() =>
                       setOpenDropdown(openDropdown === index ? null : index)
                     }
-                    className="px-4 py-2 bg-gray-200 border border-gray-300 rounded-full text-sm hover:bg-gray-300 transition"
+                    className="px-3 md:px-4 py-1.5 md:py-2 bg-gray-200 border border-gray-300 rounded-full text-xs md:text-sm hover:bg-gray-300 transition"
                   >
                     Change Status
                   </button>
 
                   {openDropdown === index && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
+                    <div className="absolute right-0 mt-2 w-40 md:w-44 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
                       {statusOptions.map((option) => (
                         <button
                           key={option}
                           onClick={() => updateStatus(index, option)}
-                          className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-xs md:text-sm hover:bg-gray-100"
                         >
                           {option}
                         </button>
@@ -128,5 +135,6 @@ export default function MaintenanceRequests() {
         </table>
       </div>
     </div>
-  );
+  </div>
+);
 }

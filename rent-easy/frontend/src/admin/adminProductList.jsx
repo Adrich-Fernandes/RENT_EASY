@@ -6,23 +6,48 @@ export default function AdminProductList() {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleEditClick = (product) => {
     setSelectedProduct(product)
     setIsEditOpen(true)
   }
 
+  const filteredRents = adminTableRents.filter((v) =>
+    v.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    v.category?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <div className="w-full p-4 md:p-8 space-y-6">
 
+      {/* ================= SEARCH + ADD ROW ================= */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
-      <div className="flex justify-end">
+        {/* Search Bar */}
+        <div className="relative w-full sm:w-80">
+          <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+          </span>
+          <input
+            type="text"
+            placeholder="Search by name or category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent"
+          />
+        </div>
+
+        {/* Add Button */}
         <button
           onClick={() => setIsAddOpen(true)}
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition whitespace-nowrap"
         >
           Add New Product
         </button>
+
       </div>
 
       {/* ================= TABLE ================= */}
@@ -41,13 +66,21 @@ export default function AdminProductList() {
           </thead>
 
           <tbody className="text-gray-700">
-            {adminTableRents.map((v, i) => (
-              <Tablerow
-                key={i}
-                data={v}
-                onEdit={() => handleEditClick(v)}
-              />
-            ))}
+            {filteredRents.length > 0 ? (
+              filteredRents.map((v, i) => (
+                <Tablerow
+                  key={i}
+                  data={v}
+                  onEdit={() => handleEditClick(v)}
+                />
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="p-8 text-center text-gray-400 text-sm">
+                  No products found matching "{searchQuery}"
+                </td>
+              </tr>
+            )}
           </tbody>
 
         </table>
