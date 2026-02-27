@@ -1,17 +1,86 @@
 import { useState } from "react";
 import { productsCard, CategoryFurniture } from "../Alldata";
+import { SlidersHorizontal } from "lucide-react";
 
 export default function Layout() {
     const [selected, setSelected] = useState("");
+    const [selectedTypes, setSelectedTypes] = useState([]);
+    const [showMobileFilter, setShowMobileFilter] = useState(false);
 
     const handleChange = (value) => {
         setSelected((prev) => (prev === value ? "" : value));
     };
 
+    const handleType = (value) => {
+        setSelectedTypes((prev) =>
+            prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+        );
+    };
+
     return (
         <div className="min-h-screen flex flex-col md:flex-row">
 
-            {/* LEFT SIDEBAR */}
+            {/* ── MOBILE FILTER BAR ── */}
+            <div className="md:hidden px-4 pt-4 space-y-3">
+
+                {/* Search + Filter toggle */}
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                    />
+                    <button
+                        onClick={() => setShowMobileFilter(!showMobileFilter)}
+                        className="flex items-center gap-1.5 px-3 py-2 border rounded-lg text-sm text-green-700 bg-green-50 hover:bg-green-100 transition"
+                    >
+                        <SlidersHorizontal size={16} />
+                        Filters
+                    </button>
+                </div>
+
+                {/* Category chips */}
+                <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                    {["Furniture", "Appliances"].map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => handleChange(cat)}
+                            className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition
+                                ${selected === cat
+                                    ? "bg-green-600 text-white border-green-600"
+                                    : "bg-white text-gray-700 border-gray-300 hover:border-green-400"
+                                }`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Expandable type filter */}
+                {showMobileFilter && (
+                    <div className="bg-white border rounded-xl p-4 shadow-sm space-y-2">
+                        <p className="text-sm font-bold text-gray-700 mb-2">Type</p>
+                        <div className="flex flex-wrap gap-2">
+                            {CategoryFurniture.map((v, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => handleType(v.name)}
+                                    className={`px-3 py-1 rounded-full text-sm border transition
+                                        ${selectedTypes.includes(v.name)
+                                            ? "bg-green-600 text-white border-green-600"
+                                            : "bg-white text-gray-600 border-gray-300 hover:border-green-400"
+                                        }`}
+                                >
+                                    {v.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+            </div>
+
+            {/* ── LEFT SIDEBAR (desktop) ── */}
             <div className="hidden md:block md:w-[20%] p-6 border-r">
 
                 <input
@@ -55,7 +124,7 @@ export default function Layout() {
                 </div>
             </div>
 
-            {/* RIGHT CONTENT */}
+            {/* ── RIGHT CONTENT ── */}
             <div className="w-full md:w-[80%] p-6">
                 <h2 className="text-2xl font-semibold mb-4">Products</h2>
 

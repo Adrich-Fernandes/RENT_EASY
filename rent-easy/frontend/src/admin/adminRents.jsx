@@ -5,6 +5,8 @@ export default function AdminRents() {
   const [users, setUsers] = useState(CustomerRequest);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [tempDate, setTempDate] = useState("");
 
   const statusOptions = ["Active", "Pending", "Completed", "Canceled"];
 
@@ -12,9 +14,27 @@ export default function AdminRents() {
     const updatedUsers = users.map((user, i) =>
       i === index ? { ...user, status: newStatus } : user
     );
-
     setUsers(updatedUsers);
     setOpenDropdown(null);
+  };
+
+  const handleEditDate = (index, currentDate) => {
+    setEditingIndex(index);
+    setTempDate(currentDate ?? "");
+  };
+
+  const handleSaveDate = (index) => {
+    const updatedUsers = users.map((user, i) =>
+      i === index ? { ...user, deliveryDate: tempDate } : user
+    );
+    setUsers(updatedUsers);
+    setEditingIndex(null);
+    setTempDate("");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
+    setTempDate(user.ExpectedDate);
   };
 
   const getStatusStyle = (status) => {
@@ -42,7 +62,7 @@ export default function AdminRents() {
   return (
     <div className="p-4 md:p-6 w-full">
 
-      {/* 🔎 Search */}
+      {/* Search */}
       <div className="mb-4">
         <input
           type="text"
@@ -54,7 +74,7 @@ export default function AdminRents() {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <div className="relative bg-white shadow rounded-lg border border-gray-200 min-w-[700px]">
+        <div className="relative bg-white shadow rounded-lg border border-gray-200 min-w-[900px]">
           <table className="w-full text-sm text-left">
             <thead className="text-sm bg-gray-100 border-b">
               <tr>
@@ -62,6 +82,8 @@ export default function AdminRents() {
                 <th className="px-6 py-3 font-medium">Product</th>
                 <th className="px-6 py-3 font-medium">Tenure</th>
                 <th className="px-6 py-3 font-medium">Total</th>
+                <th className="px-6 py-3 font-medium">Order Date</th>
+                <th className="px-6 py-3 font-medium">Expected Delivery</th>
                 <th className="px-6 py-3 font-medium">Status</th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -69,58 +91,27 @@ export default function AdminRents() {
 
             <tbody>
               {filteredUsers.map((user, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-semibold">{user.name}</div>
-                    <div className="text-gray-500 text-sm">
-                      {user.email}
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-4">{user.product}</td>
-                  <td className="px-6 py-4">{user.tenure}</td>
-                  <td className="px-6 py-4">{user.total}</td>
-
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusStyle(
-                        user.status
-                      )}`}
-                    >
-                      {user.status}
-                    </span>
-                  </td>
-
-                  <td className="px-6 py-4 relative">
-                    <button
-                      onClick={() =>
-                        setOpenDropdown(openDropdown === index ? null : index)
-                      }
-                      className="px-4 py-2 bg-gray-200 border border-gray-300 rounded-full text-sm hover:bg-gray-300 transition"
-                    >
-                      Change Status
-                    </button>
-
-                    {openDropdown === index && (
-                      <div className="absolute top-full left-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-                        {statusOptions.map((option) => (
-                          <button
-                            key={option}
-                            onClick={() => updateStatus(index, option)}
-                            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                          >
-                            {option}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </td>
-                </tr>
+                <TableRow
+                  key={index}
+                  user={user}
+                  index={index}
+                  editingIndex={editingIndex}
+                  tempDate={tempDate}
+                  openDropdown={openDropdown}
+                  statusOptions={statusOptions}
+                  getStatusStyle={getStatusStyle}
+                  handleEditDate={handleEditDate}
+                  handleSaveDate={handleSaveDate}
+                  handleCancelEdit={handleCancelEdit}
+                  setTempDate={setTempDate}
+                  updateStatus={updateStatus}
+                  setOpenDropdown={setOpenDropdown}
+                />
               ))}
 
               {filteredUsers.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="text-center py-6 text-gray-500">
+                  <td colSpan="8" className="text-center py-6 text-gray-500">
                     No results found.
                   </td>
                 </tr>
@@ -130,5 +121,112 @@ export default function AdminRents() {
         </div>
       </div>
     </div>
+  );
+}
+
+/* ============================= */
+/* TABLE ROW COMPONENT BELOW     */
+/* ============================= */
+
+function TableRow({
+  user,
+  index,
+  editingIndex,
+  tempDate,
+  openDropdown,
+  statusOptions,
+  getStatusStyle,
+  handleEditDate,
+  handleSaveDate,
+  handleCancelEdit,
+  setTempDate,
+  updateStatus,
+  setOpenDropdown,
+}) {
+  return (
+    <tr className="border-b hover:bg-gray-50">
+      <td className="px-6 py-4">
+        <div className="font-semibold">{user.name}</div>
+        <div className="text-gray-500 text-sm">{user.email}</div>
+      </td>
+
+      <td className="px-6 py-4">{user.product}</td>
+      <td className="px-6 py-4">{user.tenure}</td>
+      <td className="px-6 py-4">{user.total}</td>
+
+      <td className="px-6 py-4 text-gray-700">
+        {user.orderDate ?? ""}
+      </td>
+
+      <td className="px-6 py-4">
+        {editingIndex === index ? (
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              value={tempDate}
+              onChange={(e) => setTempDate(e.target.value)}
+              className="border border-green-400 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+            <button
+              onClick={() => handleSaveDate(index)}
+              className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded-lg"
+            >
+              Save
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs rounded-lg"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span>{user.deliveryDate ?? "__"}</span>
+            <button
+              onClick={() => handleEditDate(index, user.deliveryDate)}
+              className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg border"
+            >
+              Edit
+            </button>
+          </div>
+        )}
+      </td>
+
+      <td className="px-6 py-4">
+        <span
+          className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusStyle(
+            user.status
+          )}`}
+        >
+          {user.status}
+        </span>
+      </td>
+
+      <td className="px-6 py-4 relative">
+        <button
+          onClick={() =>
+            setOpenDropdown(openDropdown === index ? null : index)
+          }
+          className="px-4 py-2 bg-gray-200 border border-gray-300 rounded-full text-sm hover:bg-gray-300"
+        >
+          Change Status
+        </button>
+
+        {openDropdown === index && (
+          <div className="absolute top-full left-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
+            {statusOptions.map((option) => (
+              <button
+                key={option}
+                onClick={() => updateStatus(index, option)}
+                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        )}
+      </td>
+    </tr>
   );
 }

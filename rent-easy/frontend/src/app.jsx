@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import Homepage from './home/homepage';
-import ProductList from './products/productlist';
-import ProductView from './products/productView';
-import AdminMain from './admin/adminPage';
-import MyRentalsMain from './MyRentals/myRentals';
-import Cart from './home/cart';
+import React, { useState } from "react";
+import Homepage from "./home/homepage";
+import ProductList from "./products/productlist";
+import ProductView from "./products/productView";
+import AdminMain from "./admin/adminPage";
+import MyRentalsMain from "./MyRentals/myRentals";
+import Cart from "./home/cart";
+import { Home, Package, ClipboardList, X, Menu } from "lucide-react";
+
+const navItems = [
+  { label: "Home", icon: <Home size={18} /> },
+  { label: "Products", icon: <Package size={18} /> },
+  { label: "MyRents", icon: <ClipboardList size={18} /> },
+];
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,28 +19,21 @@ export default function App() {
   return (
     <>
       {/* ── NAVBAR ── */}
-      <nav
-        className="flex items-center justify-between px-6 h-16 sticky top-0 z-[100] border-b border-green-400/30"
-        style={{
-          background: 'rgba(255, 255, 255, 0.55)',
-          backdropFilter: 'blur(14px)',
-          WebkitBackdropFilter: 'blur(14px)',
-          boxShadow: '0 2px 24px 0 rgba(34, 197, 94, 0.18), 0 1px 0 0 rgba(34, 197, 94, 0.10)',
-        }}
-      >
+      <nav className="flex items-center justify-between px-6 h-16 sticky top-0 z-[100]
+        border-b border-green-400/30
+        bg-white/55 backdrop-blur-xl
+        shadow-[0_2px_24px_0_rgba(34,197,94,0.18),0_1px_0_0_rgba(34,197,94,0.10)]">
 
         {/* LEFT */}
         <div className="flex items-center gap-2">
 
           {/* Hamburger */}
           <button
-            className="md:hidden flex flex-col gap-[5px]"
+            className="md:hidden"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
-            <span className="block w-6 h-[2px] bg-green-600 rounded"></span>
-            <span className="block w-6 h-[2px] bg-green-600 rounded"></span>
-            <span className="block w-6 h-[2px] bg-green-600 rounded"></span>
+            <Menu size={24} className="text-green-600" />
           </button>
 
           <img
@@ -49,22 +49,34 @@ export default function App() {
 
         {/* CENTER */}
         <div className="hidden md:flex gap-2">
-          {["Home", "Products", "MyRents"].map((item) => (
+          {navItems.map((item) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-gray-700 font-medium text-[0.95rem] px-4 py-2 rounded-lg transition-all duration-200 hover:text-green-700 hover:bg-green-100/70 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
+              key={item.label}
+              href={`#${item.label.toLowerCase()}`}
+              className="flex items-center gap-1.5 text-gray-700 font-medium text-[0.95rem]
+                px-4 py-2 rounded-lg transition-all duration-200
+                hover:text-green-700 hover:bg-green-100/70
+                hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
             >
-              {item}
+              {item.icon}
+              {item.label}
             </a>
           ))}
         </div>
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          <img src="https://icons.veryicon.com/png/o/miscellaneous/flower-mall-color-icon/shopping-cart-114.png" alt="Cart" className="h-6 cursor-pointer" />
-          <button className="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition shadow-sm"
-            style={{ boxShadow: '0 0 12px 2px rgba(34,197,94,0.35)' }}
+          <img
+            src="https://icons.veryicon.com/png/o/miscellaneous/flower-mall-color-icon/shopping-cart-114.png"
+            alt="Cart"
+            className="h-6 cursor-pointer"
+          />
+
+          <button
+            className="px-4 py-2 rounded-lg
+              bg-green-600 text-white font-semibold text-sm
+              hover:bg-green-700 transition
+              shadow-[0_0_12px_2px_rgba(34,197,94,0.35)]"
           >
             Sign Up
           </button>
@@ -81,43 +93,60 @@ export default function App() {
 
       {/* ── DRAWER ── */}
       <div
-        className={`fixed top-0 left-0 h-screen w-[260px] shadow-xl z-[300] flex flex-col px-6 py-6 gap-2 transform transition-transform duration-300 ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-        style={{
-          background: 'rgba(255,255,255,0.85)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          boxShadow: '4px 0 32px 0 rgba(34, 197, 94, 0.15)',
-        }}
+        className={`fixed top-0 left-0 h-screen w-[260px]
+          shadow-xl z-[300]
+          flex flex-col px-6 py-6 gap-2
+          transform transition-transform duration-300
+          ${menuOpen ? "translate-x-0" : "-translate-x-full"}
+          bg-white/85 backdrop-blur-2xl
+          shadow-[4px_0_32px_0_rgba(34,197,94,0.15)]`}
       >
-        <button
-          className="self-end text-lg text-gray-500 mb-4"
-          onClick={() => setMenuOpen(false)}
-          aria-label="Close menu"
-        >
-          ✕
-        </button>
+        {/* Drawer Top */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <img
+              src="https://cdn-icons-png.freepik.com/256/5729/5729756.png?semt=ais_white_label"
+              alt="RentEase"
+              className="h-8 w-auto"
+            />
+            <span className="font-extrabold text-[1.1rem] text-gray-900">
+              <span className="text-green-600">Rent</span>Ease
+            </span>
+          </div>
 
-        {["Home", "Products", "MyRents"].map((item) => (
+          <button
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={22} className="text-gray-500 hover:text-gray-700" />
+          </button>
+        </div>
+
+        {navItems.map((item) => (
           <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            className="block px-4 py-3 rounded-xl text-gray-800 font-medium transition-all duration-200 hover:bg-green-100/80 hover:text-green-700 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
+            key={item.label}
+            href={`#${item.label.toLowerCase()}`}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl
+              text-gray-800 font-medium
+              transition-all duration-200
+              hover:bg-green-100/80
+              hover:text-green-700
+              hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
             onClick={() => setMenuOpen(false)}
           >
-            {item}
+            <span className="text-green-600">{item.icon}</span>
+            {item.label}
           </a>
         ))}
       </div>
 
       {/* PAGE */}
-      {/* <Homepage /> */}
+      <Homepage />`
       {/* <ProductList /> */}
       {/* <ProductView /> */}
       {/* <AdminMain /> */}
       {/* <MyRentalsMain /> */}
-      <Cart />
+      {/* <Cart /> */}
     </>
   );
 }

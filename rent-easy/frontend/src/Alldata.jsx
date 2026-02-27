@@ -181,6 +181,7 @@ export const CustomerRequest = [
         tenure: "6 Months",
         total: "$2400",
         status: "Active",
+        orderdate:"27/02/2026"
     },
     {
         name: "Bonnie Green",
