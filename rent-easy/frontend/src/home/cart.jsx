@@ -1,9 +1,21 @@
 import { useRef, useState } from "react";
-import { Trash2, MapPin, Calendar, ArrowRight } from "lucide-react";
+import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { CartCard } from "../Alldata";
 
 export default function Cart() {
     const [date, setDate] = useState("");
+    const [showDelivery, setShowDelivery] = useState(false);
+    const [addresses, setAddresses] = useState([]);
+    const [form, setForm] = useState({
+        name: "",
+        phone: "",
+        line1: "",
+        line2: "",
+        city: "",
+        state: "",
+        postal_code: "",
+    });
+
     const dateRef = useRef(null);
 
     const getMinDate = () => {
@@ -18,6 +30,25 @@ export default function Cart() {
                 ? dateRef.current.showPicker()
                 : dateRef.current.click();
         }
+    };
+
+    const handleForm = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleAddAddress = () => {
+        if (!form.name || !form.phone || !form.line1 || !form.city || !form.state || !form.postal_code) {
+            alert("Please fill all required fields.");
+            return;
+        }
+        setAddresses([...addresses, { ...form, date }]);
+        setForm({ name: "", phone: "", line1: "", line2: "", city: "", state: "", postal_code: "" });
+        setDate("");
+        setShowDelivery(false);
+    };
+
+    const handleRemoveAddress = (index) => {
+        setAddresses(addresses.filter((_, i) => i !== index));
     };
 
     let totalRent = 0;
@@ -43,45 +74,176 @@ export default function Cart() {
                     </div>
                 ))}
 
+                {/* ADD ADDRESS BUTTON */}
+                <button
+                    onClick={() => setShowDelivery(!showDelivery)}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-xl transition"
+                >
+                    {showDelivery ? <ChevronUp size={18} /> : <Plus size={18} />}
+                    {showDelivery ? "Cancel" : "Add Address"}
+                </button>
+
                 {/* DELIVERY SECTION */}
-                <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
+                {showDelivery && (
+                    <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
 
-                    <div className="flex items-center gap-2">
-                        <MapPin className="text-green-600" size={20} />
-                        <span className="font-bold text-lg">Delivery Details</span>
-                    </div>
-
-                    <div>
-                        <span className="block text-sm text-gray-600 mb-1">Delivery Address</span>
-                        <textarea
-                            className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-                            rows="3"
-                        />
-                    </div>
-
-                    <div>
-                        <span className="block text-sm text-gray-600 mb-2">Delivery Date</span>
-                        <div className="relative flex items-center gap-2">
-                            <Calendar className="text-green-600" size={20} />
-                            <button
-                                type="button"
-                                onClick={openCalendar}
-                                className="px-4 py-2 border rounded-lg hover:bg-gray-100 text-sm"
-                            >
-                                {date ? date : "Select Date"}
-                            </button>
-                            <input
-                                ref={dateRef}
-                                type="date"
-                                value={date}
-                                min={getMinDate()}
-                                onChange={(e) => setDate(e.target.value)}
-                                className="absolute opacity-0 pointer-events-none"
-                            />
+                        <div className="flex items-center gap-2">
+                            <MapPin className="text-green-600" size={20} />
+                            <span className="font-bold text-lg">Delivery Details</span>
                         </div>
-                    </div>
 
-                </div>
+                        {/* Name & Phone */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">Full Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={form.name}
+                                    onChange={handleForm}
+                                    placeholder="Full Name"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={form.phone}
+                                    onChange={handleForm}
+                                    placeholder="+91-9876543210"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Line 1 & Line 2 */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">Address Line 1</label>
+                                <input
+                                    type="text"
+                                    name="line1"
+                                    value={form.line1}
+                                    onChange={handleForm}
+                                    placeholder="Street number and name"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">Address Line 2 <span className="text-gray-400">(optional)</span></label>
+                                <input
+                                    type="text"
+                                    name="line2"
+                                    value={form.line2}
+                                    onChange={handleForm}
+                                    placeholder="Apt, suite, floor"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                        </div>
+
+                        {/* City & State */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">City</label>
+                                <input
+                                    type="text"
+                                    name="city"
+                                    value={form.city}
+                                    onChange={handleForm}
+                                    placeholder="Bengaluru"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">State</label>
+                                <input
+                                    type="text"
+                                    name="state"
+                                    value={form.state}
+                                    onChange={handleForm}
+                                    placeholder="Karnataka"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Pin Code */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm text-gray-600 mb-1">Pin Code</label>
+                                <input
+                                    type="text"
+                                    name="postal_code"
+                                    value={form.postal_code}
+                                    onChange={handleForm}
+                                    placeholder="560001"
+                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Delivery Date */}
+                        <div>
+                            <span className="block text-sm text-gray-600 mb-2">Delivery Date</span>
+                            <div className="relative flex items-center gap-2">
+                                <Calendar className="text-green-600" size={20} />
+                                <button
+                                    type="button"
+                                    onClick={openCalendar}
+                                    className="px-4 py-2 border border-green-400 border-opacity-40 rounded-lg hover:bg-gray-100 text-sm"
+                                >
+                                    {date ? date : "Select Date"}
+                                </button>
+                                <input
+                                    ref={dateRef}
+                                    type="date"
+                                    value={date}
+                                    min={getMinDate()}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    className="absolute opacity-0 pointer-events-none"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Save Button */}
+                        <button
+                            onClick={handleAddAddress}
+                            className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-xl text-sm transition"
+                        >
+                            Save Address
+                        </button>
+
+                    </div>
+                )}
+
+                {/* SAVED ADDRESSES */}
+                {addresses.length > 0 && (
+                    <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
+                        <div className="flex items-center gap-2">
+                            <MapPin className="text-green-600" size={20} />
+                            <span className="font-bold text-lg">Saved Addresses</span>
+                        </div>
+
+                        {addresses.map((addr, i) => (
+                            <div key={i} className="border border-green-400 border-opacity-30 rounded-xl p-4 flex justify-between items-start gap-4">
+                                <div className="space-y-1 text-sm text-gray-700">
+                                    <p className="font-semibold text-gray-900">{addr.name} · {addr.phone}</p>
+                                    <p>{addr.line1}{addr.line2 ? `, ${addr.line2}` : ""}</p>
+                                    <p>{addr.city}, {addr.state} - {addr.postal_code}</p>
+                                    {addr.date && <p className="text-green-600 text-xs">Delivery: {addr.date}</p>}
+                                </div>
+                                <Trash2
+                                    className="text-red-400 hover:text-red-600 cursor-pointer flex-shrink-0 transition"
+                                    size={18}
+                                    onClick={() => handleRemoveAddress(i)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
 
             </div>
 

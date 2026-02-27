@@ -12,7 +12,15 @@ export default function App() {
   return (
     <>
       {/* ── NAVBAR ── */}
-      <nav className="flex items-center justify-between px-6 h-16 bg-white shadow-sm sticky top-0 z-[100] border-b border-green-100">
+      <nav
+        className="flex items-center justify-between px-6 h-16 sticky top-0 z-[100] border-b border-green-400/30"
+        style={{
+          background: 'rgba(255, 255, 255, 0.55)',
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)',
+          boxShadow: '0 2px 24px 0 rgba(34, 197, 94, 0.18), 0 1px 0 0 rgba(34, 197, 94, 0.10)',
+        }}
+      >
 
         {/* LEFT */}
         <div className="flex items-center gap-2">
@@ -23,9 +31,9 @@ export default function App() {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
-            <span className="block w-6 h-[2px] bg-green-700 rounded"></span>
-            <span className="block w-6 h-[2px] bg-green-700 rounded"></span>
-            <span className="block w-6 h-[2px] bg-green-700 rounded"></span>
+            <span className="block w-6 h-[2px] bg-green-600 rounded"></span>
+            <span className="block w-6 h-[2px] bg-green-600 rounded"></span>
+            <span className="block w-6 h-[2px] bg-green-600 rounded"></span>
           </button>
 
           <img
@@ -40,12 +48,12 @@ export default function App() {
         </div>
 
         {/* CENTER */}
-        <div className="hidden md:flex gap-7">
+        <div className="hidden md:flex gap-2">
           {["Home", "Products", "MyRents"].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
-              className="text-gray-700 font-medium text-[0.95rem] hover:text-green-600 transition"
+              className="text-gray-700 font-medium text-[0.95rem] px-4 py-2 rounded-lg transition-all duration-200 hover:text-green-700 hover:bg-green-100/70 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
             >
               {item}
             </a>
@@ -55,7 +63,9 @@ export default function App() {
         {/* RIGHT */}
         <div className="flex items-center gap-4">
           <img src="https://icons.veryicon.com/png/o/miscellaneous/flower-mall-color-icon/shopping-cart-114.png" alt="Cart" className="h-6 cursor-pointer" />
-          <button className="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition shadow-sm">
+          <button className="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold text-sm hover:bg-green-700 transition shadow-sm"
+            style={{ boxShadow: '0 0 12px 2px rgba(34,197,94,0.35)' }}
+          >
             Sign Up
           </button>
         </div>
@@ -71,9 +81,15 @@ export default function App() {
 
       {/* ── DRAWER ── */}
       <div
-        className={`fixed top-0 left-0 h-screen w-[260px] bg-white shadow-xl z-[300] flex flex-col px-6 py-6 gap-2 transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-screen w-[260px] shadow-xl z-[300] flex flex-col px-6 py-6 gap-2 transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{
+          background: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          boxShadow: '4px 0 32px 0 rgba(34, 197, 94, 0.15)',
+        }}
       >
         <button
           className="self-end text-lg text-gray-500 mb-4"
@@ -83,13 +99,11 @@ export default function App() {
           ✕
         </button>
 
-
-        {/* OBJECT HERE */}
         {["Home", "Products", "MyRents"].map((item) => (
           <a
             key={item}
             href={`#${item.toLowerCase()}`}
-            className="block  px-4 py-3 rounded-xl text-gray-800 font-medium hover:bg-green-50 hover:text-green-600 transition"
+            className="block px-4 py-3 rounded-xl text-gray-800 font-medium transition-all duration-200 hover:bg-green-100/80 hover:text-green-700 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
             onClick={() => setMenuOpen(false)}
           >
             {item}
