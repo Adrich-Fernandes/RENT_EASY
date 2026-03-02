@@ -1,20 +1,17 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "app that lets you to rent furniture and appliance (server)",
+  "description": "rent furniture and appliances ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Adrich Fernandes",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.4",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "mongoose": "^9.2.1",
-    "nodemon": "^3.1.11",
-    "passport": "^0.7.0",
-    "passport-local": "^1.0.0"
+    "mongodb": "^7.1.0",
+    "mongoose": "^9.2.3"
   }
 }
