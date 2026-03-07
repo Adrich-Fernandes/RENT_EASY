@@ -1,12 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { adminTableRents } from '../Alldata'
 
 export default function AdminProductList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAdd, setShowAdd] = useState(false)
+  const [products, setProducts] = useState([])
 
-  const filteredRents = adminTableRents.filter((v) =>
+  // fetch from DB on load
+  const fetchProducts = () => {
+    axios.get("http://localhost:4000/api/product/allProducts")
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.error(err))
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const filteredRents = products.filter((v) =>
     v.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     v.category?.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -39,7 +50,7 @@ export default function AdminProductList() {
       </div>
 
       {/* ADD PRODUCT FORM */}
-      {showAdd && <AddProduct setShowAdd={setShowAdd} />}
+      {showAdd && <AddProduct setShowAdd={setShowAdd} onSuccess={fetchProducts} />}
 
       {/* TABLE */}
       <div className="bg-white shadow-md rounded-xl overflow-x-auto">
@@ -77,7 +88,14 @@ export default function AdminProductList() {
                     </button>
                   </td>
                   <td className="p-4">
-                    <button className="px-4 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition">
+                    <button
+                      onClick={() => {
+                        axios.delete(`http://localhost:4000/api/product/deleteProduct/${v._id}`)
+                          .then(() => fetchProducts())
+                          .catch((err) => console.error(err))
+                      }}
+                      className="px-4 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
+                    >
                       Delete
                     </button>
                   </td>
@@ -99,7 +117,7 @@ export default function AdminProductList() {
 }
 
 
-function AddProduct({ setShowAdd }) {
+function AddProduct({ setShowAdd, onSuccess }) {
 
   const [formData, setFormData] = useState({
     title: "", description: "", category: "", subcategory: "", rent: "", deposit: "", img: ""
@@ -114,6 +132,7 @@ function AddProduct({ setShowAdd }) {
     axios.post("http://localhost:4000/api/product/insertProduct", formData)
       .then((res) => {
         console.log(res.data)
+        onSuccess()      // re-fetch table
         setShowAdd(false)
       })
       .catch((err) => console.error(err))
@@ -143,9 +162,14 @@ function AddProduct({ setShowAdd }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
-            <input type="text" name="category" value={formData.category} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
+              <select name="category" value={formData.category} onChange={handleChange} required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+                <option value="Furniture">Furniture</option>
+                <option value="Appliance">Appliance</option>
+              </select>
+            </div>
           </div>
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Subcategory</label>
