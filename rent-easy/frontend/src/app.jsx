@@ -141,10 +141,10 @@ export default function App() {
       </div>
 
       {/* PAGE */}
-      <Homepage />`
+      {/* <Homepage /> */}
       {/* <ProductList /> */}
       {/* <ProductView /> */}
-      {/* <AdminMain /> */}
+      <AdminMain />
       {/* <MyRentalsMain /> */}
       {/* <Cart /> */}
     </>

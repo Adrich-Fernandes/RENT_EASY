@@ -1,8 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { productsCard, CategoryFurniture } from "../Alldata";
 import { SlidersHorizontal } from "lucide-react";
+import axios from "axios";
 
 export default function Layout() {
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:4000/api/product/allProducts")
+            .then((res) => {
+                setProducts(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+
     const [selected, setSelected] = useState("");
     const [selectedTypes, setSelectedTypes] = useState([]);
     const [showMobileFilter, setShowMobileFilter] = useState(false);

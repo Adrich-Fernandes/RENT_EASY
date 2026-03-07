@@ -12,7 +12,6 @@ export default function AdminMain() {
 
             {/* Tabs */}
             <div className="flex gap-2 sm:gap-3 mb-4 sm:mb-6 overflow-x-auto pb-2">
-
                 {tabs.map((tab) => (
                     <button
                         key={tab}
@@ -26,14 +25,13 @@ export default function AdminMain() {
                         {tab}
                     </button>
                 ))}
-
             </div>
 
             {/* Content */}
             <div className="p-2 sm:p-4 md:p-5">
-                <AdminRents />
-                <AdminProductList />
-                <MaintenanceRequests />
+                {activeTab === "Product" && <AdminProductList />}
+                {activeTab === "Rents" && <AdminRents />}
+                {activeTab === "Maintenance" && <MaintenanceRequests />}
             </div>
 
         </div>
