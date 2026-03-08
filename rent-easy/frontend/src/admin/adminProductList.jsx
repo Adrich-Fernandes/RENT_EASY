@@ -5,8 +5,8 @@ export default function AdminProductList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAdd, setShowAdd] = useState(false)
   const [products, setProducts] = useState([])
+  const [editProduct, setEditProduct] = useState(null)
 
-  // fetch from DB on load
   const fetchProducts = () => {
     axios.get("http://localhost:4000/api/product/allProducts")
       .then((res) => setProducts(res.data))
@@ -42,7 +42,11 @@ export default function AdminProductList() {
           />
         </div>
         <button
-          onClick={() => setShowAdd(!showAdd)}
+          onClick={() => {
+            setShowAdd(!showAdd)
+            setEditProduct(null)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
           className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition whitespace-nowrap"
         >
           Add New Product
@@ -51,6 +55,9 @@ export default function AdminProductList() {
 
       {/* ADD PRODUCT FORM */}
       {showAdd && <AddProduct setShowAdd={setShowAdd} onSuccess={fetchProducts} />}
+
+      {/* EDIT PRODUCT FORM */}
+      {editProduct && <EditProduct product={editProduct} setEditProduct={setEditProduct} onSuccess={fetchProducts} />}
 
       {/* TABLE */}
       <div className="bg-white shadow-md rounded-xl overflow-x-auto">
@@ -83,16 +90,25 @@ export default function AdminProductList() {
                   <td className="p-4">{v.rent}</td>
                   <td className="p-4">{v.deposit}</td>
                   <td className="p-4">
-                    <button className="px-4 py-2 text-sm border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition">
+                    <button
+                      onClick={() => {
+                        setEditProduct(v)
+                        setShowAdd(false)
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }}
+                      className="px-4 py-2 text-sm border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition"
+                    >
                       Edit
                     </button>
                   </td>
                   <td className="p-4">
                     <button
                       onClick={() => {
-                        axios.delete(`http://localhost:4000/api/product/deleteProduct/${v._id}`)
-                          .then(() => fetchProducts())
-                          .catch((err) => console.error(err))
+                        if (window.confirm("Are you sure you want to delete this product?")) {
+                          axios.delete(`http://localhost:4000/api/product/deleteProduct/${v._id}`)
+                            .then(() => fetchProducts())
+                            .catch((err) => console.error(err))
+                        }
                       }}
                       className="px-4 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
                     >
@@ -117,6 +133,102 @@ export default function AdminProductList() {
 }
 
 
+function EditProduct({ product, setEditProduct, onSuccess }) {
+
+  const [formData, setFormData] = useState({
+    title: product.title,
+    description: product.description,
+    category: product.category,
+    subcategory: product.subcategory || "",
+    rent: product.rent,
+    deposit: product.deposit,
+    img: product.img
+  })
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    axios.put(`http://localhost:4000/api/product/updateProduct/${product._id}`, formData)
+      .then((res) => {
+        console.log(res.data)
+        onSuccess()
+        setEditProduct(null)
+      })
+      .catch((err) => console.error(err))
+  }
+
+  return (
+    <div className="bg-white shadow-md rounded-xl p-6">
+
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-gray-800">Edit Product</h2>
+        <button onClick={() => setEditProduct(null)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">Product Name</label>
+          <input type="text" name="title" value={formData.title} onChange={handleChange} required
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
+          <textarea name="description" value={formData.description} onChange={handleChange} rows={3} required
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
+            <select name="category" value={formData.category} onChange={handleChange} required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+              <option value="">Select a category</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Appliance">Appliance</option>
+            </select>
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-700">Subcategory</label>
+            <input type="text" name="subcategory" value={formData.subcategory} onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-700">Monthly Rent (₹)</label>
+            <input type="number" name="rent" value={formData.rent} onChange={handleChange} required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-700">Security Deposit (₹)</label>
+            <input type="number" name="deposit" value={formData.deposit} onChange={handleChange} required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+          </div>
+        </div>
+
+        <div>
+          <label className="block mb-1 text-sm font-medium text-gray-700">Image URL</label>
+          <input type="text" name="img" value={formData.img} onChange={handleChange} required
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400" />
+        </div>
+
+        <button type="submit"
+          className="w-full bg-green-600 text-white py-2.5 rounded-lg font-medium hover:bg-green-700 transition">
+          Update Product
+        </button>
+
+      </form>
+    </div>
+  )
+}
+
+
 function AddProduct({ setShowAdd, onSuccess }) {
 
   const [formData, setFormData] = useState({
@@ -132,7 +244,7 @@ function AddProduct({ setShowAdd, onSuccess }) {
     axios.post("http://localhost:4000/api/product/insertProduct", formData)
       .then((res) => {
         console.log(res.data)
-        onSuccess()      // re-fetch table
+        onSuccess()
         setShowAdd(false)
       })
       .catch((err) => console.error(err))
@@ -162,14 +274,13 @@ function AddProduct({ setShowAdd, onSuccess }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
-                <option value="Furniture">Furniture</option>
-                <option value="Appliance">Appliance</option>
-              </select>
-            </div>
+            <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
+            <select name="category" value={formData.category} onChange={handleChange} required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+              <option value="">Select a category</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Appliance">Appliance</option>
+            </select>
           </div>
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Subcategory</label>
