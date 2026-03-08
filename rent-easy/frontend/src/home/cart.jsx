@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { CartCard } from "../Alldata";
+import UserNavBar from "../../components/userNavBar";
 
 export default function Cart() {
     const [date, setDate] = useState("");
@@ -62,6 +63,8 @@ export default function Cart() {
     const totalPayable = totalRent + totalSecurity;
 
     return (
+        <>
+        <UserNavBar />
         <div className="w-full flex flex-col lg:flex-row items-start gap-6 p-6 bg-gray-100 min-h-screen">
 
             {/* ================= LEFT 70% ================= */}
@@ -294,6 +297,7 @@ export default function Cart() {
             </div>
 
         </div>
+        </>
     );
 }
 

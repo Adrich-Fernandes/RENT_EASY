@@ -1,3 +1,4 @@
+import UserNavBar from '../../components/userNavBar';
 import { work_flow, Features, Category } from '../Alldata'
 import { motion } from "framer-motion"
 
@@ -18,6 +19,9 @@ export default function Homepage() {
     }
 
     return (
+        <>
+        <UserNavBar />
+
         <div className="pt-8 overflow-hidden">
 
             {/* top div*/}
@@ -306,6 +310,8 @@ export default function Homepage() {
             </div>
 
         </div>
+
+        </>
     );
 }
 

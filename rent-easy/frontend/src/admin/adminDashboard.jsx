@@ -1,0 +1,255 @@
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Package, ClipboardList, Wrench, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react'
+import AdminNavBar from '../../components/adminNavBar'
+
+export default function AdminDashboard() {
+
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalRents: 0,
+    activeRents: 0,
+    pendingRents: 0,
+    returnedRents: 0,
+    cancelledRents: 0,
+    openMaintenance: 0,
+    resolvedMaintenance: 0,
+  })
+
+  const [recentRents, setRecentRents] = useState([])
+  const [recentMaintenance, setRecentMaintenance] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        const productsRes = await axios.get("http://localhost:4000/api/product/allProducts")
+        const products = productsRes.data
+        setStats(prev => ({ ...prev, totalProducts: products.length }))
+
+        try {
+          const rentsRes = await axios.get("http://localhost:4000/api/rent/allRents")
+          const rents = rentsRes.data
+          setStats(prev => ({
+            ...prev,
+            totalRents: rents.length,
+            activeRents: rents.filter(r => r.status === "active").length,
+            pendingRents: rents.filter(r => r.status === "pending").length,
+            returnedRents: rents.filter(r => r.status === "returned").length,
+            cancelledRents: rents.filter(r => r.status === "cancelled").length,
+          }))
+          setRecentRents(rents.slice(0, 5))
+        } catch (e) {
+          console.warn("Rents API failed:", e.message)
+        }
+
+        try {
+          const maintenanceRes = await axios.get("http://localhost:4000/api/maintenance/allRequests")
+          const maintenance = maintenanceRes.data
+          setStats(prev => ({
+            ...prev,
+            openMaintenance: maintenance.filter(m => m.status === "open").length,
+            resolvedMaintenance: maintenance.filter(m => m.status === "resolved").length,
+          }))
+          setRecentMaintenance(maintenance.slice(0, 5))
+        } catch (e) {
+          console.warn("Maintenance API failed:", e.message)
+        }
+
+      } catch (err) {
+        console.error("Dashboard fetch error:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAll()
+  }, [])
+
+  return (
+    <>
+      <AdminNavBar />
+
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        <div className="w-full p-4 md:p-8 space-y-8">
+
+          {/* HEADER */}
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+            <p className="text-sm text-gray-500 mt-1">Welcome back, Admin</p>
+          </div>
+
+          {/* STAT CARDS */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
+              <div className="bg-green-100 p-3 rounded-lg">
+                <Package size={22} className="text-green-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Total Products</p>
+                <p className="text-2xl font-bold text-gray-800">{stats.totalProducts}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <ClipboardList size={22} className="text-blue-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Total Rents</p>
+                <p className="text-2xl font-bold text-gray-800">{stats.totalRents}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
+              <div className="bg-yellow-100 p-3 rounded-lg">
+                <TrendingUp size={22} className="text-yellow-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Active Rents</p>
+                <p className="text-2xl font-bold text-gray-800">{stats.activeRents}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
+              <div className="bg-red-100 p-3 rounded-lg">
+                <Wrench size={22} className="text-red-500" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Open Maintenance</p>
+                <p className="text-2xl font-bold text-gray-800">{stats.openMaintenance}</p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* RENT STATUS BREAKDOWN */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <Clock size={18} className="text-yellow-500" />
+              <div>
+                <p className="text-xs text-gray-400">Pending</p>
+                <p className="text-lg font-semibold text-gray-700">{stats.pendingRents}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <TrendingUp size={18} className="text-blue-500" />
+              <div>
+                <p className="text-xs text-gray-400">Active</p>
+                <p className="text-lg font-semibold text-gray-700">{stats.activeRents}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <CheckCircle size={18} className="text-green-500" />
+              <div>
+                <p className="text-xs text-gray-400">Returned</p>
+                <p className="text-lg font-semibold text-gray-700">{stats.returnedRents}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <XCircle size={18} className="text-red-400" />
+              <div>
+                <p className="text-xs text-gray-400">Cancelled</p>
+                <p className="text-lg font-semibold text-gray-700">{stats.cancelledRents}</p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* RECENT TABLES */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* RECENT RENTS */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="p-5 border-b border-gray-100">
+                <h2 className="font-semibold text-gray-800">Recent Rents</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+                    <tr>
+                      <th className="px-4 py-3">User</th>
+                      <th className="px-4 py-3">Product</th>
+                      <th className="px-4 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentRents.length > 0 ? recentRents.map((r, i) => (
+                      <tr key={i} className="border-t hover:bg-gray-50 transition">
+                        <td className="px-4 py-3 font-medium text-gray-700">{r.user?.name || "—"}</td>
+                        <td className="px-4 py-3 text-gray-500">{r.product?.title || "—"}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            r.status === "active" ? "bg-blue-100 text-blue-600" :
+                            r.status === "pending" ? "bg-yellow-100 text-yellow-600" :
+                            r.status === "returned" ? "bg-green-100 text-green-600" :
+                            "bg-red-100 text-red-500"
+                          }`}>
+                            {r.status}
+                          </span>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr>
+                        <td colSpan={3} className="px-4 py-6 text-center text-gray-400">No rents yet</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* RECENT MAINTENANCE */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="p-5 border-b border-gray-100">
+                <h2 className="font-semibold text-gray-800">Recent Maintenance</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+                    <tr>
+                      <th className="px-4 py-3">User</th>
+                      <th className="px-4 py-3">Issue</th>
+                      <th className="px-4 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentMaintenance.length > 0 ? recentMaintenance.map((m, i) => (
+                      <tr key={i} className="border-t hover:bg-gray-50 transition">
+                        <td className="px-4 py-3 font-medium text-gray-700">{m.user?.name || "—"}</td>
+                        <td className="px-4 py-3 text-gray-500 truncate max-w-[150px]">{m.issue}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            m.status === "open" ? "bg-red-100 text-red-500" :
+                            m.status === "in-progress" ? "bg-yellow-100 text-yellow-600" :
+                            "bg-green-100 text-green-600"
+                          }`}>
+                            {m.status}
+                          </span>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr>
+                        <td colSpan={3} className="px-4 py-6 text-center text-gray-400">No requests yet</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+    </>
+  )
+}

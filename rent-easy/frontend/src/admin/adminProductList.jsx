@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import AdminNavBar from '../../components/adminNavBar'
 
 export default function AdminProductList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAdd, setShowAdd] = useState(false)
   const [products, setProducts] = useState([])
   const [editProduct, setEditProduct] = useState(null)
+  const [previewProduct, setPreviewProduct] = useState(null)
 
   const fetchProducts = () => {
     axios.get("http://localhost:4000/api/product/allProducts")
@@ -17,13 +19,86 @@ export default function AdminProductList() {
     fetchProducts()
   }, [])
 
-  const filteredRents = products.filter((v) =>
+ const filteredRents = products.filter((v) =>
     v.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    v.category?.toLowerCase().includes(searchQuery.toLowerCase())
+    v.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    v.subcategory?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    v.rent?.toString().includes(searchQuery) ||
+    v.deposit?.toString().includes(searchQuery) ||
+    v.img?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
+    <>
+    <AdminNavBar />
     <div className="w-full p-4 md:p-8 space-y-6">
+
+      {/* PREVIEW OVERLAY */}
+      {previewProduct && (
+        <div className="fixed inset-0 bg-black/40 z-[400] flex items-center justify-center px-4"
+          onClick={() => setPreviewProduct(null)}
+        >
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            <div className="flex items-start justify-between">
+              <h2 className="text-xl font-bold text-gray-800">{previewProduct.title}</h2>
+              <button onClick={() => setPreviewProduct(null)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+            </div>
+
+            <img src={previewProduct.img} alt={previewProduct.title}
+              className="w-full h-52 object-cover rounded-xl" />
+
+            <p className="text-sm text-gray-500">{previewProduct.description}</p>
+
+            <div className="flex gap-2 flex-wrap">
+              <span className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full">{previewProduct.category}</span>
+              {previewProduct.subcategory && (
+                <span className="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">{previewProduct.subcategory}</span>
+              )}
+            </div>
+
+            <div className="flex gap-6">
+              <div>
+                <p className="text-xs text-gray-400">Monthly Rent</p>
+                <p className="text-lg font-semibold text-green-600">₹{previewProduct.rent}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Security Deposit</p>
+                <p className="text-lg font-semibold text-gray-700">₹{previewProduct.deposit}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setEditProduct(previewProduct)
+                  setPreviewProduct(null)
+                  setShowAdd(false)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+                className="flex-1 py-2 text-sm border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to delete this product?")) {
+                    axios.delete(`http://localhost:4000/api/product/deleteProduct/${previewProduct._id}`)
+                      .then(() => { fetchProducts(); setPreviewProduct(null) })
+                      .catch((err) => console.error(err))
+                  }
+                }}
+                className="flex-1 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
+              >
+                Delete
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* SEARCH + ADD ROW */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -75,7 +150,11 @@ export default function AdminProductList() {
           <tbody className="text-gray-700">
             {filteredRents.length > 0 ? (
               filteredRents.map((v, i) => (
-                <tr key={i} className="border-t hover:bg-gray-50 transition">
+                <tr
+                  key={i}
+                  onClick={() => setPreviewProduct(v)}
+                  className="border-t hover:bg-green-50 cursor-pointer transition"
+                >
                   <td className="p-4">
                     <div className="flex items-center gap-4">
                       <img src={v.img} alt="product" className="w-14 h-14 object-cover rounded-lg" />
@@ -87,11 +166,12 @@ export default function AdminProductList() {
                       {v.category}
                     </span>
                   </td>
-                  <td className="p-4">{v.rent}</td>
-                  <td className="p-4">{v.deposit}</td>
+                  <td className="p-4">₹ {v.rent}</td>
+                  <td className="p-4">₹ {v.deposit}</td>
                   <td className="p-4">
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
                         setEditProduct(v)
                         setShowAdd(false)
                         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -103,7 +183,8 @@ export default function AdminProductList() {
                   </td>
                   <td className="p-4">
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
                         if (window.confirm("Are you sure you want to delete this product?")) {
                           axios.delete(`http://localhost:4000/api/product/deleteProduct/${v._id}`)
                             .then(() => fetchProducts())
@@ -129,6 +210,7 @@ export default function AdminProductList() {
       </div>
 
     </div>
+    </>
   )
 }
 
@@ -161,6 +243,7 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
   }
 
   return (
+    
     <div className="bg-white shadow-md rounded-xl p-6">
 
       <div className="flex items-center justify-between mb-6">

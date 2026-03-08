@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ActiveRents from "./activeRentals";
 import PastCards from "./pastRentals";
 import Maintain from "./maintenance";
+import UserNavBar from "../../components/userNavBar";
 
 export default function MyRentalsMain() {
     const [activeTab, setActiveTab] = useState("Active Rentals");
@@ -9,6 +10,8 @@ export default function MyRentalsMain() {
     const tabs = ["Active Rentals", "Past Rentals", "Maintenance"];
 
     return (
+        <>
+        <UserNavBar />
         <div className="w-full mx-auto p-6">
 
             {/* Title Section */}
@@ -46,5 +49,6 @@ export default function MyRentalsMain() {
             </div>
 
         </div>
+        </>
     );
 }

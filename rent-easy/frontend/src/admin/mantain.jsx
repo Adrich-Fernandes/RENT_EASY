@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { maintain } from "../Alldata";
+import AdminNavBar from "../../components/adminNavBar";
 
 export default function MaintenanceRequests() {
   const [users, setUsers] = useState(
@@ -59,6 +60,8 @@ export default function MaintenanceRequests() {
   );
 
   return (
+    <>
+    <AdminNavBar />
     <div className="p-4 md:p-6">
       <div className="mb-4">
         <input
@@ -179,5 +182,6 @@ export default function MaintenanceRequests() {
         </div>
       </div>
     </div>
+    </>
   );
 }
