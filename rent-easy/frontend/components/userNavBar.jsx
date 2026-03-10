@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { use, useState } from 'react'
 import { Home, Package, ClipboardList, X, Menu } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import {  useClerk, UserButton, useUser } from "@clerk/react";
+
 
 const navItems = [
   { label: "Home", icon: <Home size={18} />, path: "/" },
@@ -10,6 +12,8 @@ const navItems = [
 
 const UserNavBar = () => {
 
+  const {user} = useUser();
+  const {openSignIn} = useClerk();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -70,15 +74,17 @@ const UserNavBar = () => {
             alt="Cart"
             className="h-6 cursor-pointer"
           />
-
-          <button
+          {
+            !user ? (<button onClick={openSignIn}
             className="px-4 py-2 rounded-lg
               bg-green-600 text-white font-semibold text-sm
               hover:bg-green-700 transition
               shadow-[0_0_12px_2px_rgba(34,197,94,0.35)]"
           >
             Sign Up
-          </button>
+          </button>) : (<UserButton/>)
+          }
+          
         </div>
       </nav>
 
