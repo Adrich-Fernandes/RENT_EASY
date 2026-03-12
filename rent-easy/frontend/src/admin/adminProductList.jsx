@@ -2,6 +2,21 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import AdminNavBar from '../../components/adminNavBar'
 
+
+const CLOUD_NAME = "dhajogfcx"    
+const UPLOAD_PRESET = "products";
+
+async function uploadToCloudinary(file) {
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("upload_preset", UPLOAD_PRESET)
+  const res = await axios.post(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    formData
+  )
+  return res.data.secure_url
+}
+
 export default function AdminProductList() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showAdd, setShowAdd] = useState(false)
@@ -15,9 +30,7 @@ export default function AdminProductList() {
       .catch((err) => console.error(err))
   }
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+  useEffect(() => { fetchProducts() }, [])
 
   const filteredRents = products.filter((v) =>
     v.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -76,9 +89,7 @@ export default function AdminProductList() {
                     setShowAdd(false)
                   }}
                   className="flex-1 py-2 text-sm border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition"
-                >
-                  Edit
-                </button>
+                >Edit</button>
                 <button
                   onClick={() => {
                     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -88,9 +99,7 @@ export default function AdminProductList() {
                     }
                   }}
                   className="flex-1 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
-                >
-                  Delete
-                </button>
+                >Delete</button>
               </div>
             </div>
           </div>
@@ -139,10 +148,7 @@ export default function AdminProductList() {
             />
           </div>
           <button
-            onClick={() => {
-              setShowAdd(!showAdd)
-              setEditProduct(null)
-            }}
+            onClick={() => { setShowAdd(!showAdd); setEditProduct(null) }}
             className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition whitespace-nowrap"
           >
             Add New Product
@@ -165,9 +171,7 @@ export default function AdminProductList() {
             <tbody className="text-gray-700">
               {filteredRents.length > 0 ? (
                 filteredRents.map((v, i) => (
-                  <tr
-                    key={i}
-                    onClick={() => setPreviewProduct(v)}
+                  <tr key={i} onClick={() => setPreviewProduct(v)}
                     className="border-t hover:bg-green-50 cursor-pointer transition"
                   >
                     <td className="p-4">
@@ -177,23 +181,15 @@ export default function AdminProductList() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">
-                        {v.category}
-                      </span>
+                      <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">{v.category}</span>
                     </td>
                     <td className="p-4">₹ {v.rent}</td>
                     <td className="p-4">₹ {v.deposit}</td>
                     <td className="p-4">
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setEditProduct(v)
-                          setShowAdd(false)
-                        }}
+                        onClick={(e) => { e.stopPropagation(); setEditProduct(v); setShowAdd(false) }}
                         className="px-4 py-2 text-sm border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition"
-                      >
-                        Edit
-                      </button>
+                      >Edit</button>
                     </td>
                     <td className="p-4">
                       <button
@@ -206,9 +202,7 @@ export default function AdminProductList() {
                           }
                         }}
                         className="px-4 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
-                      >
-                        Delete
-                      </button>
+                      >Delete</button>
                     </td>
                   </tr>
                 ))
@@ -229,9 +223,69 @@ export default function AdminProductList() {
 }
 
 
-function EditProduct({ product, setEditProduct, onSuccess }) {
+// ─── Reusable image uploader with Cloudinary ───
+function ImageUploader({ imgs, onChange }) {
+  const [uploading, setUploading] = useState(false)
 
-  const initImgs = product.imgs?.length > 0 ? product.imgs : product.img ? [product.img] : [""]
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files)
+    if (!files.length) return
+    setUploading(true)
+    try {
+      const urls = await Promise.all(files.map(uploadToCloudinary))
+      onChange([...imgs, ...urls])
+    } catch (err) {
+      console.error("Upload failed", err)
+      alert("Image upload failed. Check your Cloudinary credentials.")
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const remove = (i) => onChange(imgs.filter((_, idx) => idx !== i))
+
+  return (
+    <div className="space-y-3">
+
+      {/* Image previews */}
+      {imgs.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {imgs.map((url, i) => (
+            <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200 group">
+              <img src={url} alt="" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={() => remove(i)}
+                className="absolute inset-0 bg-black/50 text-white text-xl opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+              >×</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Upload button */}
+      <label className={`flex items-center gap-2 cursor-pointer w-fit px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-400 transition text-sm text-gray-500 hover:text-green-600 ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4" />
+        </svg>
+        {uploading ? "Uploading..." : "Upload Images"}
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </label>
+
+    </div>
+  )
+}
+
+
+// ─── Edit form ───
+function EditProduct({ product, setEditProduct, onSuccess }) {
+  const initImgs = product.imgs?.length > 0 ? product.imgs : product.img ? [product.img] : []
 
   const [formData, setFormData] = useState({
     title: product.title,
@@ -245,22 +299,10 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
-  const handleImageChange = (index, value) => {
-    const newImgs = [...formData.imgs]
-    newImgs[index] = value
-    setFormData({ ...formData, imgs: newImgs })
-  }
-
-  const addImageField = () => setFormData({ ...formData, imgs: [...formData.imgs, ""] })
-
-  const removeImage = (index) => {
-    setFormData({ ...formData, imgs: formData.imgs.filter((_, i) => i !== index) })
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault()
-    const payload = { ...formData, imgs: formData.imgs.filter(Boolean) }
-    axios.put(`http://localhost:4000/api/product/updateProduct/${product._id}`, payload)
+    if (formData.imgs.length === 0) return alert("Please upload at least one image.")
+    axios.put(`http://localhost:4000/api/product/updateProduct/${product._id}`, formData)
       .then(() => { onSuccess(); setEditProduct(null) })
       .catch((err) => console.error(err))
   }
@@ -317,25 +359,7 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
 
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">Images</label>
-          {formData.imgs.map((img, index) => (
-            <div key={index} className="flex gap-2 mb-2 items-center">
-              <input
-                type="text"
-                value={img}
-                placeholder={`Image URL ${index + 1}`}
-                onChange={(e) => handleImageChange(index, e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-              />
-              {img && (
-                <img src={img} alt="preview" className="w-10 h-10 object-cover rounded border border-gray-200 flex-shrink-0" />
-              )}
-              <button type="button" onClick={() => removeImage(index)} disabled={formData.imgs.length === 1}
-                className="text-red-400 hover:text-red-600 text-xl leading-none disabled:opacity-30">×</button>
-            </div>
-          ))}
-          <button type="button" onClick={addImageField} className="text-sm text-green-600 hover:text-green-700 font-medium">
-            + Add another image
-          </button>
+          <ImageUploader imgs={formData.imgs} onChange={(imgs) => setFormData({ ...formData, imgs })} />
         </div>
 
         <button type="submit"
@@ -348,31 +372,19 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
 }
 
 
+// ─── Add form ───
 function AddProduct({ setShowAdd, onSuccess }) {
-
   const [formData, setFormData] = useState({
     title: "", description: "", category: "", subcategory: "",
-    rent: "", deposit: "", imgs: [""]
+    rent: "", deposit: "", imgs: []
   })
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
-  const handleImageChange = (index, value) => {
-    const newImgs = [...formData.imgs]
-    newImgs[index] = value
-    setFormData({ ...formData, imgs: newImgs })
-  }
-
-  const addImageField = () => setFormData({ ...formData, imgs: [...formData.imgs, ""] })
-
-  const removeImage = (index) => {
-    setFormData({ ...formData, imgs: formData.imgs.filter((_, i) => i !== index) })
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault()
-    const payload = { ...formData, imgs: formData.imgs.filter(Boolean) }
-    axios.post("http://localhost:4000/api/product/insertProduct", payload)
+    if (formData.imgs.length === 0) return alert("Please upload at least one image.")
+    axios.post("http://localhost:4000/api/product/insertProduct", formData)
       .then(() => { onSuccess(); setShowAdd(false) })
       .catch((err) => console.error(err))
   }
@@ -429,25 +441,7 @@ function AddProduct({ setShowAdd, onSuccess }) {
 
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">Images</label>
-          {formData.imgs.map((img, index) => (
-            <div key={index} className="flex gap-2 mb-2 items-center">
-              <input
-                type="text"
-                value={img}
-                placeholder={`Image URL ${index + 1}`}
-                onChange={(e) => handleImageChange(index, e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-              />
-              {img && (
-                <img src={img} alt="preview" className="w-10 h-10 object-cover rounded border border-gray-200 flex-shrink-0" />
-              )}
-              <button type="button" onClick={() => removeImage(index)} disabled={formData.imgs.length === 1}
-                className="text-red-400 hover:text-red-600 text-xl leading-none disabled:opacity-30">×</button>
-            </div>
-          ))}
-          <button type="button" onClick={addImageField} className="text-sm text-green-600 hover:text-green-700 font-medium">
-            + Add another image
-          </button>
+          <ImageUploader imgs={formData.imgs} onChange={(imgs) => setFormData({ ...formData, imgs })} />
         </div>
 
         <button type="submit"
