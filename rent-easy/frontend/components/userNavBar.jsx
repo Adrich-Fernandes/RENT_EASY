@@ -1,13 +1,14 @@
 import React, { use, useState } from 'react'
-import { Home, Package, ClipboardList, X, Menu } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Home, Package, ClipboardList, X, Menu, ShoppingCartIcon } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 import {  useClerk, UserButton, useUser } from "@clerk/react";
+import Cart from '../src/home/cart';
 
 
 const navItems = [
   { label: "Home", icon: <Home size={18} />, path: "/" },
   { label: "Products", icon: <Package size={18} />, path: "/productlist" },
-  { label: "MyRents", icon: <ClipboardList size={18} />, path: "/myrentals" },
+  { label: "MyRents", icon: <ClipboardList size={18} />, path: "/myrentals/ActiveRents" },
 ];
 
 const UserNavBar = () => {
@@ -69,11 +70,13 @@ const UserNavBar = () => {
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          <img
-            src="https://icons.veryicon.com/png/o/miscellaneous/flower-mall-color-icon/shopping-cart-114.png"
-            alt="Cart"
-            className="h-6 cursor-pointer"
-          />
+
+          {/* cart image */}
+          <Link to="/cart" >
+          <ShoppingCartIcon  className="h-6 cursor-pointer text-green-600 hover:text-green-700 hover:bg-green-100/70 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"/>
+          </Link>
+
+
           {
             !user ? (<button onClick={openSignIn}
             className="px-4 py-2 rounded-lg

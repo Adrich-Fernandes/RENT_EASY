@@ -1,6 +1,8 @@
 import UserNavBar from "../../components/userNavBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Footer from "../../components/footer";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProductView() {
 
@@ -9,9 +11,12 @@ export default function ProductView() {
   const product = state?.product
 
   const [selectedTenure, setSelectedTenure] = useState(3)
+  const [activeImg, setActiveImg] = useState(0)
+  const [lightbox, setLightbox] = useState(false)
   const tenureOptions = [3, 6, 12]
 
-  // if somehow opened with no data, go back
+  const images = product?.imgs?.length > 0 ? product.imgs : product?.img ? [product.img] : []
+
   if (!product) {
     return (
       <div className="flex flex-col items-center justify-center h-screen gap-4">
@@ -25,82 +30,225 @@ export default function ProductView() {
 
   return (
     <>
-    <UserNavBar />
-    <div className="flex flex-col md:flex-row items-center min-h-[60vh]">
+      <style>{`
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+      `}</style>
 
-      {/* LEFT — IMAGE */}
-      <div className="w-full md:w-1/2 p-8 flex justify-center">
-        <div className="w-full max-w-md flex justify-center">
-          <div className="p-3 border-2 border-green-200 aspect-square rounded-2xl overflow-hidden shadow-lg">
-            <img
-              src={product.img}
-              alt={product.title}
-              className="w-full h-full rounded-2xl object-cover"
-            />
-          </div>
+      <UserNavBar />
+
+      {/* LIGHTBOX */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 bg-black/90 z-[600] flex items-center justify-center px-4"
+          onClick={() => setLightbox(false)}
+        >
+          {/* Close */}
+          <button
+            onClick={() => setLightbox(false)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition"
+          >
+            <X size={32} />
+          </button>
+
+          {/* Prev */}
+          {images.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveImg((i) => (i - 1 + images.length) % images.length) }}
+              className="absolute left-4 text-white hover:text-gray-300 transition"
+            >
+              <ChevronLeft size={48} />
+            </button>
+          )}
+
+          {/* Image */}
+          <img
+            src={images[activeImg]}
+            alt={product.title}
+            className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Next */}
+          {images.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveImg((i) => (i + 1) % images.length) }}
+              className="absolute right-4 text-white hover:text-gray-300 transition"
+            >
+              <ChevronRight size={48} />
+            </button>
+          )}
+
+          {/* Dot indicators */}
+          {images.length > 1 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setActiveImg(i) }}
+                  className={`w-2.5 h-2.5 rounded-full transition ${i === activeImg ? "bg-white scale-125" : "bg-white/40 hover:bg-white/70"}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* RIGHT — DETAILS */}
-      <div className="w-full md:w-1/2 p-8 space-y-6">
+      <div className="bg-gray-50 min-h-screen">
+        <div className="px-16 py-8">
+          <div className="flex flex-col lg:flex-row gap-10">
 
-        {/* Category Badge */}
-        <span className="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-medium">
-          {product.category}
-        </span>
+            {/* LEFT — STICKY IMAGE GALLERY */}
+            <div className="lg:w-1/2 flex flex-col lg:flex-row gap-4">
 
-        {/* Title */}
-        <h1 className="text-4xl font-bold">{product.title}</h1>
+              {/* Thumbnail strip */}
+              {images.length > 1 && (
+                <div className="order-2 lg:order-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px]">
+                  {images.map((src, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveImg(i)}
+                      className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${
+                        i === activeImg
+                          ? "border-green-500 shadow-md"
+                          : "border-gray-200 opacity-70 hover:opacity-100 hover:border-green-300"
+                      }`}
+                    >
+                      <img src={src} alt={`thumb ${i + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
 
-        {/* Description */}
-        <span className="block text-gray-600 text-lg">{product.description}</span>
+              {/* Main image — click to open lightbox */}
+              <div className="order-1 lg:order-2 flex-1 lg:sticky lg:top-4">
+                <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow group border border-gray-200">
+                  <img
+                    src={images[activeImg]}
+                    alt={product.title}
+                    className="w-full h-full object-cover cursor-zoom-in"
+                    onClick={() => setLightbox(true)}
+                  />
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setActiveImg((i) => (i - 1 + images.length) % images.length)}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow opacity-0 group-hover:opacity-100 transition text-xl"
+                      >‹</button>
+                      <button
+                        onClick={() => setActiveImg((i) => (i + 1) % images.length)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow opacity-0 group-hover:opacity-100 transition text-xl"
+                      >›</button>
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                        {images.map((_, i) => (
+                          <button key={i} onClick={() => setActiveImg(i)}
+                            className={`w-2 h-2 rounded-full transition ${i === activeImg ? "bg-green-600 scale-125" : "bg-white/70 hover:bg-white"}`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
 
-        {/* Pricing Box */}
-        <div className="bg-green-50 rounded-2xl p-6 flex justify-between items-start">
-          <div>
-            <span className="text-sm text-gray-600">Monthly Rent</span>
-            <h2 className="text-3xl font-bold text-green-600">
-              ₹{product.rent} <span className="text-lg font-medium text-gray-500">/mo</span>
-            </h2>
-          </div>
-          <div className="text-right">
-            <span className="text-sm text-gray-600">Security Deposit</span>
-            <h3 className="text-2xl font-semibold">₹{product.deposit}</h3>
-          </div>
-        </div>
+            </div>
 
-        {/* Rental Tenure */}
-        <div>
-          <p className="font-medium mb-3">Select Rental Tenure</p>
-          <div className="grid grid-cols-3 gap-4">
-            {tenureOptions.map((months) => (
-              <div
-                key={months}
-                onClick={() => setSelectedTenure(months)}
-                className={`border rounded-xl p-4 text-center cursor-pointer transition ${
-                  selectedTenure === months
-                    ? "border-green-500 bg-green-50"
-                    : "hover:border-green-400"
-                }`}
-              >
-                <h3 className="text-2xl font-bold">{months}</h3>
-                <span className="block text-gray-500">months</span>
-                <span className="block text-green-600 font-medium mt-1">
-                  ₹{product.rent * months} total
+            {/* RIGHT — PRODUCT DETAILS */}
+            <div className="lg:w-1/2 space-y-5">
+
+              <div className="flex gap-2 flex-wrap">
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                  {product.category}
+                </span>
+                {product.subcategory && (
+                  <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">
+                    {product.subcategory}
+                  </span>
+                )}
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  product.available ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-500"
+                }`}>
+                  {product.available ? "In Stock" : "Unavailable"}
                 </span>
               </div>
-            ))}
+
+              <h1 className="text-3xl font-bold text-gray-900 leading-snug">{product.title}</h1>
+
+              <hr className="border-gray-200" />
+
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">Monthly Rent</p>
+                <p className="text-4xl font-bold text-green-600">
+                  ₹{product.rent} <span className="text-lg font-medium text-gray-400">/mo</span>
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Security Deposit: <span className="font-semibold text-gray-700">₹{product.deposit}</span>
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-1">About this item</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{product.description}</p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-3">Select Rental Tenure</p>
+                <div className="grid grid-cols-3 gap-3">
+                  {tenureOptions.map((months) => (
+                    <div
+                      key={months}
+                      onClick={() => setSelectedTenure(months)}
+                      className={`border rounded-xl p-4 text-center cursor-pointer transition ${
+                        selectedTenure === months
+                          ? "border-green-500 bg-green-50 shadow-sm"
+                          : "border-gray-200 hover:border-green-400 bg-white"
+                      }`}
+                    >
+                      <h3 className="text-2xl font-bold text-gray-800">{months}</h3>
+                      <span className="block text-xs text-gray-500">months</span>
+                      <span className="block text-green-600 font-semibold text-sm mt-1">
+                        ₹{product.rent * months}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white py-4 rounded-xl transition font-bold text-lg shadow-md">
+                Add To Cart
+              </button>
+
+              <div className="bg-white border border-gray-200 rounded-xl p-4 text-sm space-y-2 text-gray-600">
+                <div className="flex justify-between">
+                  <span>Monthly Rent</span>
+                  <span className="font-medium text-gray-800">₹{product.rent}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tenure</span>
+                  <span className="font-medium text-gray-800">{selectedTenure} months</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Security Deposit</span>
+                  <span className="font-medium text-gray-800">₹{product.deposit}</span>
+                </div>
+                <hr className="border-gray-100" />
+                <div className="flex justify-between font-semibold text-gray-900">
+                  <span>Total (rent only)</span>
+                  <span className="text-green-600">₹{product.rent * selectedTenure}</span>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
-
-        {/* Add to Cart Button */}
-        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl transition">
-          <span className="text-xl font-bold">Add To Cart</span>
-        </button>
-
       </div>
-
-    </div>
+      <Footer />
     </>
   );
 }

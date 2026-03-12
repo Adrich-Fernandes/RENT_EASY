@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema(
         subcategory: { type: String, trim: true, default: "" },
         rent: { type: Number, required: true },
         deposit: { type: Number, required: true },
-        img: { type: String, required: true, trim: true },
+        imgs: { type: [String], required: true, default: [] },  // ← changed
         available: { type: Boolean, default: true },
     },
     { timestamps: true }

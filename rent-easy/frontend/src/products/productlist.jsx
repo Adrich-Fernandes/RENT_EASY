@@ -247,7 +247,7 @@ export default function Layout() {
                             >
                                 <div className="relative overflow-hidden">
                                     <img
-                                        src={v.img}
+                                        src={v.imgs?.[0] || v.img}
                                         alt={v.title}
                                         className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-110"
                                     />

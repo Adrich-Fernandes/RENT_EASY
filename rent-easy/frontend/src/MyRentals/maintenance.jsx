@@ -1,7 +1,10 @@
 import React from "react";
+import TabBar from "./tabBar";
 
 export default function Maintain() {
   return (
+    <>
+    <TabBar />
     <div className="p-2 w-full max-w-5xl mx-auto space-y-3">
 
       {/* Card */}
@@ -28,5 +31,6 @@ export default function Maintain() {
       </div>
 
     </div>
+    </>
   );
 }
