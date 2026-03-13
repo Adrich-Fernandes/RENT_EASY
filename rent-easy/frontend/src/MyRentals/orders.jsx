@@ -1,103 +1,274 @@
-import React from "react";
+import { useState } from "react";
 import TabBar from "./tabBar";
-import { Package, Truck, CheckCircle, Clock, MapPin } from "lucide-react";
+import { products } from "../Alldata";
 
-const STATUS_STEPS = ["confirmed", "processing", "shipped", "out_for_delivery"];
+export default function Orders() {
 
-const STATUS_META = {
-  confirmed: { label: "Order Confirmed", icon: CheckCircle, color: "text-blue-500", bg: "bg-blue-100" },
-  processing: { label: "Processing", icon: Clock, color: "text-yellow-500", bg: "bg-yellow-100" },
-  shipped: { label: "Shipped", icon: Package, color: "text-orange-500", bg: "bg-orange-100" },
-  out_for_delivery: { label: "Out for Delivery", icon: Truck, color: "text-green-500", bg: "bg-green-100" },
-};
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
-export default function Orders({ orders = [] }) {
   return (
-    <>
+    <div className="min-h-screen bg-zinc-100">
+
       <TabBar />
-      <div className="p-4 w-full max-w-4xl mx-auto space-y-4">
-        {orders.length === 0 ? (
-          <div className="text-center text-gray-400 py-16">No active orders</div>
-        ) : (
-          orders.map((order, i) => <OrderCard key={i} order={order} />)
-        )}
+
+      <div className="px-4 py-10 sm:px-8">
+
+        <h1 className="text-2xl font-semibold text-zinc-800 mb-8 max-w-5xl mx-auto">
+          Orders
+        </h1>
+
+        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onClick={() => setSelectedProduct(product)}
+            />
+          ))}
+        </div>
+
       </div>
-    </>
+
+      {selectedProduct && (
+        <OrderDetails
+          product={selectedProduct}
+          close={() => setSelectedProduct(null)}
+        />
+      )}
+
+    </div>
   );
 }
 
-function OrderCard({ order }) {
-  const meta = STATUS_META[order.status] || STATUS_META.confirmed;
-  const currentStep = STATUS_STEPS.indexOf(order.status);
-  const Icon = meta.icon;
 
+
+function ProductCard({ product, onClick }) {
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 space-y-4">
+    <div
+      onClick={onClick}
+      className="bg-white rounded-2xl overflow-hidden border border-zinc-200 cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+    >
+      <div
+        className={`relative ${product.bg} h-56 flex items-center justify-center overflow-hidden`}
+      >
+        <img
+          src={product.image}
+          alt={product.title}
+          className="h-44 w-full object-contain hover:scale-105 transition-transform duration-300"
+        />
 
-      {/* Top row */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <img
-            src={order.product?.img || order.product?.imgs?.[0]}
-            alt={order.product?.title}
-            className="w-16 h-16 object-cover rounded-xl flex-shrink-0"
-          />
-          <div>
-            <h3 className="font-bold text-gray-800 text-base">{order.product?.title}</h3>
-            <p className="text-sm text-gray-500 mt-0.5">{order.tenure} months · ₹{order.totalRent}</p>
-            {order.deliveryDate && (
-              <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                <MapPin size={11} /> Expected: {new Date(order.deliveryDate).toLocaleDateString("en-IN")}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${meta.bg} ${meta.color} flex-shrink-0`}>
-          <Icon size={13} />
-          {meta.label}
+        <span
+          className={`absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${product.statusColor}`}
+        >
+          {product.status}
         </span>
       </div>
 
-      {/* Progress bar */}
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          {STATUS_STEPS.map((step, i) => {
-            const done = i <= currentStep;
-            const StepIcon = STATUS_META[step].icon;
-            return (
-              <div key={step} className="flex flex-col items-center gap-1 flex-1">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${done ? "bg-green-500 text-white" : "bg-gray-100 text-gray-300"} transition-all`}>
-                  <StepIcon size={15} />
-                </div>
-                <span className={`text-[10px] text-center ${done ? "text-green-600 font-medium" : "text-gray-400"}`}>
-                  {STATUS_META[step].label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+      <div className="p-4">
+        <h2 className="text-base font-semibold text-zinc-800">
+          {product.title}
+        </h2>
 
-        {/* Connector line */}
-        <div className="flex items-center px-4 -mt-6 mb-2">
-          {STATUS_STEPS.map((_, i) =>
-            i < STATUS_STEPS.length - 1 ? (
-              <div
-                key={i}
-                className={`flex-1 h-0.5 mx-1 rounded ${i < currentStep ? "bg-green-400" : "bg-gray-200"}`}
-              />
-            ) : null
-          )}
-        </div>
+        <p className="text-lg font-bold text-zinc-900 mt-1">
+          {product.price}
+        </p>
+
+        <p className="text-xs text-zinc-400 mt-3 leading-relaxed">
+          {product.description}
+        </p>
       </div>
-
-      {/* Address */}
-      {order.address && (
-        <div className="text-xs text-gray-500 border-t border-gray-100 pt-3">
-          <span className="font-semibold text-gray-700">Delivering to: </span>
-          {order.address.fullname}, {order.address.addressline1}, {order.address.city} - {order.address.pincode}
-        </div>
-      )}
     </div>
   );
+}
+
+
+
+function OrderDetails({ product, close }) {
+
+  const steps = [
+    "ordered",
+    "dispatch",
+    "out for delivery",
+    "complete"
+  ]
+
+  const currentStep = steps.indexOf(product.status?.toLowerCase())
+  const progressWidth = ((currentStep + 1) / steps.length) * 100
+
+  const [showForm, setShowForm] = useState(false)
+  const [reason, setReason] = useState("")
+  const [otherReason, setOtherReason] = useState("")
+
+  const isComplete = product.status?.toLowerCase() === "complete"
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (reason === "") {
+      alert("Please select a reason")
+      return
+    }
+
+    if (reason === "other" && otherReason.trim() === "") {
+      alert("Please enter your reason")
+      return
+    }
+
+    const finalReason = reason === "other" ? otherReason : reason
+
+    console.log(isComplete ? "Return Request:" : "Cancellation Request:", finalReason)
+
+    alert(isComplete ? "Return request submitted" : "Cancellation request submitted")
+
+    setShowForm(false)
+    setReason("")
+    setOtherReason("")
+  }
+
+  return (
+
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[999]">
+
+      <div className="bg-white w-[450px] rounded-xl p-6 relative shadow-lg">
+
+        <button
+          onClick={close}
+          className="absolute right-4 top-3 text-zinc-500 text-lg hover:text-black"
+        >
+          ✕
+        </button>
+
+        <img
+          src={product.image}
+          className="h-40 w-full object-contain"
+        />
+
+        <h2 className="text-lg font-semibold mt-4">
+          {product.title}
+        </h2>
+
+        <p className="font-bold text-xl mt-1">
+          {product.price}
+        </p>
+
+        <p className="text-sm text-zinc-500 mt-2">
+          {product.description}
+        </p>
+
+
+        {/* Order Tracker */}
+
+        <div className="mt-8">
+
+          <div className="flex justify-between text-xs mb-2">
+
+            {steps.map((step, index) => (
+
+              <span
+                key={step}
+                className={`capitalize font-medium ${
+                  index === currentStep
+                    ? "text-green-600"
+                    : index < currentStep
+                    ? "text-green-500"
+                    : "text-zinc-400"
+                }`}
+              >
+                {step}
+              </span>
+
+            ))}
+
+          </div>
+
+          <div className="relative h-2 bg-zinc-200 rounded">
+
+            <div
+              className="absolute top-0 left-0 h-2 bg-green-500 rounded transition-all duration-500"
+              style={{ width: `${progressWidth}%` }}
+            />
+
+          </div>
+
+        </div>
+
+
+        {/* Action Button */}
+
+        {!showForm && (
+
+          <button
+            onClick={() => setShowForm(true)}
+            className={`mt-6 w-full py-2 rounded-lg font-medium text-white ${
+              isComplete
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-red-500 hover:bg-red-600"
+            }`}
+          >
+            {isComplete ? "Return Product" : "Request Cancellation"}
+          </button>
+
+        )}
+
+
+        {/* Form */}
+
+        {showForm && (
+
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+
+            <select
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="w-full border rounded-lg p-2"
+            >
+              <option value="">Select a reason</option>
+
+              {isComplete ? (
+                <>
+                  <option value="damaged">Product damaged</option>
+                  <option value="wrong item">Wrong item received</option>
+                  <option value="not satisfied">Not satisfied with product</option>
+                  <option value="other">Other</option>
+                </>
+              ) : (
+                <>
+                  <option value="changed my mind">Changed my mind</option>
+                  <option value="no need">No need</option>
+                  <option value="expensive">Expensive</option>
+                  <option value="better deal">Got best deal somewhere else</option>
+                  <option value="other">Other</option>
+                </>
+              )}
+
+            </select>
+
+
+            {reason === "other" && (
+
+              <textarea
+                value={otherReason}
+                onChange={(e) => setOtherReason(e.target.value)}
+                placeholder="Enter your issue"
+                className="w-full border rounded-lg p-2"
+              />
+
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium"
+            >
+              Submit
+            </button>
+
+          </form>
+
+        )}
+
+      </div>
+
+    </div>
+
+  )
 }

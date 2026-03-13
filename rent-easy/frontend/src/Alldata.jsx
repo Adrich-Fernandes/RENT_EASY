@@ -362,3 +362,72 @@ export const CartCard = [
 
     },
 ];
+
+
+
+
+
+
+
+export const products = [
+  {
+    id: 1,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+    title: "Minimal Arc Timepiece",
+    price: "$249.00",
+    description: "Sleek stainless-steel case with sapphire crystal face. Water-resistant up to 50m. Only 14 units left.",
+    status: "OUT FOR DELIVERY",
+    statusColor: "bg-green-100 text-green-700",
+    bg: "bg-amber-50",
+  },
+  {
+    id: 2,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+    title: "Aura Wireless Headphones",
+    price: "$189.00",
+    description: "40-hour battery, active noise cancellation, and premium 40mm drivers. Top-rated by 1,200+ buyers.",
+    status: "ordered",
+    statusColor: "bg-sky-100 text-sky-700",
+    bg: "bg-sky-50",
+  },
+  {
+    id: 3,
+    image: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80",
+    title: "Verdure Signature Fragrance",
+    price: "$95.00",
+    description: "Limited run of 500 bottles. Notes of cedar, bergamot, and white musk. Arrives in a luxury gift box.",
+    status: "ordered",
+    statusColor: "bg-violet-100 text-violet-700",
+    bg: "bg-emerald-50",
+  },
+  {
+    id: 4,
+    image: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80",
+    title: "Stride Air Running Shoes",
+    price: "$79.00",
+    description: "Breathable mesh upper with responsive foam sole. Sizes 6–12 available. Size 9 selling fast.",
+    status: "ordered",
+    statusColor: "bg-rose-100 text-rose-700",
+    bg: "bg-rose-50",
+  },
+  {
+    id: 5,
+    image: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&q=80",
+    title: 'ProBook Ultra 14" Laptop',
+    price: "$1,299.00",
+    description: "Intel Core Ultra 7, 16GB RAM, 1TB SSD, OLED display. Ships April 1st — reserve yours now.",
+    status: "dispatch",
+    statusColor: "bg-orange-100 text-orange-700",
+    bg: "bg-violet-50",
+  },
+  {
+    id: 6,
+    image: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&q=80",
+    title: "Urban Canvas High-Top",
+    price: "$115.00",
+    description: "Vulcanized rubber sole, premium canvas upper. Trending this week — 340 carts and counting.",
+    status: "complete",
+    statusColor: "bg-red-100 text-red-700",
+    bg: "bg-orange-50",
+  },
+];

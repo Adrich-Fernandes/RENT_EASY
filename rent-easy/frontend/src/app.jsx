@@ -11,6 +11,7 @@ import { Route, Routes } from "react-router";
 import PastCards from "./MyRentals/pastRentals.jsx";
 import ActiveRents from "./MyRentals/activeRentals.jsx";
 import Maintain from "./MyRentals/maintenance.jsx";
+import Order from "./MyRentals/orders.jsx";
 
 
 
@@ -28,6 +29,7 @@ export default function App() {
       <Route path="/myrentals/ActiveRents" element={<ActiveRents />} />
       <Route path="/myrentals/pastRents" element={<PastCards />} />
       <Route path="/myrentals/maintenance" element={<Maintain />} />
+      <Route path="/myrentals/orders" element={<Order/>} />
       <Route path="/cart" element={<Cart />} />
 
 
@@ -37,6 +39,7 @@ export default function App() {
       <Route path="/admin/products" element={<AdminProductList />} />
       <Route path="/admin/rents" element={<AdminRents />} />
       <Route path="/admin/maintenance" element={<MaintenanceRequests />} />
+      
     </Routes>
       
     </>

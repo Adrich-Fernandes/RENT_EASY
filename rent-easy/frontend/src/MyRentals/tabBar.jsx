@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import UserNavBar from "../../components/userNavBar";
-import { Home, Package, ClipboardList } from "lucide-react";
+import UserNavBar from "../components/userNavBar";
+import { Home, Package, ClipboardList, BoxIcon } from "lucide-react";
 
 export default function TabBar() {
     const location = useLocation();
@@ -10,6 +10,7 @@ export default function TabBar() {
         { label: "Active Rentals", icon: <Home size={18} />, path: "/myrentals/ActiveRents" },
         { label: "Past Rentals", icon: <Package size={18} />, path: "/myrentals/pastRents" },
         { label: "Maintenance", icon: <ClipboardList size={18} />, path: "/myrentals/maintenance" },
+        { label: "Orders", icon: <BoxIcon size={18} />, path: "/myrentals/orders" },
     ];
 
     return (
