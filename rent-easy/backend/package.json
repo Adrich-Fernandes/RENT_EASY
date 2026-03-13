@@ -9,6 +9,7 @@
   "author": "Adrich Fernandes",
   "license": "ISC",
   "dependencies": {
+    "@clerk/clerk-react": "^5.61.3",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
