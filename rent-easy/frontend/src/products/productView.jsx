@@ -1,7 +1,7 @@
-import UserNavBar from "../../components/userNavBar";
+import UserNavBar from "../components/userNavBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Footer from "../../components/footer";
+import Footer from "../components/footer";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProductView() {

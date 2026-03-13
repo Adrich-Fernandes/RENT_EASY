@@ -2,7 +2,6 @@ import React from "react";
 import Homepage from "./home/homepage";
 import ProductList from "./products/productlist";
 import ProductView from "./products/productView";
-import MyRentalsMain from "./MyRentals/tabBar.jsx";
 import Cart from "./home/cart";
 import AdminDashboard from "./admin/adminDashboard.jsx";
 import AdminProductList from "./admin/adminProductList.jsx";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import AdminNavBar from "../../components/adminNavBar";
+import AdminNavBar from "../components/adminNavBar";
 
 export default function AdminRents() {
   const [rents, setRents] = useState([]);

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { CartCard } from "../Alldata";
-import UserNavBar from "../../components/userNavBar";
+import UserNavBar from "../components/userNavBar";
 
 export default function Cart() {
     const [date, setDate] = useState("");

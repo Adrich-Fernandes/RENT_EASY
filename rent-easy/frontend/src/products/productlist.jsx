@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import axios from "axios";
-import UserNavBar from "../../components/userNavBar";
+import UserNavBar from "../components/userNavBar";
 import { useNavigate } from "react-router-dom";
 
 export default function Layout() {

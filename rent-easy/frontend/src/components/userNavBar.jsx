@@ -2,7 +2,7 @@ import React, { use, useState } from 'react'
 import { Home, Package, ClipboardList, X, Menu, ShoppingCartIcon } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import {  useClerk, UserButton, useUser } from "@clerk/react";
-import Cart from '../src/home/cart';
+import Cart from '../home/cart';
 
 
 const navItems = [

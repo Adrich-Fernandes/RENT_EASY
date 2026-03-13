@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Package, ClipboardList, Wrench, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react'
-import AdminNavBar from '../../components/adminNavBar'
+import AdminNavBar from '../components/adminNavBar'
 
 export default function AdminDashboard() {
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { maintain } from "../Alldata";
-import AdminNavBar from "../../components/adminNavBar";
+import AdminNavBar from "../components/adminNavBar";
 
 export default function MaintenanceRequests() {
   const [users, setUsers] = useState(

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import AdminNavBar from '../../components/adminNavBar'
+import AdminNavBar from '../components/adminNavBar'
 
 
 const CLOUD_NAME = "dhajogfcx"    

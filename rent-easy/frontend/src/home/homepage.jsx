@@ -1,7 +1,7 @@
-import UserNavBar from '../../components/userNavBar';
+import UserNavBar from '../components/userNavBar';
 import { work_flow, Features, Category } from '../Alldata'
 import { motion } from "framer-motion"
-import Footer from '../../components/footer'
+import Footer from '../components/footer'
 
 export default function Homepage() {
 
