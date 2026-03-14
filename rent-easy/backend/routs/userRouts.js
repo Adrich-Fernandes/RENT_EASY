@@ -1,10 +1,23 @@
-const express = require("express");
-const router = express.Router();
-const { createProduct, updateProduct, getAllProducts, deleteProduct } = require("../controller/productController");
+// const express = require("express");
+// const router = express.Router();
+// const userController = require("../controllers/userController");
 
-router.get("/allProducts", getAllProducts);
-router.post("/insertProduct", createProduct);
-router.put("/updateProduct/:id", updateProduct);
-router.delete("/deleteProduct/:id", deleteProduct);
+// router.post("/create", userController.createUser);
 
-module.exports = router;
+// router.get("/:clerkId", userController.getUser);
+
+// router.post("/:clerkId/address", userController.addAddress);
+
+// router.delete("/:clerkId/address/:addressId", userController.deleteAddress);
+
+// router.post("/:clerkId/cart", userController.addToCart);
+
+// router.delete("/:clerkId/cart/:productId", userController.removeFromCart);
+
+// router.post("/:clerkId/rental", userController.createRental);
+
+// router.patch("/:clerkId/rental/:rentalId", userController.completeRental);
+
+// router.post("/:clerkId/maintenance", userController.createMaintenanceRequest);
+
+// module.exports = router;

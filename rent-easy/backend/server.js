@@ -1,6 +1,6 @@
 const express = require("express");
 const ConnectDB = require("./config/db");
-const userRouts = require("./routs/userRouts");
+const productRouts = require("./routs/ProductRouts");
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/product", userRouts);
+app.use("/api/product", productRouts);
 
 app.get("/", (req, res) => {
   res.send("RENT EASE API");
