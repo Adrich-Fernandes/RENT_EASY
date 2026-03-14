@@ -1,356 +1,443 @@
-import { useRef, useState } from "react";
-import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronDown, ChevronUp } from "lucide-react";
-import { CartCard } from "../Alldata";
+import { useRef, useState, useEffect } from "react";
+import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronUp, Loader2 } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
+import { useUser } from "@clerk/clerk-react";
+import axios from "axios";
+
+const API = "http://localhost:4000/api/user";
 
 export default function Cart() {
-    const [date, setDate] = useState("");
-    const [showDelivery, setShowDelivery] = useState(false);
-    const [addresses, setAddresses] = useState([]);
-    const [form, setForm] = useState({
-        name: "",
+  const { user, isLoaded } = useUser();
+
+  const [cartItems, setCartItems] = useState([]);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddressIdx, setSelectedAddressIdx] = useState(null);
+  const [showDelivery, setShowDelivery] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [placingOrder, setPlacingOrder] = useState(false);
+  const [date, setDate] = useState("");
+  const [form, setForm] = useState({
+    fullname: "",
+    phone: "",
+    addressline1: "",
+    addressline2: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const dateRef = useRef(null);
+
+  // ── Fetch cart + addresses ───────────────────────────────────────
+  useEffect(() => {
+    if (!user) return;
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${API}/${user.id}`);
+        setCartItems(res.data?.cart || []);
+        setSavedAddresses(res.data?.address || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setPageLoading(false);
+      }
+    };
+    fetchData();
+  }, [user]);
+
+  const getMinDate = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().split("T")[0];
+  };
+
+  const openCalendar = () => {
+    dateRef.current?.showPicker
+      ? dateRef.current.showPicker()
+      : dateRef.current?.click();
+  };
+
+  const handleForm = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  // ── Remove from cart ─────────────────────────────────────────────
+  const handleRemoveFromCart = async (productId) => {
+    try {
+      await axios.delete(`${API}/${user.id}/cart/${productId}`);
+      setCartItems((prev) =>
+        prev.filter((item) => item.product._id !== productId)
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to remove item.");
+    }
+  };
+
+  // ── Save address ─────────────────────────────────────────────────
+  const handleAddAddress = async () => {
+    const { fullname, phone, addressline1, city, state, pincode } = form;
+    if (!fullname || !phone || !addressline1 || !city || !state || !pincode) {
+      alert("Please fill all required fields.");
+      return;
+    }
+    try {
+      const res = await axios.post(`${API}/${user.id}/address`, form);
+      setSavedAddresses(res.data);
+      setForm({
+        fullname: "",
         phone: "",
-        line1: "",
-        line2: "",
+        addressline1: "",
+        addressline2: "",
         city: "",
         state: "",
-        postal_code: "",
-    });
+        pincode: "",
+      });
+      setShowDelivery(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save address.");
+    }
+  };
 
-    const dateRef = useRef(null);
+  // ── Delete address ───────────────────────────────────────────────
+  const handleDeleteAddress = async (addressId, idx) => {
+    try {
+      const res = await axios.delete(`${API}/${user.id}/address/${addressId}`);
+      setSavedAddresses(res.data);
+      if (selectedAddressIdx === idx) setSelectedAddressIdx(null);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete address.");
+    }
+  };
 
-    const getMinDate = () => {
-        const today = new Date();
-        today.setDate(today.getDate() + 3);
-        return today.toISOString().split("T")[0];
-    };
+  // ── Place order ──────────────────────────────────────────────────
+  const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) return alert("Your cart is empty.");
+    if (selectedAddressIdx === null) return alert("Please select a delivery address.");
+    if (!date) return alert("Please select a delivery date.");
 
-    const openCalendar = () => {
-        if (dateRef.current) {
-            dateRef.current.showPicker
-                ? dateRef.current.showPicker()
-                : dateRef.current.click();
-        }
-    };
+    setPlacingOrder(true);
+    try {
+      const rentalStart = new Date(date);
+      const rentalEnd = new Date(date);
+      rentalEnd.setMonth(rentalEnd.getMonth() + 1);
 
-    const handleForm = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+      await Promise.all(
+        cartItems.map((item) =>
+          axios.post(`${API}/${user.id}/rental`, {
+            productId: item.product._id,
+            rentalStartDate: rentalStart.toISOString(),
+            rentalEndDate: rentalEnd.toISOString(),
+            price: item.product.rent,
+          })
+        )
+      );
 
-    const handleAddAddress = () => {
-        if (!form.name || !form.phone || !form.line1 || !form.city || !form.state || !form.postal_code) {
-            alert("Please fill all required fields.");
-            return;
-        }
-        setAddresses([...addresses, { ...form, date }]);
-        setForm({ name: "", phone: "", line1: "", line2: "", city: "", state: "", postal_code: "" });
-        setDate("");
-        setShowDelivery(false);
-    };
+      await Promise.all(
+        cartItems.map((item) =>
+          axios.delete(`${API}/${user.id}/cart/${item.product._id}`)
+        )
+      );
 
-    const handleRemoveAddress = (index) => {
-        setAddresses(addresses.filter((_, i) => i !== index));
-    };
+      setCartItems([]);
+      setSelectedAddressIdx(null);
+      setDate("");
+      alert("Order placed successfully! 🎉");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to place order. Please try again.");
+    } finally {
+      setPlacingOrder(false);
+    }
+  };
 
-    let totalRent = 0;
-    let totalSecurity = 0;
+  // ── Totals ───────────────────────────────────────────────────────
+  const totalRent = cartItems.reduce((sum, item) => sum + (item.product?.rent || 0), 0);
+  const totalDeposit = cartItems.reduce((sum, item) => sum + (item.product?.deposit || 0), 0);
+  const totalPayable = totalRent + totalDeposit;
 
-    CartCard.map((item) => {
-        totalRent = totalRent + item.price;
-        totalSecurity = totalSecurity + item.deposity;
-    });
-
-    const totalPayable = totalRent + totalSecurity;
-
+  // ── Auth / loading states ────────────────────────────────────────
+  if (!isLoaded || pageLoading) {
     return (
-        <>
+      <>
         <UserNavBar />
-        <div className="w-full flex flex-col lg:flex-row items-start gap-6 p-6 bg-gray-100 min-h-screen">
+        <div className="flex items-center justify-center h-64">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-gray-400 text-sm">Loading cart...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
 
-            {/* ================= LEFT 70% ================= */}
-            <div className="w-full lg:flex-[7] space-y-6">
+  if (!user) {
+    return (
+      <>
+        <UserNavBar />
+        <div className="flex items-center justify-center h-64">
+          <p className="text-gray-500">Please sign in to view your cart.</p>
+        </div>
+      </>
+    );
+  }
 
-                {/* PRODUCT CARD */}
-                {CartCard.map((item, i) => (
-                    <div key={i} className="bg-white shadow-md rounded-xl p-5">
-                        <Card data={item} />
-                    </div>
-                ))}
+  return (
+    <>
+      <UserNavBar />
+      <div className="w-full flex flex-col lg:flex-row items-start gap-6 p-6 bg-gray-100 min-h-screen">
 
-                {/* ADD ADDRESS BUTTON */}
+        {/* ── LEFT 70% ── */}
+        <div className="w-full lg:flex-[7] space-y-6">
+
+          {/* Empty state */}
+          {cartItems.length === 0 && (
+            <div className="bg-white rounded-xl shadow-md p-10 text-center text-gray-400 text-lg">
+              Your cart is empty.
+            </div>
+          )}
+
+          {/* Cart items */}
+          {cartItems.map((item) => (
+            <div key={item._id} className="bg-white shadow-md rounded-xl p-5">
+              <CartItemCard
+                data={item.product}
+                onRemove={() => handleRemoveFromCart(item.product._id)}
+              />
+            </div>
+          ))}
+
+          {/* Delivery date — shown once address is selected */}
+          {selectedAddressIdx !== null && (
+            <div className="bg-white shadow-md rounded-xl p-5 space-y-3">
+              <div className="flex items-center gap-2">
+                <Calendar className="text-green-600" size={20} />
+                <span className="font-bold text-lg">Select Delivery Date</span>
+              </div>
+              <div className="flex items-center gap-3">
                 <button
-                    onClick={() => setShowDelivery(!showDelivery)}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-xl transition"
+                  type="button"
+                  onClick={openCalendar}
+                  className="px-4 py-2 border border-green-400 border-opacity-40 rounded-lg hover:bg-gray-50 text-sm"
                 >
-                    {showDelivery ? <ChevronUp size={18} /> : <Plus size={18} />}
-                    {showDelivery ? "Cancel" : "Add Address"}
+                  {date ? date : "Pick a date"}
                 </button>
-
-                {/* DELIVERY SECTION */}
-                {showDelivery && (
-                    <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
-
-                        <div className="flex items-center gap-2">
-                            <MapPin className="text-green-600" size={20} />
-                            <span className="font-bold text-lg">Delivery Details</span>
-                        </div>
-
-                        {/* Name & Phone */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">Full Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={form.name}
-                                    onChange={handleForm}
-                                    placeholder="Full Name"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    value={form.phone}
-                                    onChange={handleForm}
-                                    placeholder="+91-9876543210"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Line 1 & Line 2 */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">Address Line 1</label>
-                                <input
-                                    type="text"
-                                    name="line1"
-                                    value={form.line1}
-                                    onChange={handleForm}
-                                    placeholder="Street number and name"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">Address Line 2 <span className="text-gray-400">(optional)</span></label>
-                                <input
-                                    type="text"
-                                    name="line2"
-                                    value={form.line2}
-                                    onChange={handleForm}
-                                    placeholder="Apt, suite, floor"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                        </div>
-
-                        {/* City & State */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">City</label>
-                                <input
-                                    type="text"
-                                    name="city"
-                                    value={form.city}
-                                    onChange={handleForm}
-                                    placeholder="Bengaluru"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">State</label>
-                                <input
-                                    type="text"
-                                    name="state"
-                                    value={form.state}
-                                    onChange={handleForm}
-                                    placeholder="Karnataka"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Pin Code */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm text-gray-600 mb-1">Pin Code</label>
-                                <input
-                                    type="text"
-                                    name="postal_code"
-                                    value={form.postal_code}
-                                    onChange={handleForm}
-                                    placeholder="560001"
-                                    className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm placeholder:text-gray-400 placeholder:opacity-60"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Delivery Date */}
-                        <div>
-                            <span className="block text-sm text-gray-600 mb-2">Delivery Date</span>
-                            <div className="relative flex items-center gap-2">
-                                <Calendar className="text-green-600" size={20} />
-                                <button
-                                    type="button"
-                                    onClick={openCalendar}
-                                    className="px-4 py-2 border border-green-400 border-opacity-40 rounded-lg hover:bg-gray-100 text-sm"
-                                >
-                                    {date ? date : "Select Date"}
-                                </button>
-                                <input
-                                    ref={dateRef}
-                                    type="date"
-                                    value={date}
-                                    min={getMinDate()}
-                                    onChange={(e) => setDate(e.target.value)}
-                                    className="absolute opacity-0 pointer-events-none"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Save Button */}
-                        <button
-                            onClick={handleAddAddress}
-                            className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-xl text-sm transition"
-                        >
-                            Save Address
-                        </button>
-
-                    </div>
-                )}
-
-                {/* SAVED ADDRESSES */}
-                {addresses.length > 0 && (
-                    <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
-                        <div className="flex items-center gap-2">
-                            <MapPin className="text-green-600" size={20} />
-                            <span className="font-bold text-lg">Saved Addresses</span>
-                        </div>
-
-                        {addresses.map((addr, i) => (
-                            <div key={i} className="border border-green-400 border-opacity-30 rounded-xl p-4 flex justify-between items-start gap-4">
-                                <div className="space-y-1 text-sm text-gray-700">
-                                    <p className="font-semibold text-gray-900">{addr.name} · {addr.phone}</p>
-                                    <p>{addr.line1}{addr.line2 ? `, ${addr.line2}` : ""}</p>
-                                    <p>{addr.city}, {addr.state} - {addr.postal_code}</p>
-                                    {addr.date && <p className="text-green-600 text-xs">Delivery: {addr.date}</p>}
-                                </div>
-                                <Trash2
-                                    className="text-red-400 hover:text-red-600 cursor-pointer flex-shrink-0 transition"
-                                    size={18}
-                                    onClick={() => handleRemoveAddress(i)}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-            </div>
-
-            {/* ================= RIGHT 30% ================= */}
-            <div className="w-full lg:flex-[3]">
-
-                <div className="bg-white rounded-2xl shadow-md p-6 space-y-6">
-
-                    <h2 className="text-lg font-semibold">Order Summary</h2>
-
-                    <div className="space-y-3 text-gray-600 text-sm">
-                        {CartCard.map((v, i) => (
-                            <CountTotal key={i} data={v} />
-                        ))}
-                    </div>
-
-                    <hr />
-
-                    <div className="space-y-3 text-sm">
-                        <div className="flex justify-between">
-                            <span className="text-gray-600">Total Rent</span>
-                            <span className="font-semibold text-gray-800">₹{totalRent}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-600">Security Deposit</span>
-                            <span className="font-semibold text-gray-800">₹{totalSecurity}</span>
-                        </div>
-                    </div>
-
-                    <hr />
-
-                    <div className="flex justify-between items-center">
-                        <span className="font-semibold text-lg">Total Payable</span>
-                        <span className="font-bold text-lg text-green-600">₹{totalPayable}</span>
-                    </div>
-
-                    <button className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition">
-                        Place Order
-                        <ArrowRight size={18} />
-                    </button>
-
-                    <p className="text-xs text-gray-500 text-center">
-                        Deposit is refundable upon return of products in good condition
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-        </>
-    );
-}
-
-function CountTotal({ data }) {
-    return (
-        <div className="flex justify-between">
-            <span>{data.title}</span>
-            <span className="font-medium text-gray-800">₹{data.price}</span>
-        </div>
-    );
-}
-
-function Card({ data }) {
-    const cardTotal = data.price + data.deposity;
-
-    return (
-        <div className="flex flex-col sm:flex-row gap-6">
-
-            <img
-                src={data.img}
-                alt="product"
-                className="w-28 h-28 object-cover rounded-lg flex-shrink-0"
-            />
-
-            <div className="flex-1 flex flex-col justify-between gap-3">
-                <div>
-                    <h2 className="text-lg font-semibold">{data.title}</h2>
-                    <p className="text-gray-600 text-sm mt-1">{data.description}</p>
-                </div>
-
-                <div className="flex items-center gap-6">
-                    <div>
-                        <span className="block text-sm text-gray-500">Monthly Rent</span>
-                        <span className="block text-green-600 font-bold text-lg">₹{data.price}</span>
-                    </div>
-                    <div>
-                        <span className="block text-sm text-gray-500">Security Deposit</span>
-                        <span className="block font-bold text-lg">₹{data.deposity}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col items-end justify-between gap-4">
-                <Trash2
-                    className="text-red-500 cursor-pointer hover:text-red-600 transition"
-                    size={20}
+                <input
+                  ref={dateRef}
+                  type="date"
+                  value={date}
+                  min={getMinDate()}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="absolute opacity-0 pointer-events-none"
                 />
-                <div className="text-right">
-                    <span className="block text-gray-400 text-sm">Total Rent</span>
-                    <span className="block font-bold text-xl text-gray-800">₹{cardTotal}</span>
+                {date && (
+                  <span className="text-green-600 text-sm font-medium">✓ {date}</span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Add address button */}
+          <button
+            onClick={() => setShowDelivery(!showDelivery)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-xl transition"
+          >
+            {showDelivery ? <ChevronUp size={18} /> : <Plus size={18} />}
+            {showDelivery ? "Cancel" : "Add New Address"}
+          </button>
+
+          {/* Address form */}
+          {showDelivery && (
+            <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="text-green-600" size={20} />
+                <span className="font-bold text-lg">New Delivery Address</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { label: "Full Name",                  name: "fullname",     placeholder: "Full Name" },
+                  { label: "Phone Number",               name: "phone",        placeholder: "+91-9876543210" },
+                  { label: "Address Line 1",             name: "addressline1", placeholder: "Street number and name" },
+                  { label: "Address Line 2 (optional)",  name: "addressline2", placeholder: "Apt, suite, floor" },
+                  { label: "City",                       name: "city",         placeholder: "Bengaluru" },
+                  { label: "State",                      name: "state",        placeholder: "Karnataka" },
+                  { label: "Pin Code",                   name: "pincode",      placeholder: "560001" },
+                ].map(({ label, name, placeholder }) => (
+                  <div key={name}>
+                    <label className="block text-sm text-gray-600 mb-1">{label}</label>
+                    <input
+                      type="text"
+                      name={name}
+                      value={form[name]}
+                      onChange={handleForm}
+                      placeholder={placeholder}
+                      className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={handleAddAddress}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-xl text-sm transition"
+              >
+                Save Address
+              </button>
+            </div>
+          )}
+
+          {/* Saved addresses — selectable */}
+          {savedAddresses.length > 0 && (
+            <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="text-green-600" size={20} />
+                <span className="font-bold text-lg">Select Delivery Address</span>
+              </div>
+
+              {savedAddresses.map((addr, i) => (
+                <div
+                  key={addr._id || i}
+                  onClick={() => setSelectedAddressIdx(i)}
+                  className={`border rounded-xl p-4 flex justify-between items-start gap-4 cursor-pointer transition ${
+                    selectedAddressIdx === i
+                      ? "border-green-500 bg-green-50"
+                      : "border-gray-200 hover:border-green-300"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${
+                      selectedAddressIdx === i
+                        ? "border-green-500 bg-green-500"
+                        : "border-gray-400"
+                    }`} />
+                    <div className="space-y-1 text-sm text-gray-700">
+                      <p className="font-semibold text-gray-900">
+                        {addr.fullname} · {addr.phone}
+                      </p>
+                      <p>
+                        {addr.addressline1}
+                        {addr.addressline2 ? `, ${addr.addressline2}` : ""}
+                      </p>
+                      <p>{addr.city}, {addr.state} — {addr.pincode}</p>
+                    </div>
+                  </div>
+                  <Trash2
+                    className="text-red-400 hover:text-red-600 cursor-pointer flex-shrink-0 transition"
+                    size={18}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteAddress(addr._id, i);
+                    }}
+                  />
                 </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── RIGHT 30% ── */}
+        <div className="w-full lg:flex-[3]">
+          <div className="bg-white rounded-2xl shadow-md p-6 space-y-6">
+            <h2 className="text-lg font-semibold">Order Summary</h2>
+
+            <div className="space-y-3 text-gray-600 text-sm">
+              {cartItems.map((item) => (
+                <div key={item._id} className="flex justify-between">
+                  <span>{item.product?.name || item.product?.title}</span>
+                  <span className="font-medium text-gray-800">₹{item.product?.rent}</span>
+                </div>
+              ))}
             </div>
 
+            <hr />
+
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Total Rent</span>
+                <span className="font-semibold text-gray-800">₹{totalRent}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Security Deposit</span>
+                <span className="font-semibold text-gray-800">₹{totalDeposit}</span>
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-lg">Total Payable</span>
+              <span className="font-bold text-lg text-green-600">₹{totalPayable}</span>
+            </div>
+
+            <button
+              onClick={handlePlaceOrder}
+              disabled={placingOrder || cartItems.length === 0}
+              className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
+            >
+              {placingOrder ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Placing Order...
+                </>
+              ) : (
+                <>
+                  <span>Place Order</span>
+                  <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+
+            <p className="text-xs text-gray-500 text-center">
+              Deposit is refundable upon return of products in good condition
+            </p>
+          </div>
         </div>
-    );
+
+      </div>
+    </>
+  );
+}
+
+
+function CartItemCard({ data, onRemove }) {
+  const cardTotal = (data?.rent || 0) + (data?.deposit || 0);
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-6">
+      <img
+        src={data?.image || data?.imgs?.[0]}
+        alt={data?.name || data?.title}
+        className="w-28 h-28 object-cover rounded-lg flex-shrink-0"
+      />
+      <div className="flex-1 flex flex-col justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">{data?.name || data?.title}</h2>
+          <p className="text-gray-600 text-sm mt-1">{data?.description}</p>
+        </div>
+        <div className="flex items-center gap-6">
+          <div>
+            <span className="block text-sm text-gray-500">Monthly Rent</span>
+            <span className="block text-green-600 font-bold text-lg">₹{data?.rent}</span>
+          </div>
+          <div>
+            <span className="block text-sm text-gray-500">Security Deposit</span>
+            <span className="block font-bold text-lg">₹{data?.deposit}</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col items-end justify-between gap-4">
+        <Trash2
+          className="text-red-500 cursor-pointer hover:text-red-600 transition"
+          size={20}
+          onClick={onRemove}
+        />
+        <div className="text-right">
+          <span className="block text-gray-400 text-sm">Total</span>
+          <span className="block font-bold text-xl text-gray-800">₹{cardTotal}</span>
+        </div>
+      </div>
+    </div>
+  );
 }

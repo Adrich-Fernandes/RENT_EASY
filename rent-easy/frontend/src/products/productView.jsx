@@ -2,20 +2,46 @@ import UserNavBar from "../components/userNavBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Footer from "../components/footer";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ShoppingCart, Check, Loader2 } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
+import axios from "axios";
+
+const API = "http://localhost:4000/api/user";
 
 export default function ProductView() {
 
-  const { state } = useLocation()
-  const navigate = useNavigate()
-  const product = state?.product
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const product = state?.product;
+  const { user } = useUser();
 
-  const [selectedTenure, setSelectedTenure] = useState(3)
-  const [activeImg, setActiveImg] = useState(0)
-  const [lightbox, setLightbox] = useState(false)
-  const tenureOptions = [3, 6, 12]
+  const [selectedTenure, setSelectedTenure] = useState(3);
+  const [activeImg, setActiveImg] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
+  const [cartStatus, setCartStatus] = useState("idle"); // "idle" | "loading" | "done"
 
-  const images = product?.imgs?.length > 0 ? product.imgs : product?.img ? [product.img] : []
+  const tenureOptions = [3, 6, 12];
+  const images = product?.imgs?.length > 0 ? product.imgs : product?.img ? [product.img] : [];
+
+  const handleAddToCart = async () => {
+    if (!user) {
+      alert("Please sign in to add items to your cart.");
+      return;
+    }
+    if (cartStatus !== "idle") return;
+
+    setCartStatus("loading");
+    try {
+      await axios.post(`${API}/${user.id}/cart`, { productId: product._id });
+      setCartStatus("done");
+      // Reset back to idle after 2s
+      setTimeout(() => setCartStatus("idle"), 2000);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add to cart. Please try again.");
+      setCartStatus("idle");
+    }
+  };
 
   if (!product) {
     return (
@@ -25,7 +51,7 @@ export default function ProductView() {
           Back to Products
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -45,25 +71,19 @@ export default function ProductView() {
           className="fixed inset-0 bg-black/90 z-[600] flex items-center justify-center px-4"
           onClick={() => setLightbox(false)}
         >
-          {/* Close */}
-          <button
-            onClick={() => setLightbox(false)}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition"
-          >
+          <button onClick={() => setLightbox(false)} className="absolute top-4 right-4 text-white hover:text-gray-300 transition">
             <X size={32} />
           </button>
 
-          {/* Prev */}
           {images.length > 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); setActiveImg((i) => (i - 1 + images.length) % images.length) }}
+              onClick={(e) => { e.stopPropagation(); setActiveImg((i) => (i - 1 + images.length) % images.length); }}
               className="absolute left-4 text-white hover:text-gray-300 transition"
             >
               <ChevronLeft size={48} />
             </button>
           )}
 
-          {/* Image */}
           <img
             src={images[activeImg]}
             alt={product.title}
@@ -71,23 +91,21 @@ export default function ProductView() {
             onClick={(e) => e.stopPropagation()}
           />
 
-          {/* Next */}
           {images.length > 1 && (
             <button
-              onClick={(e) => { e.stopPropagation(); setActiveImg((i) => (i + 1) % images.length) }}
+              onClick={(e) => { e.stopPropagation(); setActiveImg((i) => (i + 1) % images.length); }}
               className="absolute right-4 text-white hover:text-gray-300 transition"
             >
               <ChevronRight size={48} />
             </button>
           )}
 
-          {/* Dot indicators */}
           {images.length > 1 && (
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
               {images.map((_, i) => (
                 <button
                   key={i}
-                  onClick={(e) => { e.stopPropagation(); setActiveImg(i) }}
+                  onClick={(e) => { e.stopPropagation(); setActiveImg(i); }}
                   className={`w-2.5 h-2.5 rounded-full transition ${i === activeImg ? "bg-white scale-125" : "bg-white/40 hover:bg-white/70"}`}
                 />
               ))}
@@ -100,10 +118,9 @@ export default function ProductView() {
         <div className="px-16 py-8">
           <div className="flex flex-col lg:flex-row gap-10">
 
-            {/* LEFT — STICKY IMAGE GALLERY */}
+            {/* LEFT — IMAGE GALLERY */}
             <div className="lg:w-1/2 flex flex-col lg:flex-row gap-4">
 
-              {/* Thumbnail strip */}
               {images.length > 1 && (
                 <div className="order-2 lg:order-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px]">
                   {images.map((src, i) => (
@@ -122,7 +139,6 @@ export default function ProductView() {
                 </div>
               )}
 
-              {/* Main image — click to open lightbox */}
               <div className="order-1 lg:order-2 flex-1 lg:sticky lg:top-4">
                 <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow group border border-gray-200">
                   <img
@@ -152,7 +168,6 @@ export default function ProductView() {
                   )}
                 </div>
               </div>
-
             </div>
 
             {/* RIGHT — PRODUCT DETAILS */}
@@ -220,9 +235,38 @@ export default function ProductView() {
                 </div>
               </div>
 
-              <button className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white py-4 rounded-xl transition font-bold text-lg shadow-md">
-                Add To Cart
+              {/* Add to Cart Button — 3 states */}
+              <button
+                onClick={handleAddToCart}
+                disabled={cartStatus !== "idle" || !product.available}
+                className={`w-full py-4 rounded-xl transition font-bold text-lg shadow-md flex items-center justify-center gap-3
+                  ${cartStatus === "done"
+                    ? "bg-green-100 text-green-700 border border-green-300 cursor-default"
+                    : cartStatus === "loading"
+                    ? "bg-green-500 text-white opacity-80 cursor-wait"
+                    : !product.available
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700 active:bg-green-800 text-white cursor-pointer"
+                  }`}
+              >
+                {cartStatus === "loading" && <Loader2 size={20} className="animate-spin" />}
+                {cartStatus === "done" && <Check size={20} />}
+                {cartStatus === "idle" && <ShoppingCart size={20} />}
+
+                {cartStatus === "loading" && "Adding..."}
+                {cartStatus === "done" && "Added to Cart!"}
+                {cartStatus === "idle" && (!product.available ? "Unavailable" : "Add To Cart")}
               </button>
+
+              {/* Go to cart shortcut — shown after adding */}
+              {cartStatus === "done" && (
+                <button
+                  onClick={() => navigate("/cart")}
+                  className="w-full py-3 rounded-xl border-2 border-green-500 text-green-600 font-semibold hover:bg-green-50 transition text-sm"
+                >
+                  Go to Cart →
+                </button>
+              )}
 
               <div className="bg-white border border-gray-200 rounded-xl p-4 text-sm space-y-2 text-gray-600">
                 <div className="flex justify-between">
