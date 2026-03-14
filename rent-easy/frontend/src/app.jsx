@@ -1,4 +1,5 @@
 import React from "react";
+import { Route, Routes } from "react-router";
 import Homepage from "./home/homepage";
 import ProductList from "./products/productlist";
 import ProductView from "./products/productView";
@@ -7,7 +8,6 @@ import AdminDashboard from "./admin/adminDashboard.jsx";
 import AdminProductList from "./admin/adminProductList.jsx";
 import AdminRents from "./admin/adminRents.jsx";
 import MaintenanceRequests from "./admin/mantain.jsx";
-import { Route, Routes } from "react-router";
 import PastCards from "./MyRentals/pastRentals.jsx";
 import ActiveRents from "./MyRentals/activeRentals.jsx";
 import Maintain from "./MyRentals/maintenance.jsx";

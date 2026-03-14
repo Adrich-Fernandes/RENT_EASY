@@ -1,286 +1,284 @@
-// const User = require("../models/User");
+const User = require("../models/userModel");
 
+/* =========================
+   CREATE USER (after Clerk login)
+========================= */
 
+exports.createUser = async (req, res) => {
+  try {
 
-// /* =========================
-//    CREATE USER (after Clerk login)
-// ========================= */
+    const { clerkId, name, email } = req.body;
 
-// exports.createUser = async (req, res) => {
-//   try {
+    const existingUser = await User.findOne({ clerkId });
 
-//     const { clerkId, name, email } = req.body;
+    if (existingUser) {
+      return res.status(200).json(existingUser);
+    }
 
-//     const existingUser = await User.findOne({ clerkId });
+    const user = await User.create({
+      clerkId,
+      name,
+      email
+    });
 
-//     if (existingUser) {
-//       return res.status(200).json(existingUser);
-//     }
+    res.status(201).json(user);
 
-//     const user = await User.create({
-//       clerkId,
-//       name,
-//       email
-//     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-//     res.status(201).json(user);
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 
 
+/* =========================
+   GET USER
+========================= */
 
+exports.getUser = async (req, res) => {
 
-// /* =========================
-//    GET USER
-// ========================= */
+  try {
 
-// exports.getUser = async (req, res) => {
+    const { clerkId } = req.params;
 
-//   try {
+    const user = await User.findOne({ clerkId })
+      .populate("cart.product")
+      .populate("activeRentals.product")
+      .populate("pastRentals.product");
 
-//     const { clerkId } = req.params;
+    res.json(user);
 
-//     const user = await User.findOne({ clerkId })
-//       .populate("cart.product")
-//       .populate("activeRentals.product")
-//       .populate("pastRentals.product");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   ADD ADDRESS
+========================= */
 
+exports.addAddress = async (req, res) => {
 
-// /* =========================
-//    ADD ADDRESS
-// ========================= */
+  try {
 
-// exports.addAddress = async (req, res) => {
+    const { clerkId } = req.params;
 
-//   try {
+    const user = await User.findOne({ clerkId });
 
-//     const { clerkId } = req.params;
+    user.address.push(req.body);
 
-//     const user = await User.findOne({ clerkId });
+    await user.save();
 
-//     user.address.push(req.body);
+    res.json(user.address);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.address);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   DELETE ADDRESS
+========================= */
 
+exports.deleteAddress = async (req, res) => {
 
-// /* =========================
-//    DELETE ADDRESS
-// ========================= */
+  try {
 
-// exports.deleteAddress = async (req, res) => {
+    const { clerkId, addressId } = req.params;
 
-//   try {
+    const user = await User.findOne({ clerkId });
 
-//     const { clerkId, addressId } = req.params;
+    user.address = user.address.filter(
+      (addr) => addr._id.toString() !== addressId
+    );
 
-//     const user = await User.findOne({ clerkId });
+    await user.save();
 
-//     user.address = user.address.filter(
-//       (addr) => addr._id.toString() !== addressId
-//     );
+    res.json(user.address);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.address);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   ADD TO CART
+========================= */
 
+exports.addToCart = async (req, res) => {
 
-// /* =========================
-//    ADD TO CART
-// ========================= */
+  try {
 
-// exports.addToCart = async (req, res) => {
+    const { clerkId } = req.params;
+    const { productId } = req.body;
 
-//   try {
+    const user = await User.findOne({ clerkId });
 
-//     const { clerkId } = req.params;
-//     const { productId } = req.body;
+    const existingItem = user.cart.find(
+      (item) => item.product.toString() === productId
+    );
 
-//     const user = await User.findOne({ clerkId });
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      user.cart.push({ product: productId });
+    }
 
-//     const existingItem = user.cart.find(
-//       (item) => item.product.toString() === productId
-//     );
+    await user.save();
 
-//     if (existingItem) {
-//       existingItem.quantity += 1;
-//     } else {
-//       user.cart.push({ product: productId });
-//     }
+    res.json(user.cart);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.cart);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   REMOVE FROM CART
+========================= */
 
+exports.removeFromCart = async (req, res) => {
 
-// /* =========================
-//    REMOVE FROM CART
-// ========================= */
+  try {
 
-// exports.removeFromCart = async (req, res) => {
+    const { clerkId, productId } = req.params;
 
-//   try {
+    const user = await User.findOne({ clerkId });
 
-//     const { clerkId, productId } = req.params;
+    user.cart = user.cart.filter(
+      (item) => item.product.toString() !== productId
+    );
 
-//     const user = await User.findOne({ clerkId });
+    await user.save();
 
-//     user.cart = user.cart.filter(
-//       (item) => item.product.toString() !== productId
-//     );
+    res.json(user.cart);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.cart);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   CREATE RENTAL
+========================= */
 
+exports.createRental = async (req, res) => {
 
-// /* =========================
-//    CREATE RENTAL
-// ========================= */
+  try {
 
-// exports.createRental = async (req, res) => {
+    const { clerkId } = req.params;
 
-//   try {
+    const {
+      productId,
+      rentalStartDate,
+      rentalEndDate,
+      price
+    } = req.body;
 
-//     const { clerkId } = req.params;
+    const user = await User.findOne({ clerkId });
 
-//     const {
-//       productId,
-//       rentalStartDate,
-//       rentalEndDate,
-//       price
-//     } = req.body;
+    user.activeRentals.push({
+      product: productId,
+      rentalStartDate,
+      rentalEndDate,
+      price
+    });
 
-//     const user = await User.findOne({ clerkId });
+    await user.save();
 
-//     user.activeRentals.push({
-//       product: productId,
-//       rentalStartDate,
-//       rentalEndDate,
-//       price
-//     });
+    res.json(user.activeRentals);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.activeRentals);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   COMPLETE RENTAL
+========================= */
 
+exports.completeRental = async (req, res) => {
 
-// /* =========================
-//    COMPLETE RENTAL
-// ========================= */
+  try {
 
-// exports.completeRental = async (req, res) => {
+    const { clerkId, rentalId } = req.params;
 
-//   try {
+    const user = await User.findOne({ clerkId });
 
-//     const { clerkId, rentalId } = req.params;
+    const rental = user.activeRentals.id(rentalId);
 
-//     const user = await User.findOne({ clerkId });
+    user.pastRentals.push({
+      product: rental.product,
+      rentalStartDate: rental.rentalStartDate,
+      rentalEndDate: rental.rentalEndDate,
+      returnedAt: new Date(),
+      totalPaid: rental.price
+    });
 
-//     const rental = user.activeRentals.id(rentalId);
+    rental.remove();
 
-//     user.pastRentals.push({
-//       product: rental.product,
-//       rentalStartDate: rental.rentalStartDate,
-//       rentalEndDate: rental.rentalEndDate,
-//       returnedAt: new Date(),
-//       totalPaid: rental.price
-//     });
+    await user.save();
 
-//     rental.remove();
+    res.json(user.pastRentals);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.pastRentals);
+};
 
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
 
-// };
 
 
+/* =========================
+   CREATE MAINTENANCE REQUEST
+========================= */
 
+exports.createMaintenanceRequest = async (req, res) => {
 
-// /* =========================
-//    CREATE MAINTENANCE REQUEST
-// ========================= */
+  try {
 
-// exports.createMaintenanceRequest = async (req, res) => {
+    const { clerkId } = req.params;
 
-//   try {
+    const { productId, issue } = req.body;
 
-//     const { clerkId } = req.params;
+    const user = await User.findOne({ clerkId });
 
-//     const { productId, issue } = req.body;
+    user.maintenanceRequests.push({
+      product: productId,
+      issue
+    });
 
-//     const user = await User.findOne({ clerkId });
+    await user.save();
 
-//     user.maintenanceRequests.push({
-//       product: productId,
-//       issue
-//     });
+    res.json(user.maintenanceRequests);
 
-//     await user.save();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 
-//     res.json(user.maintenanceRequests);
-
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-
-// };
+};

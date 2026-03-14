@@ -1,164 +1,164 @@
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-// const userSchema = new mongoose.Schema(
-// {
-//   clerkId: {
-//     type: String,
-//     required: true,
-//     unique: true
-//   },
+const userSchema = new mongoose.Schema(
+{
+  clerkId: {
+    type: String,
+    required: true,
+    unique: true
+  },
 
-//   name: {
-//     type: String,
-//     required: true
-//   },
+  name: {
+    type: String,
+    required: true
+  },
 
-//   email: {
-//     type: String,
-//     required: true
-//   },
+  email: {
+    type: String,
+    required: true
+  },
 
-//   role: {
-//     type: String,
-//     enum: ["user","admin"],
-//     default: "user"
-//   },
-
-
-//   /* ADDRESSES */
-
-//   address: [
-//     {
-//       fullname: { type: String, required: true },
-
-//       addressline1: { type: String, required: true },
-
-//       addressline2: { type: String },
-
-//       city: { type: String, required: true },
-
-//       state: { type: String, required: true },
-
-//       phone: { type: String, required: true },
-
-//       pincode: { type: String, required: true },
-
-//       isDefault: {
-//         type: Boolean,
-//         default: false
-//       }
-//     }
-//   ],
+  role: {
+    type: String,
+    enum: ["user","admin"],
+    default: "user"
+  },
 
 
-//   /* CART */
+  /* ADDRESSES */
 
-//   cart: [
-//     {
-//       product: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Product"
-//       },
+  address: [
+    {
+      fullname: { type: String, required: true },
 
-//       quantity: {
-//         type: Number,
-//         default: 1
-//       },
+      addressline1: { type: String, required: true },
 
-//       addedAt: {
-//         type: Date,
-//         default: Date.now
-//       }
-//     }
-//   ],
+      addressline2: { type: String },
 
+      city: { type: String, required: true },
 
-//   /* ACTIVE RENTALS */
+      state: { type: String, required: true },
 
-//   activeRentals: [
-//     {
-//       product: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Product"
-//       },
+      phone: { type: String, required: true },
 
-//       rentalStartDate: Date,
+      pincode: { type: String, required: true },
 
-//       rentalEndDate: Date,
-
-//       deliveryDate: Date,
-
-//       price: Number,
-
-//       status: {
-//         type: String,
-//         enum: [
-//           "ordered",
-//           "dispatch",
-//           "out for delivery",
-//           "active"
-//         ],
-//         default: "ordered"
-//       }
-//     }
-//   ],
+      isDefault: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ],
 
 
-//   /* PAST RENTALS */
+  /* CART */
 
-//   pastRentals: [
-//     {
-//       product: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Product"
-//       },
+  cart: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+      },
 
-//       rentalStartDate: Date,
+      quantity: {
+        type: Number,
+        default: 1
+      },
 
-//       rentalEndDate: Date,
+      addedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ],
 
-//       returnedAt: Date,
 
-//       totalPaid: Number
-//     }
-//   ],
+  /* ACTIVE RENTALS */
+
+  activeRentals: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+      },
+
+      rentalStartDate: Date,
+
+      rentalEndDate: Date,
+
+      deliveryDate: Date,
+
+      price: Number,
+
+      status: {
+        type: String,
+        enum: [
+          "ordered",
+          "dispatch",
+          "out for delivery",
+          "active"
+        ],
+        default: "ordered"
+      }
+    }
+  ],
 
 
-//   /* MAINTENANCE REQUESTS */
+  /* PAST RENTALS */
 
-//   maintenanceRequests: [
-//     {
-//       product: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Product"
-//       },
+  pastRentals: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+      },
 
-//       issue: String,
+      rentalStartDate: Date,
 
-//       requestedAt: {
-//         type: Date,
-//         default: Date.now
-//       },
+      rentalEndDate: Date,
 
-//       expectedCompletionDate: Date,
+      returnedAt: Date,
 
-//       completedAt: Date,
+      totalPaid: Number
+    }
+  ],
 
-//       status: {
-//         type: String,
-//         enum: [
-//           "requested",
-//           "approved",
-//           "in progress",
-//           "completed"
-//         ],
-//         default: "requested"
-//       }
-//     }
-//   ]
 
-// },
-// { timestamps:true }
-// );
+  /* MAINTENANCE REQUESTS */
 
-// module.exports = mongoose.model("User", userSchema);
+  maintenanceRequests: [
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+      },
+
+      issue: String,
+
+      requestedAt: {
+        type: Date,
+        default: Date.now
+      },
+
+      expectedCompletionDate: Date,
+
+      completedAt: Date,
+
+      status: {
+        type: String,
+        enum: [
+          "requested",
+          "approved",
+          "in progress",
+          "completed"
+        ],
+        default: "requested"
+      }
+    }
+  ]
+
+},
+{ timestamps:true }
+);
+
+module.exports = mongoose.model("User", userSchema);
