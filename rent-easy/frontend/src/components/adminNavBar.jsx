@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
-import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ClipboardList, Wrench, X, Menu, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { LayoutDashboard, Package, ClipboardList, Wrench, X, Menu } from "lucide-react";
+import { useUser, UserButton } from "@clerk/clerk-react";
 
 const navItems = [
-  { label: "Dashboard", icon: <LayoutDashboard size={18} />, path: "/admin" },
-  { label: "Products", icon: <Package size={18} />, path: "/admin/products" },
-  { label: "Rents", icon: <ClipboardList size={18} />, path: "/admin/rents" },
-  { label: "Maintenance", icon: <Wrench size={18} />, path: "/admin/maintenance" },
+  { label: "Dashboard",   icon: <LayoutDashboard size={18} />, path: "/admin" },
+  { label: "Products",    icon: <Package size={18} />,         path: "/admin/products" },
+  { label: "Rents",       icon: <ClipboardList size={18} />,   path: "/admin/rents" },
+  { label: "Maintenance", icon: <Wrench size={18} />,          path: "/admin/maintenance" },
 ];
 
 const AdminNavBar = () => {
-
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -22,7 +24,6 @@ const AdminNavBar = () => {
 
         {/* LEFT */}
         <div className="flex items-center gap-2">
-
           <button
             className="md:hidden"
             onClick={() => setMenuOpen(true)}
@@ -68,22 +69,18 @@ const AdminNavBar = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-sm">
-              A
-            </div>
-            <span className="hidden md:block text-sm font-medium text-gray-700">Admin</span>
-          </div>
-
-          <button
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg
-              border border-red-300 text-red-500 font-semibold text-sm
-              hover:bg-red-50 transition"
-          >
-            <LogOut size={16} />
-            <span className="hidden md:block">Logout</span>
-          </button>
+        <div className="flex items-center gap-3">
+          <span className="hidden md:block text-sm font-medium text-gray-700">
+            {user?.firstName || "Admin"}
+          </span>
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "w-8 h-8",
+              },
+            }}
+          />
         </div>
       </nav>
 
@@ -145,22 +142,23 @@ const AdminNavBar = () => {
           </NavLink>
         ))}
 
-        {/* Logout at bottom of drawer */}
-        <div className="mt-auto">
-          <button
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl
-              text-red-500 font-medium
-              transition-all duration-200
-              hover:bg-red-50"
-          >
-            <LogOut size={18} />
-            Logout
-          </button>
+        {/* UserButton in drawer too */}
+        <div className="mt-auto flex items-center gap-3 px-2">
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "w-8 h-8",
+              },
+            }}
+          />
+          <span className="text-sm font-medium text-gray-700">
+            {user?.firstName || "Admin"}
+          </span>
         </div>
-
       </div>
     </>
-  )
-}
+  );
+};
 
-export default AdminNavBar
+export default AdminNavBar;
