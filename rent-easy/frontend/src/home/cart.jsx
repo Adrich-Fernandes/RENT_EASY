@@ -9,26 +9,20 @@ const API = "http://localhost:4000/api/user";
 export default function Cart() {
   const { user, isLoaded } = useUser();
 
-  const [cartItems, setCartItems] = useState([]);
-  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [cartItems, setCartItems]               = useState([]);
+  const [savedAddresses, setSavedAddresses]     = useState([]);
   const [selectedAddressIdx, setSelectedAddressIdx] = useState(null);
-  const [showDelivery, setShowDelivery] = useState(false);
-  const [pageLoading, setPageLoading] = useState(true);
-  const [placingOrder, setPlacingOrder] = useState(false);
-  const [date, setDate] = useState("");
+  const [showDelivery, setShowDelivery]         = useState(false);
+  const [pageLoading, setPageLoading]           = useState(true);
+  const [placingOrder, setPlacingOrder]         = useState(false);
+  const [date, setDate]                         = useState("");
   const [form, setForm] = useState({
-    fullname: "",
-    phone: "",
-    addressline1: "",
-    addressline2: "",
-    city: "",
-    state: "",
-    pincode: "",
+    fullname: "", phone: "", addressline1: "",
+    addressline2: "", city: "", state: "", pincode: "",
   });
 
   const dateRef = useRef(null);
 
-  // ── Fetch cart + addresses ───────────────────────────────────────
   useEffect(() => {
     if (!user) return;
     const fetchData = async () => {
@@ -57,23 +51,18 @@ export default function Cart() {
       : dateRef.current?.click();
   };
 
-  const handleForm = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleForm = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // ── Remove from cart ─────────────────────────────────────────────
   const handleRemoveFromCart = async (productId) => {
     try {
       await axios.delete(`${API}/${user.id}/cart/${productId}`);
-      setCartItems((prev) =>
-        prev.filter((item) => item.product._id !== productId)
-      );
+      setCartItems((prev) => prev.filter((item) => item.product._id !== productId));
     } catch (err) {
       console.error(err);
       alert("Failed to remove item.");
     }
   };
 
-  // ── Save address ─────────────────────────────────────────────────
   const handleAddAddress = async () => {
     const { fullname, phone, addressline1, city, state, pincode } = form;
     if (!fullname || !phone || !addressline1 || !city || !state || !pincode) {
@@ -83,15 +72,7 @@ export default function Cart() {
     try {
       const res = await axios.post(`${API}/${user.id}/address`, form);
       setSavedAddresses(res.data);
-      setForm({
-        fullname: "",
-        phone: "",
-        addressline1: "",
-        addressline2: "",
-        city: "",
-        state: "",
-        pincode: "",
-      });
+      setForm({ fullname: "", phone: "", addressline1: "", addressline2: "", city: "", state: "", pincode: "" });
       setShowDelivery(false);
     } catch (err) {
       console.error(err);
@@ -99,7 +80,6 @@ export default function Cart() {
     }
   };
 
-  // ── Delete address ───────────────────────────────────────────────
   const handleDeleteAddress = async (addressId, idx) => {
     try {
       const res = await axios.delete(`${API}/${user.id}/address/${addressId}`);
@@ -111,27 +91,29 @@ export default function Cart() {
     }
   };
 
-  // ── Place order ──────────────────────────────────────────────────
+  // ── Place order — uses tenure stored on each cart item ──────────
   const handlePlaceOrder = async () => {
-    if (cartItems.length === 0) return alert("Your cart is empty.");
-    if (selectedAddressIdx === null) return alert("Please select a delivery address.");
-    if (!date) return alert("Please select a delivery date.");
+    if (cartItems.length === 0)        return alert("Your cart is empty.");
+    if (selectedAddressIdx === null)   return alert("Please select a delivery address.");
+    if (!date)                         return alert("Please select a delivery date.");
 
     setPlacingOrder(true);
     try {
-      const rentalStart = new Date(date);
-      const rentalEnd = new Date(date);
-      rentalEnd.setMonth(rentalEnd.getMonth() + 1);
-
       await Promise.all(
-        cartItems.map((item) =>
-          axios.post(`${API}/${user.id}/rental`, {
-            productId: item.product._id,
+        cartItems.map((item) => {
+          const rentalStart = new Date(date);
+          const rentalEnd   = new Date(date);
+          // ✅ Use the tenure saved when user added to cart (default 1 if missing)
+          const tenure = item.tenure || 3;
+          rentalEnd.setMonth(rentalEnd.getMonth() + tenure);
+
+          return axios.post(`${API}/${user.id}/rental`, {
+            productId:       item.product._id,
             rentalStartDate: rentalStart.toISOString(),
-            rentalEndDate: rentalEnd.toISOString(),
-            price: item.product.rent,
-          })
-        )
+            rentalEndDate:   rentalEnd.toISOString(),
+            price:           item.product.rent,
+          });
+        })
       );
 
       await Promise.all(
@@ -152,12 +134,10 @@ export default function Cart() {
     }
   };
 
-  // ── Totals ───────────────────────────────────────────────────────
-  const totalRent = cartItems.reduce((sum, item) => sum + (item.product?.rent || 0), 0);
+  const totalRent    = cartItems.reduce((sum, item) => sum + (item.product?.rent || 0) * (item.tenure || 1), 0);
   const totalDeposit = cartItems.reduce((sum, item) => sum + (item.product?.deposit || 0), 0);
   const totalPayable = totalRent + totalDeposit;
 
-  // ── Auth / loading states ────────────────────────────────────────
   if (!isLoaded || pageLoading) {
     return (
       <>
@@ -188,27 +168,25 @@ export default function Cart() {
       <UserNavBar />
       <div className="w-full flex flex-col lg:flex-row items-start gap-6 p-6 bg-gray-100 min-h-screen">
 
-        {/* ── LEFT 70% ── */}
+        {/* LEFT */}
         <div className="w-full lg:flex-[7] space-y-6">
 
-          {/* Empty state */}
           {cartItems.length === 0 && (
             <div className="bg-white rounded-xl shadow-md p-10 text-center text-gray-400 text-lg">
               Your cart is empty.
             </div>
           )}
 
-          {/* Cart items */}
           {cartItems.map((item) => (
             <div key={item._id} className="bg-white shadow-md rounded-xl p-5">
               <CartItemCard
                 data={item.product}
+                tenure={item.tenure || 1}
                 onRemove={() => handleRemoveFromCart(item.product._id)}
               />
             </div>
           ))}
 
-          {/* Delivery date — shown once address is selected */}
           {selectedAddressIdx !== null && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-3">
               <div className="flex items-center gap-2">
@@ -216,11 +194,7 @@ export default function Cart() {
                 <span className="font-bold text-lg">Select Delivery Date</span>
               </div>
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={openCalendar}
-                  className="px-4 py-2 border border-green-400 border-opacity-40 rounded-lg hover:bg-gray-50 text-sm"
-                >
+                <button type="button" onClick={openCalendar} className="px-4 py-2 border border-green-400 border-opacity-40 rounded-lg hover:bg-gray-50 text-sm">
                   {date ? date : "Pick a date"}
                 </button>
                 <input
@@ -231,14 +205,11 @@ export default function Cart() {
                   onChange={(e) => setDate(e.target.value)}
                   className="absolute opacity-0 pointer-events-none"
                 />
-                {date && (
-                  <span className="text-green-600 text-sm font-medium">✓ {date}</span>
-                )}
+                {date && <span className="text-green-600 text-sm font-medium">✓ {date}</span>}
               </div>
             </div>
           )}
 
-          {/* Add address button */}
           <button
             onClick={() => setShowDelivery(!showDelivery)}
             className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-xl transition"
@@ -247,89 +218,63 @@ export default function Cart() {
             {showDelivery ? "Cancel" : "Add New Address"}
           </button>
 
-          {/* Address form */}
           {showDelivery && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
                 <MapPin className="text-green-600" size={20} />
                 <span className="font-bold text-lg">New Delivery Address</span>
               </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  { label: "Full Name",                  name: "fullname",     placeholder: "Full Name" },
-                  { label: "Phone Number",               name: "phone",        placeholder: "+91-9876543210" },
-                  { label: "Address Line 1",             name: "addressline1", placeholder: "Street number and name" },
-                  { label: "Address Line 2 (optional)",  name: "addressline2", placeholder: "Apt, suite, floor" },
-                  { label: "City",                       name: "city",         placeholder: "Bengaluru" },
-                  { label: "State",                      name: "state",        placeholder: "Karnataka" },
-                  { label: "Pin Code",                   name: "pincode",      placeholder: "560001" },
+                  { label: "Full Name",                 name: "fullname",     placeholder: "Full Name" },
+                  { label: "Phone Number",              name: "phone",        placeholder: "+91-9876543210" },
+                  { label: "Address Line 1",            name: "addressline1", placeholder: "Street number and name" },
+                  { label: "Address Line 2 (optional)", name: "addressline2", placeholder: "Apt, suite, floor" },
+                  { label: "City",                      name: "city",         placeholder: "Bengaluru" },
+                  { label: "State",                     name: "state",        placeholder: "Karnataka" },
+                  { label: "Pin Code",                  name: "pincode",      placeholder: "560001" },
                 ].map(({ label, name, placeholder }) => (
                   <div key={name}>
                     <label className="block text-sm text-gray-600 mb-1">{label}</label>
                     <input
-                      type="text"
-                      name={name}
-                      value={form[name]}
-                      onChange={handleForm}
-                      placeholder={placeholder}
+                      type="text" name={name} value={form[name]} onChange={handleForm} placeholder={placeholder}
                       className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
                     />
                   </div>
                 ))}
               </div>
-
-              <button
-                onClick={handleAddAddress}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-xl text-sm transition"
-              >
+              <button onClick={handleAddAddress} className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-xl text-sm transition">
                 Save Address
               </button>
             </div>
           )}
 
-          {/* Saved addresses — selectable */}
           {savedAddresses.length > 0 && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
                 <MapPin className="text-green-600" size={20} />
                 <span className="font-bold text-lg">Select Delivery Address</span>
               </div>
-
               {savedAddresses.map((addr, i) => (
                 <div
                   key={addr._id || i}
                   onClick={() => setSelectedAddressIdx(i)}
                   className={`border rounded-xl p-4 flex justify-between items-start gap-4 cursor-pointer transition ${
-                    selectedAddressIdx === i
-                      ? "border-green-500 bg-green-50"
-                      : "border-gray-200 hover:border-green-300"
+                    selectedAddressIdx === i ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-green-300"
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${
-                      selectedAddressIdx === i
-                        ? "border-green-500 bg-green-500"
-                        : "border-gray-400"
-                    }`} />
+                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${selectedAddressIdx === i ? "border-green-500 bg-green-500" : "border-gray-400"}`} />
                     <div className="space-y-1 text-sm text-gray-700">
-                      <p className="font-semibold text-gray-900">
-                        {addr.fullname} · {addr.phone}
-                      </p>
-                      <p>
-                        {addr.addressline1}
-                        {addr.addressline2 ? `, ${addr.addressline2}` : ""}
-                      </p>
+                      <p className="font-semibold text-gray-900">{addr.fullname} · {addr.phone}</p>
+                      <p>{addr.addressline1}{addr.addressline2 ? `, ${addr.addressline2}` : ""}</p>
                       <p>{addr.city}, {addr.state} — {addr.pincode}</p>
                     </div>
                   </div>
                   <Trash2
                     className="text-red-400 hover:text-red-600 cursor-pointer flex-shrink-0 transition"
                     size={18}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteAddress(addr._id, i);
-                    }}
+                    onClick={(e) => { e.stopPropagation(); handleDeleteAddress(addr._id, i); }}
                   />
                 </div>
               ))}
@@ -337,7 +282,7 @@ export default function Cart() {
           )}
         </div>
 
-        {/* ── RIGHT 30% ── */}
+        {/* RIGHT */}
         <div className="w-full lg:flex-[3]">
           <div className="bg-white rounded-2xl shadow-md p-6 space-y-6">
             <h2 className="text-lg font-semibold">Order Summary</h2>
@@ -345,8 +290,13 @@ export default function Cart() {
             <div className="space-y-3 text-gray-600 text-sm">
               {cartItems.map((item) => (
                 <div key={item._id} className="flex justify-between">
-                  <span>{item.product?.name || item.product?.title}</span>
-                  <span className="font-medium text-gray-800">₹{item.product?.rent}</span>
+                  <span>
+                    {item.product?.name || item.product?.title}
+                    <span className="text-xs text-gray-400 ml-1">× {item.tenure || 1} mo</span>
+                  </span>
+                  <span className="font-medium text-gray-800">
+                    ₹{(item.product?.rent || 0) * (item.tenure || 1)}
+                  </span>
                 </div>
               ))}
             </div>
@@ -377,15 +327,9 @@ export default function Cart() {
               className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
             >
               {placingOrder ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Placing Order...
-                </>
+                <><Loader2 size={18} className="animate-spin" /> Placing Order...</>
               ) : (
-                <>
-                  <span>Place Order</span>
-                  <ArrowRight size={18} />
-                </>
+                <><span>Place Order</span><ArrowRight size={18} /></>
               )}
             </button>
 
@@ -401,8 +345,8 @@ export default function Cart() {
 }
 
 
-function CartItemCard({ data, onRemove }) {
-  const cardTotal = (data?.rent || 0) + (data?.deposit || 0);
+function CartItemCard({ data, tenure, onRemove }) {
+  const cardTotal = ((data?.rent || 0) * tenure) + (data?.deposit || 0);
 
   return (
     <div className="flex flex-col sm:flex-row gap-6">
@@ -422,17 +366,17 @@ function CartItemCard({ data, onRemove }) {
             <span className="block text-green-600 font-bold text-lg">₹{data?.rent}</span>
           </div>
           <div>
+            <span className="block text-sm text-gray-500">Tenure</span>
+            <span className="block font-bold text-lg">{tenure} months</span>
+          </div>
+          <div>
             <span className="block text-sm text-gray-500">Security Deposit</span>
             <span className="block font-bold text-lg">₹{data?.deposit}</span>
           </div>
         </div>
       </div>
       <div className="flex flex-col items-end justify-between gap-4">
-        <Trash2
-          className="text-red-500 cursor-pointer hover:text-red-600 transition"
-          size={20}
-          onClick={onRemove}
-        />
+        <Trash2 className="text-red-500 cursor-pointer hover:text-red-600 transition" size={20} onClick={onRemove} />
         <div className="text-right">
           <span className="block text-gray-400 text-sm">Total</span>
           <span className="block font-bold text-xl text-gray-800">₹{cardTotal}</span>

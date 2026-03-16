@@ -65,6 +65,11 @@ const userSchema = new mongoose.Schema(
         default: 1
       },
 
+      tenure: {
+        type: Number,
+        default: 1
+      },
+
       addedAt: {
         type: Date,
         default: Date.now

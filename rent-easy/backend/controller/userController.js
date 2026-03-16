@@ -122,7 +122,7 @@ exports.addToCart = async (req, res) => {
   try {
 
     const { clerkId } = req.params;
-    const { productId } = req.body;
+    const { productId, tenure = 1 } = req.body;
 
     const user = await User.findOne({ clerkId });
 
@@ -131,9 +131,9 @@ exports.addToCart = async (req, res) => {
     );
 
     if (existingItem) {
-      existingItem.quantity += 1;
+      existingItem.tenure = tenure;
     } else {
-      user.cart.push({ product: productId });
+      user.cart.push({ product: productId, tenure });
     }
 
     await user.save();
@@ -201,7 +201,8 @@ exports.createRental = async (req, res) => {
       product: productId,
       rentalStartDate,
       rentalEndDate,
-      price
+      price,
+      status: "ordered"
     });
 
     await user.save();
@@ -239,7 +240,7 @@ exports.completeRental = async (req, res) => {
       totalPaid: rental.price
     });
 
-    rental.remove();
+    rental.deleteOne();
 
     await user.save();
 
