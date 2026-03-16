@@ -39,25 +39,8 @@ exports.updateStatus = async (req, res) => {
     const rental = user.activeRentals.id(orderId);
     rental.status = status;
 
-    // If status is "complete", move to pastRentals
-    if (status === "complete") {
-      user.pastRentals.push({
-        product: rental.product,
-        rentalStartDate: rental.rentalStartDate,
-        rentalEndDate: rental.rentalEndDate,
-        returnedAt: new Date(),
-        totalPaid: rental.price
-      });
-      user.activeRentals.pull(orderId);
-    }
-
     await user.save();
     
-    // Return updated order or a placeholder if it was moved
-    if (status === "complete") {
-      return res.status(200).json({ ...rental.toObject(), status: "complete", _id: orderId });
-    }
-
     const updatedRental = user.activeRentals.id(orderId);
     res.status(200).json({
       ...updatedRental.toObject(),
@@ -95,6 +78,57 @@ exports.updateDeliveryDate = async (req, res) => {
         email: user.email
       }
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get all maintenance requests across all users
+exports.getAllMaintenance = async (req, res) => {
+  try {
+    const users = await User.find({ "maintenanceRequests.0": { $exists: true } })
+      .populate("maintenanceRequests.product");
+
+    const allRequests = [];
+    users.forEach(user => {
+      user.maintenanceRequests.forEach(request => {
+        allRequests.push({
+          ...request.toObject(),
+          user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            clerkId: user.clerkId
+          }
+        });
+      });
+    });
+
+    res.status(200).json(allRequests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Update maintenance request
+exports.updateMaintenanceStatus = async (req, res) => {
+  try {
+    const { userId, requestId } = req.params;
+    const { status, expectedCompletionDate } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const request = user.maintenanceRequests.id(requestId);
+    if (!request) return res.status(404).json({ message: "Request not found" });
+
+    if (status) request.status = status;
+    if (expectedCompletionDate) request.expectedCompletionDate = new Date(expectedCompletionDate);
+    if (status === "completed") request.completedAt = new Date();
+
+    await user.save();
+
+    res.status(200).json(request);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

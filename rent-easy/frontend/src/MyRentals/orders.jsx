@@ -172,12 +172,18 @@ function ProductCard({ rental, isPast, onClick }) {
   const end = new Date(rental.rentalEndDate);
   const isExpired = now > end;
 
-  const statusLabel = isPast ? "Completed" : isExpired ? "Expired" : "Active";
-  const statusColor = isPast
-    ? "bg-zinc-200 text-zinc-600"
-    : isExpired
-    ? "bg-red-100 text-red-600"
-    : "bg-green-100 text-green-700";
+  const statusStyle = (status) => {
+    switch (status) {
+      case "ordered":          return "bg-yellow-100 text-yellow-700";
+      case "dispatch":         return "bg-blue-100 text-blue-700";
+      case "out for delivery": return "bg-purple-100 text-purple-700";
+      case "complete":         return "bg-green-100 text-green-700";
+      default:                 return "bg-gray-100 text-gray-600";
+    }
+  };
+
+  const statusLabel = rental.status;
+  const statusColor = statusStyle(rental.status);
 
   return (
     <div
@@ -220,7 +226,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
   const [otherReason, setOtherReason] = useState("");
 
   const steps = ["ordered", "dispatch", "out for delivery", "complete"];
-  const currentStep = isPast ? 3 : 2; // simplify: past = complete, active = out for delivery
+  const currentStep = steps.indexOf(rental.status) !== -1 ? steps.indexOf(rental.status) : 0;
   const progressWidth = ((currentStep + 1) / steps.length) * 100;
 
   const handleSubmit = async (e) => {

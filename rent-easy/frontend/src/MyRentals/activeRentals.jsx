@@ -128,8 +128,8 @@ function Card({ data, clerkId }) {
         {/* Image */}
         <div className="relative w-full h-52">
           <img
-            src={product?.image || product?.imgs?.[0]}
-            alt={product?.name || product?.title}
+            src={product?.imgs?.[0] || product?.image}
+            alt={product?.title || product?.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-green-50 via-transparent to-transparent" />
@@ -139,21 +139,28 @@ function Card({ data, clerkId }) {
         <div className="p-5 flex flex-col gap-4">
           <div>
             <h2 className="text-green-900 text-2xl font-extrabold">
-              {product?.name || product?.title}
+              {product?.title || product?.name}
             </h2>
-            <span className="text-green-800 font-bold">
-              ₹{data.price} / Month
-            </span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-green-800 font-bold">
+                ₹{data.price} / Month
+              </span>
+              <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${
+                data.status === "complete" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+              }`}>
+                {data.status === "complete" ? "Active / Delivered" : data.status}
+              </span>
+            </div>
           </div>
 
           <div className="flex flex-col gap-2 text-sm text-green-700">
             <div className="flex items-center gap-2">
               <CalendarIcon size={18} />
-              <span>Start: {new Date(data.rentalStartDate).toLocaleDateString()}</span>
+              <span>Start: {data.rentalStartDate ? new Date(data.rentalStartDate).toLocaleDateString() : "—"}</span>
             </div>
             <div className="flex items-center gap-2">
               <TimerIcon size={18} />
-              <span>End: {new Date(data.rentalEndDate).toLocaleDateString()}</span>
+              <span>End: {data.rentalEndDate ? new Date(data.rentalEndDate).toLocaleDateString() : "—"}</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPinIcon size={18} />
