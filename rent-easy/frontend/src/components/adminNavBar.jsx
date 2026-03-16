@@ -1,19 +1,18 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, ClipboardList, Wrench, X, Menu } from "lucide-react";
+import { LayoutDashboard, Package, Wrench, X, Menu, ShoppingBag } from "lucide-react";
 import { useUser, UserButton } from "@clerk/clerk-react";
 
 const navItems = [
   { label: "Dashboard",   icon: <LayoutDashboard size={18} />, path: "/admin" },
   { label: "Products",    icon: <Package size={18} />,         path: "/admin/products" },
-  { label: "Rents",       icon: <ClipboardList size={18} />,   path: "/admin/rents" },
+  { label: "Orders",      icon: <ShoppingBag size={18} />,     path: "/admin/orders" },
   { label: "Maintenance", icon: <Wrench size={18} />,          path: "/admin/maintenance" },
 ];
 
 const AdminNavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useUser();
-  const navigate = useNavigate();
 
   return (
     <>
@@ -142,7 +141,7 @@ const AdminNavBar = () => {
           </NavLink>
         ))}
 
-        {/* UserButton in drawer too */}
+        {/* UserButton in drawer */}
         <div className="mt-auto flex items-center gap-3 px-2">
           <UserButton
             afterSignOutUrl="/"

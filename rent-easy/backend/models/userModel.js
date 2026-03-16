@@ -96,6 +96,7 @@ const userSchema = new mongoose.Schema(
           "ordered",
           "dispatch",
           "out for delivery",
+          "complete",
           "active"
         ],
         default: "ordered"

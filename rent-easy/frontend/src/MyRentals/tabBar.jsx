@@ -8,7 +8,6 @@ export default function TabBar() {
 
     const navItems = [
         { label: "Active Rentals", icon: <Home size={18} />, path: "/myrentals/ActiveRents" },
-        { label: "Past Rentals", icon: <Package size={18} />, path: "/myrentals/pastRents" },
         { label: "Maintenance", icon: <ClipboardList size={18} />, path: "/myrentals/maintenance" },
         { label: "Orders", icon: <BoxIcon size={18} />, path: "/myrentals/orders" },
     ];

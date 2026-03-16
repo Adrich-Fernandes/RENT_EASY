@@ -8,12 +8,11 @@ import ProductView from "./products/productView";
 import Cart from "./home/cart";
 import AdminDashboard from "./admin/adminDashboard.jsx";
 import AdminProductList from "./admin/adminProductList.jsx";
-import AdminRents from "./admin/adminRents.jsx";
 import MaintenanceRequests from "./admin/mantain.jsx";
-import PastCards from "./MyRentals/pastRentals.jsx";
 import ActiveRents from "./MyRentals/activeRentals.jsx";
 import Maintain from "./MyRentals/maintenance.jsx";
 import Order from "./MyRentals/orders.jsx";
+import AdminOrders from "./admin/AdminOrders.jsx";
 
 function UserSync({ setRole, setRoleLoaded }) {
   const { user, isLoaded } = useUser();
@@ -82,15 +81,14 @@ export default function App() {
         <Route path="/productview" element={<UserRoute role={role} roleLoaded={roleLoaded}><ProductView /></UserRoute>} />
         <Route path="/cart" element={<UserRoute role={role} roleLoaded={roleLoaded}><Cart /></UserRoute>} />
         <Route path="/myrentals/ActiveRents" element={<UserRoute role={role} roleLoaded={roleLoaded}><ActiveRents /></UserRoute>} />
-        <Route path="/myrentals/pastRents" element={<UserRoute role={role} roleLoaded={roleLoaded}><PastCards /></UserRoute>} />
         <Route path="/myrentals/maintenance" element={<UserRoute role={role} roleLoaded={roleLoaded}><Maintain /></UserRoute>} />
         <Route path="/myrentals/orders" element={<UserRoute role={role} roleLoaded={roleLoaded}><Order /></UserRoute>} />
 
         {/* ── Admin Routes — non-admins get redirected to / ── */}
         <Route path="/admin" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/products" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminProductList /></AdminRoute>} />
-        <Route path="/admin/rents" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminRents /></AdminRoute>} />
         <Route path="/admin/maintenance" element={<AdminRoute role={role} roleLoaded={roleLoaded}><MaintenanceRequests /></AdminRoute>} />
+        <Route path="/admin/orders" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminOrders/></AdminRoute>} />
 
       </Routes>
     </>
