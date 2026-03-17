@@ -192,7 +192,8 @@ exports.createRental = async (req, res) => {
       productId,
       rentalStartDate,
       rentalEndDate,
-      price
+      price,
+      shippingAddress
     } = req.body;
 
     const user = await User.findOne({ clerkId });
@@ -202,6 +203,7 @@ exports.createRental = async (req, res) => {
       rentalStartDate,
       rentalEndDate,
       price,
+      shippingAddress,
       status: "ordered"
     });
 

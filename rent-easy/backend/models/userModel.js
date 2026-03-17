@@ -105,6 +105,16 @@ const userSchema = new mongoose.Schema(
           "active"
         ],
         default: "ordered"
+      },
+
+      shippingAddress: {
+        fullname: String,
+        phone: String,
+        addressline1: String,
+        addressline2: String,
+        city: String,
+        state: String,
+        pincode: String
       }
     }
   ],
@@ -125,7 +135,17 @@ const userSchema = new mongoose.Schema(
 
       returnedAt: Date,
 
-      totalPaid: Number
+      totalPaid: Number,
+
+      shippingAddress: {
+        fullname: String,
+        phone: String,
+        addressline1: String,
+        addressline2: String,
+        city: String,
+        state: String,
+        pincode: String
+      }
     }
   ],
 

@@ -112,6 +112,7 @@ export default function Cart() {
             rentalStartDate: rentalStart.toISOString(),
             rentalEndDate:   rentalEnd.toISOString(),
             price:           item.product.rent,
+            shippingAddress: savedAddresses[selectedAddressIdx]
           });
         })
       );

@@ -1,11 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import AdminNavBar from "../components/adminNavBar";
-import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search } from "lucide-react";
+import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, MapPin } from "lucide-react";
 
 const API = "http://localhost:4000/api/rent";
 
 const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete"];
+
+const SEARCH_FIELDS = [
+  { label: "All", value: "all" },
+  { label: "Customer", value: "customer" },
+  { label: "Product", value: "product" },
+  { label: "Address", value: "address" },
+];
 
 const statusStyle = (status) => {
   switch (status) {
@@ -17,19 +24,40 @@ const statusStyle = (status) => {
   }
 };
 
-// ── Helper: get first image from product ────────────────────────
 const getImg = (product) => product?.imgs?.[0] || "";
+
+// Highlight matching text
+function Highlight({ text = "", term = "" }) {
+  if (!term.trim() || !text) return <span>{text}</span>;
+  const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+  const parts = text.split(regex);
+  return (
+    <span>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="bg-yellow-200 text-yellow-900 rounded px-0.5">
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </span>
+  );
+}
 
 export default function AdminOrders() {
   const [orders, setOrders]               = useState([]);
   const [loading, setLoading]             = useState(true);
   const [searchTerm, setSearchTerm]       = useState("");
+  const [searchField, setSearchField]     = useState("all");
+  const [searchFieldOpen, setSearchFieldOpen] = useState(false);
   const [statusFilter, setStatusFilter]   = useState("all");
   const [openDropdown, setOpenDropdown]   = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const dropdownRef = useRef(null);
+  const dropdownRef    = useRef(null);
+  const searchFieldRef = useRef(null);
 
-  // ── Fetch ────────────────────────────────────────────────────
   const fetchOrders = async () => {
     try {
       const res = await axios.get(`${API}/allRents`);
@@ -43,17 +71,18 @@ export default function AdminOrders() {
 
   useEffect(() => { fetchOrders(); }, []);
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target))
         setOpenDropdown(null);
+      if (searchFieldRef.current && !searchFieldRef.current.contains(e.target))
+        setSearchFieldOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ── Update status ────────────────────────────────────────────
   const updateStatus = async (orderId, newStatus) => {
     try {
       const res = await axios.put(`${API}/updateStatus/${orderId}`, { status: newStatus });
@@ -66,7 +95,6 @@ export default function AdminOrders() {
     }
   };
 
-  // ── Update delivery date ─────────────────────────────────────
   const updateDeliveryDate = async (orderId, date) => {
     try {
       const res = await axios.put(`${API}/updateDelivery/${orderId}`, { deliveryDate: date });
@@ -78,12 +106,32 @@ export default function AdminOrders() {
     }
   };
 
-  // ── Filter ───────────────────────────────────────────────────
+  // ── Smart Filter ─────────────────────────────────────────────
   const filtered = orders.filter((o) => {
-    const matchSearch =
-      o.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      o.user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      o.product?.title?.toLowerCase().includes(searchTerm.toLowerCase());
+    const term = searchTerm.toLowerCase().trim();
+
+    let matchSearch = true;
+    if (term) {
+      if (searchField === "all") {
+        matchSearch =
+          o.user?.name?.toLowerCase().includes(term) ||
+          o.user?.email?.toLowerCase().includes(term) ||
+          o.product?.title?.toLowerCase().includes(term);
+      } else if (searchField === "customer") {
+        matchSearch =
+          o.user?.name?.toLowerCase().includes(term) ||
+          o.user?.email?.toLowerCase().includes(term);
+      } else if (searchField === "product") {
+        matchSearch = o.product?.title?.toLowerCase().includes(term);
+      } else if (searchField === "address") {
+        matchSearch =
+          o.shippingAddress?.city?.toLowerCase().includes(term) ||
+          o.shippingAddress?.state?.toLowerCase().includes(term) ||
+          o.shippingAddress?.pincode?.toLowerCase().includes(term) ||
+          o.shippingAddress?.addressline1?.toLowerCase().includes(term);
+      }
+    }
+
     const matchStatus = statusFilter === "all" || o.status === statusFilter;
     return matchSearch && matchStatus;
   });
@@ -93,6 +141,8 @@ export default function AdminOrders() {
     return acc;
   }, {});
 
+  const currentSearchLabel = SEARCH_FIELDS.find((f) => f.value === searchField)?.label;
+
   return (
     <>
       <AdminNavBar />
@@ -100,7 +150,7 @@ export default function AdminOrders() {
 
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Orders</h1>
 
-        {/* ── Summary Cards ── */}
+        {/* ── Summary Cards (also act as status filters) ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {[
             { label: "Ordered",          key: "ordered",          color: "bg-yellow-50 border-yellow-200 text-yellow-700" },
@@ -121,18 +171,69 @@ export default function AdminOrders() {
           ))}
         </div>
 
-        {/* ── Search + Filter ── */}
+        {/* ── Search Bar with Field Selector ── */}
         <div className="flex flex-wrap items-center gap-3 mb-5">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by name, email or product..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+
+          {/* Search input + field dropdown combined */}
+          <div className="relative flex-1 min-w-[260px] flex rounded-lg border border-gray-300 overflow-visible focus-within:ring-2 focus-within:ring-green-400 focus-within:border-transparent bg-white">
+
+            {/* Field selector dropdown trigger */}
+            <div ref={searchFieldRef} className="relative flex-shrink-0">
+              <button
+                onClick={() => setSearchFieldOpen((v) => !v)}
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 border-r border-gray-300 hover:bg-gray-50 transition whitespace-nowrap h-full rounded-l-lg"
+              >
+                <Filter size={13} className="text-gray-400" />
+                {currentSearchLabel}
+                <ChevronDown size={13} className={`text-gray-400 transition-transform ${searchFieldOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {searchFieldOpen && (
+                <div className="absolute left-0 top-full mt-1 w-36 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                  {SEARCH_FIELDS.map((f) => (
+                    <button
+                      key={f.value}
+                      onClick={() => { setSearchField(f.value); setSearchFieldOpen(false); }}
+                      className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm transition hover:bg-gray-50 ${
+                        searchField === f.value ? "font-bold text-green-600" : "text-gray-700"
+                      }`}
+                    >
+                      {f.label}
+                      {searchField === f.value && <span className="ml-auto text-green-500">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Search icon + input */}
+            <div className="relative flex-1 flex items-center">
+              <Search size={15} className="absolute left-3 text-gray-400 pointer-events-none" />
+              <input
+                type="text"
+                placeholder={
+                  searchField === "product"
+                    ? "Search by product name..."
+                    : searchField === "customer"
+                    ? "Search by name or email..."
+                    : "Search by name, email or product..."
+                }
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 text-sm bg-transparent focus:outline-none"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 text-gray-400 hover:text-gray-600 transition"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Status filter pills — "All" + each status */}
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setStatusFilter("all")}
@@ -160,6 +261,20 @@ export default function AdminOrders() {
           </div>
         </div>
 
+        {/* Result count */}
+        {(searchTerm || statusFilter !== "all") && (
+          <p className="text-sm text-gray-500 mb-3">
+            Showing <span className="font-semibold text-gray-700">{filtered.length}</span> of{" "}
+            <span className="font-semibold text-gray-700">{orders.length}</span> orders
+            {searchTerm && (
+              <> for <span className="font-semibold text-gray-700">"{searchTerm}"</span> in {currentSearchLabel.toLowerCase()}</>
+            )}
+            {statusFilter !== "all" && (
+              <> · filtered by <span className="capitalize font-semibold text-gray-700">{statusFilter}</span></>
+            )}
+          </p>
+        )}
+
         {/* ── Table ── */}
         {loading ? (
           <div className="flex items-center justify-center h-48">
@@ -173,6 +288,7 @@ export default function AdminOrders() {
                   <tr>
                     <th className="px-5 py-3">Customer</th>
                     <th className="px-5 py-3">Product</th>
+                    <th className="px-5 py-3">Address</th>
                     <th className="px-5 py-3">Rental Period</th>
                     <th className="px-5 py-3">Price / mo</th>
                     <th className="px-5 py-3">Delivery Date</th>
@@ -184,7 +300,9 @@ export default function AdminOrders() {
                   {filtered.length === 0 ? (
                     <tr>
                       <td colSpan="7" className="text-center py-12 text-gray-400">
-                        No orders found.
+                        {searchTerm
+                          ? `No orders found matching "${searchTerm}" in ${currentSearchLabel.toLowerCase()}.`
+                          : "No orders found."}
                       </td>
                     </tr>
                   ) : (
@@ -196,8 +314,12 @@ export default function AdminOrders() {
                       >
                         {/* Customer */}
                         <td className="px-5 py-4">
-                          <p className="font-semibold text-gray-800">{order.user?.name || "—"}</p>
-                          <p className="text-xs text-gray-400">{order.user?.email || "—"}</p>
+                          <p className="font-semibold text-gray-800">
+                            <Highlight text={order.user?.name || "—"} term={searchField !== "product" ? searchTerm : ""} />
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            <Highlight text={order.user?.email || "—"} term={searchField !== "product" ? searchTerm : ""} />
+                          </p>
                         </td>
 
                         {/* Product */}
@@ -211,9 +333,19 @@ export default function AdminOrders() {
                               />
                             )}
                             <span className="font-medium text-gray-800">
-                              {order.product?.title || "—"}
+                              <Highlight text={order.product?.title || "—"} term={searchField !== "customer" && searchField !== "address" ? searchTerm : ""} />
                             </span>
                           </div>
+                        </td>
+
+                        {/* Address */}
+                        <td className="px-5 py-4">
+                          <p className="text-gray-800 font-medium">
+                            <Highlight text={order.shippingAddress?.city || "—"} term={searchField === "address" || searchField === "all" ? searchTerm : ""} />
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            <Highlight text={order.shippingAddress?.state || ""} term={searchField === "address" || searchField === "all" ? searchTerm : ""} />
+                          </p>
                         </td>
 
                         {/* Rental Period */}
@@ -227,7 +359,7 @@ export default function AdminOrders() {
                           ₹{order.price}
                         </td>
 
-                        {/* Delivery Date inline */}
+                        {/* Delivery Date */}
                         <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
                           <input
                             type="date"
@@ -308,6 +440,7 @@ export default function AdminOrders() {
 function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
   const product = order.product;
   const user    = order.user;
+  const address = order.shippingAddress;
 
   const [localDate, setLocalDate] = useState(
     order.deliveryDate
@@ -376,6 +509,25 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
                 <p className="font-medium text-gray-800">{user?.email || "—"}</p>
               </div>
             </div>
+          </div>
+
+          {/* Delivery Address */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin size={16} className="text-gray-400" />
+              <p className="font-semibold text-gray-700">Delivery Address</p>
+            </div>
+            {address ? (
+              <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-1">
+                <p className="font-bold text-gray-800">{address.fullname} · {address.phone}</p>
+                <p className="text-gray-600">{address.addressline1}{address.addressline2 ? `, ${address.addressline2}` : ""}</p>
+                <p className="text-gray-600">{address.city}, {address.state} — {address.pincode}</p>
+              </div>
+            ) : (
+              <div className="bg-gray-50 rounded-xl p-4 text-center text-gray-400 text-sm">
+                No shipping address provided
+              </div>
+            )}
           </div>
 
           {/* Rental Period */}
