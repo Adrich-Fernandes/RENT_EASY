@@ -168,6 +168,8 @@ const userSchema = new mongoose.Schema(
 
       expectedCompletionDate: Date,
 
+      pickupDate: Date,
+
       completedAt: Date,
 
       status: {

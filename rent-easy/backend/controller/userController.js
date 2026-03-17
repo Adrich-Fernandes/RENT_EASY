@@ -44,7 +44,8 @@ exports.getUser = async (req, res) => {
     const user = await User.findOne({ clerkId })
       .populate("cart.product")
       .populate("activeRentals.product")
-      .populate("pastRentals.product");
+      .populate("pastRentals.product")
+      .populate("maintenanceRequests.product");
 
     res.json(user);
 

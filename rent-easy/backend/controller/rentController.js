@@ -114,7 +114,7 @@ exports.getAllMaintenance = async (req, res) => {
 exports.updateMaintenanceStatus = async (req, res) => {
   try {
     const { userId, requestId } = req.params;
-    const { status, expectedCompletionDate } = req.body;
+    const { status, expectedCompletionDate, pickupDate } = req.body;
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -124,6 +124,13 @@ exports.updateMaintenanceStatus = async (req, res) => {
 
     if (status) request.status = status;
     if (expectedCompletionDate) request.expectedCompletionDate = new Date(expectedCompletionDate);
+    if (pickupDate) {
+      request.pickupDate = new Date(pickupDate);
+      // Auto-approve if currently in "requested" state
+      if (request.status === "requested") {
+        request.status = "approved";
+      }
+    }
     if (status === "completed") request.completedAt = new Date();
 
     await user.save();
