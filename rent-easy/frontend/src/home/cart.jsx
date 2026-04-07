@@ -145,7 +145,7 @@ export default function Cart() {
         <UserNavBar />
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
             <p className="text-gray-400 text-sm">Loading cart...</p>
           </div>
         </div>
@@ -191,11 +191,11 @@ export default function Cart() {
           {selectedAddressIdx !== null && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-3">
               <div className="flex items-center gap-2">
-                <Calendar className="text-green-600" size={20} />
+                <Calendar className="text-red-600" size={20} />
                 <span className="font-bold text-lg">Select Delivery Date</span>
               </div>
               <div className="flex items-center gap-3">
-                <button type="button" onClick={openCalendar} className="px-4 py-2 border border-green-400 border-opacity-40 rounded-lg hover:bg-gray-50 text-sm">
+                <button type="button" onClick={openCalendar} className="px-4 py-2 border border-red-400 border-opacity-40 rounded-lg hover:bg-gray-50 text-sm">
                   {date ? date : "Pick a date"}
                 </button>
                 <input
@@ -206,14 +206,14 @@ export default function Cart() {
                   onChange={(e) => setDate(e.target.value)}
                   className="absolute opacity-0 pointer-events-none"
                 />
-                {date && <span className="text-green-600 text-sm font-medium">✓ {date}</span>}
+                {date && <span className="text-red-600 text-sm font-medium">✓ {date}</span>}
               </div>
             </div>
           )}
 
           <button
             onClick={() => setShowDelivery(!showDelivery)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-xl transition"
+            className="flex items-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-xl transition"
           >
             {showDelivery ? <ChevronUp size={18} /> : <Plus size={18} />}
             {showDelivery ? "Cancel" : "Add New Address"}
@@ -222,7 +222,7 @@ export default function Cart() {
           {showDelivery && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="text-green-600" size={20} />
+                <MapPin className="text-red-600" size={20} />
                 <span className="font-bold text-lg">New Delivery Address</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -239,12 +239,12 @@ export default function Cart() {
                     <label className="block text-sm text-gray-600 mb-1">{label}</label>
                     <input
                       type="text" name={name} value={form[name]} onChange={handleForm} placeholder={placeholder}
-                      className="w-full border border-green-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+                      className="w-full border border-red-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
                     />
                   </div>
                 ))}
               </div>
-              <button onClick={handleAddAddress} className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2.5 rounded-xl text-sm transition">
+              <button onClick={handleAddAddress} className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-xl text-sm transition">
                 Save Address
               </button>
             </div>
@@ -253,7 +253,7 @@ export default function Cart() {
           {savedAddresses.length > 0 && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="text-green-600" size={20} />
+                <MapPin className="text-red-600" size={20} />
                 <span className="font-bold text-lg">Select Delivery Address</span>
               </div>
               {savedAddresses.map((addr, i) => (
@@ -261,11 +261,11 @@ export default function Cart() {
                   key={addr._id || i}
                   onClick={() => setSelectedAddressIdx(i)}
                   className={`border rounded-xl p-4 flex justify-between items-start gap-4 cursor-pointer transition ${
-                    selectedAddressIdx === i ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-green-300"
+                    selectedAddressIdx === i ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-red-300"
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${selectedAddressIdx === i ? "border-green-500 bg-green-500" : "border-gray-400"}`} />
+                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${selectedAddressIdx === i ? "border-red-500 bg-red-500" : "border-gray-400"}`} />
                     <div className="space-y-1 text-sm text-gray-700">
                       <p className="font-semibold text-gray-900">{addr.fullname} · {addr.phone}</p>
                       <p>{addr.addressline1}{addr.addressline2 ? `, ${addr.addressline2}` : ""}</p>
@@ -319,13 +319,13 @@ export default function Cart() {
 
             <div className="flex justify-between items-center">
               <span className="font-semibold text-lg">Total Payable</span>
-              <span className="font-bold text-lg text-green-600">₹{totalPayable}</span>
+              <span className="font-bold text-lg text-red-600">₹{totalPayable}</span>
             </div>
 
             <button
               onClick={handlePlaceOrder}
               disabled={placingOrder || cartItems.length === 0}
-              className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
+              className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
             >
               {placingOrder ? (
                 <><Loader2 size={18} className="animate-spin" /> Placing Order...</>
@@ -364,7 +364,7 @@ function CartItemCard({ data, tenure, onRemove }) {
         <div className="flex items-center gap-6">
           <div>
             <span className="block text-sm text-gray-500">Monthly Rent</span>
-            <span className="block text-green-600 font-bold text-lg">₹{data?.rent}</span>
+            <span className="block text-red-600 font-bold text-lg">₹{data?.rent}</span>
           </div>
           <div>
             <span className="block text-sm text-gray-500">Tenure</span>

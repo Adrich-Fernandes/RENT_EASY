@@ -72,7 +72,7 @@ export default function AdminDashboard() {
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="w-full p-4 md:p-8 space-y-8">
@@ -87,8 +87,8 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <Package size={22} className="text-green-600" />
+              <div className="bg-red-100 p-3 rounded-lg">
+                <Package size={22} className="text-red-600" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Total Products</p>
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <CheckCircle size={18} className="text-green-500" />
+              <CheckCircle size={18} className="text-red-500" />
               <div>
                 <p className="text-xs text-gray-400">Returned</p>
                 <p className="text-lg font-semibold text-gray-700">{stats.returnedRents}</p>
@@ -191,7 +191,7 @@ export default function AdminDashboard() {
                           <span className={`px-2 py-1 text-xs rounded-full font-medium ${
                             r.status === "active" ? "bg-blue-100 text-blue-600" :
                             r.status === "pending" ? "bg-yellow-100 text-yellow-600" :
-                            r.status === "returned" ? "bg-green-100 text-green-600" :
+                            r.status === "returned" ? "bg-red-100 text-red-600" :
                             "bg-red-100 text-red-500"
                           }`}>
                             {r.status}
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
                           <span className={`px-2 py-1 text-xs rounded-full font-medium ${
                             m.status === "open" ? "bg-red-100 text-red-500" :
                             m.status === "in-progress" ? "bg-yellow-100 text-yellow-600" :
-                            "bg-green-100 text-green-600"
+                            "bg-red-100 text-red-600"
                           }`}>
                             {m.status}
                           </span>

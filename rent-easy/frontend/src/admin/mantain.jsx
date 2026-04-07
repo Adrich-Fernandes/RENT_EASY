@@ -90,7 +90,7 @@ export default function MaintenanceRequests() {
       case "requested":   return "bg-yellow-100 text-yellow-700";
       case "approved":    return "bg-blue-100 text-blue-700";
       case "in progress": return "bg-purple-100 text-purple-700";
-      case "completed":   return "bg-green-100 text-green-700";
+      case "completed":   return "bg-red-100 text-red-700";
       default:            return "bg-gray-100 text-gray-600";
     }
   };
@@ -116,13 +116,13 @@ export default function MaintenanceRequests() {
             placeholder="Search by customer, product, or issue..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-400"
           />
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <div className="w-full overflow-x-auto">
@@ -181,9 +181,9 @@ export default function MaintenanceRequests() {
                                 type="date"
                                 value={tempPickup}
                                 onChange={(e) => setTempPickup(e.target.value)}
-                                className="border border-gray-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-green-400 outline-none"
+                                className="border border-gray-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-red-400 outline-none"
                               />
-                              <button onClick={() => handleSavePickup(req.user?._id, req._id)} className="px-3 py-1 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600">Save</button>
+                              <button onClick={() => handleSavePickup(req.user?._id, req._id)} className="px-3 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600">Save</button>
                               <button onClick={() => setEditingPickup(null)} className="px-3 py-1 bg-gray-100 text-gray-500 text-xs rounded-lg">✕</button>
                             </div>
                           ) : (
@@ -209,9 +209,9 @@ export default function MaintenanceRequests() {
                                 type="date"
                                 value={tempDate}
                                 onChange={(e) => setTempDate(e.target.value)}
-                                className="border border-gray-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-green-400 outline-none"
+                                className="border border-gray-300 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-red-400 outline-none"
                               />
-                              <button onClick={() => handleSaveDate(req.user?._id, req._id)} className="px-3 py-1 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600">Save</button>
+                              <button onClick={() => handleSaveDate(req.user?._id, req._id)} className="px-3 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600">Save</button>
                               <button onClick={() => setEditingDate(null)} className="px-3 py-1 bg-gray-100 text-gray-500 text-xs rounded-lg">✕</button>
                             </div>
                           ) : (
@@ -269,7 +269,7 @@ export default function MaintenanceRequests() {
                 key={option}
                 onClick={() => updateStatus(req?.user?._id, openDropdown, option)}
                 className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 capitalize transition ${
-                  req?.status === option ? "text-green-600 font-bold" : "text-gray-700"
+                  req?.status === option ? "text-red-600 font-bold" : "text-gray-700"
                 }`}
               >
                 <span className={`w-2 h-2 rounded-full ${getStatusStyle(option).split(" ")[0]}`} />

@@ -40,7 +40,7 @@ export default function Maintain() {
       <div className="min-h-screen bg-zinc-50">
         <TabBar />
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-green-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-red-400 border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -58,7 +58,7 @@ export default function Maintain() {
             <h1 className="text-2xl font-bold text-gray-900">Maintenance</h1>
             <p className="text-sm text-gray-400 mt-1">Track your service requests</p>
           </div>
-          <div className="flex items-center gap-2 bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-xl">
+          <div className="flex items-center gap-2 bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-xl">
             <Wrench size={15} />
             <span>{requests.length} Request{requests.length !== 1 ? "s" : ""}</span>
           </div>
@@ -94,8 +94,8 @@ export default function Maintain() {
                     {/* Product + status row */}
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
-                          <Wrench size={20} className="text-green-600" />
+                        <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                          <Wrench size={20} className="text-red-600" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-gray-900 text-base leading-tight">
@@ -117,15 +117,15 @@ export default function Maintain() {
                         {/* connector line */}
                         <div className="absolute top-2.5 left-0 right-0 h-0.5 bg-gray-100 z-0" />
                         <div
-                          className="absolute top-2.5 left-0 h-0.5 bg-green-400 z-0 transition-all duration-500"
+                          className="absolute top-2.5 left-0 h-0.5 bg-red-400 z-0 transition-all duration-500"
                           style={{ width: stepIndex >= 0 ? `${(stepIndex / (steps.length - 1)) * 100}%` : "0%" }}
                         />
                         {steps.map((step, idx) => (
                           <div key={step} className="flex flex-col items-center gap-1 z-10">
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                              idx < stepIndex  ? "bg-green-500 border-green-500"
-                              : idx === stepIndex && step === "completed" ? "bg-green-500 border-green-500" 
-                              : idx === stepIndex ? "bg-white border-green-500 shadow-sm shadow-green-200"
+                              idx < stepIndex  ? "bg-red-500 border-red-500"
+                              : idx === stepIndex && step === "completed" ? "bg-red-500 border-red-500" 
+                              : idx === stepIndex ? "bg-white border-red-500 shadow-sm shadow-red-200"
                               : "bg-white border-gray-200"
                             }`}>
                               {(idx < stepIndex || (idx === stepIndex && step === "completed")) && (
@@ -134,11 +134,11 @@ export default function Maintain() {
                                 </svg>
                               )}
                               {idx === stepIndex && step !== "completed" && (
-                                <div className="w-2 h-2 rounded-full bg-green-500" />
+                                <div className="w-2 h-2 rounded-full bg-red-500" />
                               )}
                             </div>
                             <span className={`text-[10px] font-medium capitalize hidden sm:block ${
-                              idx <= stepIndex ? "text-green-600" : "text-gray-300"
+                              idx <= stepIndex ? "text-red-600" : "text-gray-300"
                             }`}>
                               {step}
                             </span>
@@ -160,7 +160,7 @@ export default function Maintain() {
                         </div>
                       )}
                       {req.expectedCompletionDate && (
-                        <div className="flex items-center gap-1.5 text-green-600 font-medium">
+                        <div className="flex items-center gap-1.5 text-red-600 font-medium">
                           <CheckCircle2 size={12} />
                           <span>Expected by {new Date(req.expectedCompletionDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
                         </div>

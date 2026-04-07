@@ -10,7 +10,7 @@ const footer = () => {
         {/* LEFT SECTION */}
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
-            <span className="text-green-400">Rent</span>
+            <span className="text-red-400">Rent</span>
             <span className="text-white">Ease</span>
           </h2>
 

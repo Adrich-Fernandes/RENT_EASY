@@ -46,7 +46,7 @@ export default function ProductView() {
     return (
       <div className="flex flex-col items-center justify-center h-screen gap-4">
         <p className="text-gray-500">No product selected.</p>
-        <button onClick={() => navigate("/productlist")} className="px-4 py-2 bg-green-600 text-white rounded-lg">
+        <button onClick={() => navigate("/productlist")} className="px-4 py-2 bg-red-600 text-white rounded-lg">
           Back to Products
         </button>
       </div>
@@ -99,7 +99,7 @@ export default function ProductView() {
               {images.length > 1 && (
                 <div className="order-2 lg:order-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px]">
                   {images.map((src, i) => (
-                    <button key={i} onClick={() => setActiveImg(i)} className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${i === activeImg ? "border-green-500 shadow-md" : "border-gray-200 opacity-70 hover:opacity-100 hover:border-green-300"}`}>
+                    <button key={i} onClick={() => setActiveImg(i)} className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${i === activeImg ? "border-red-500 shadow-md" : "border-gray-200 opacity-70 hover:opacity-100 hover:border-red-300"}`}>
                       <img src={src} alt={`thumb ${i + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
@@ -114,7 +114,7 @@ export default function ProductView() {
                       <button onClick={() => setActiveImg((i) => (i + 1) % images.length)} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow opacity-0 group-hover:opacity-100 transition text-xl">›</button>
                       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                         {images.map((_, i) => (
-                          <button key={i} onClick={() => setActiveImg(i)} className={`w-2 h-2 rounded-full transition ${i === activeImg ? "bg-green-600 scale-125" : "bg-white/70 hover:bg-white"}`} />
+                          <button key={i} onClick={() => setActiveImg(i)} className={`w-2 h-2 rounded-full transition ${i === activeImg ? "bg-red-600 scale-125" : "bg-white/70 hover:bg-white"}`} />
                         ))}
                       </div>
                     </>
@@ -126,7 +126,7 @@ export default function ProductView() {
             {/* RIGHT — PRODUCT DETAILS */}
             <div className="lg:w-1/2 space-y-5">
               <div className="flex gap-2 flex-wrap">
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">{product.category}</span>
+                <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">{product.category}</span>
                 {product.subcategory && (
                   <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">{product.subcategory}</span>
                 )}
@@ -140,7 +140,7 @@ export default function ProductView() {
 
               <div className="space-y-1">
                 <p className="text-sm text-gray-500">Monthly Rent</p>
-                <p className="text-4xl font-bold text-green-600">₹{product.rent} <span className="text-lg font-medium text-gray-400">/mo</span></p>
+                <p className="text-4xl font-bold text-red-600">₹{product.rent} <span className="text-lg font-medium text-gray-400">/mo</span></p>
                 <p className="text-sm text-gray-500 mt-1">Security Deposit: <span className="font-semibold text-gray-700">₹{product.deposit}</span></p>
               </div>
 
@@ -157,7 +157,7 @@ export default function ProductView() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-gray-700">Select Rental Tenure</p>
-                  <span className="text-sm font-bold text-green-600">
+                  <span className="text-sm font-bold text-red-600">
                     {selectedTenure} month{selectedTenure > 1 ? "s" : ""}
                   </span>
                 </div>
@@ -169,11 +169,11 @@ export default function ProductView() {
                       onClick={() => setSelectedTenure(months)}
                       className={`rounded-xl py-3 text-center transition border-2 ${
                         selectedTenure === months
-                          ? "border-green-500 bg-green-50 shadow-sm"
-                          : "border-gray-200 hover:border-green-300 bg-white"
+                          ? "border-red-500 bg-red-50 shadow-sm"
+                          : "border-gray-200 hover:border-red-300 bg-white"
                       }`}
                     >
-                      <span className={`block text-lg font-bold ${selectedTenure === months ? "text-green-600" : "text-gray-800"}`}>
+                      <span className={`block text-lg font-bold ${selectedTenure === months ? "text-red-600" : "text-gray-800"}`}>
                         {months}
                       </span>
                       <span className="block text-[10px] text-gray-400">mo</span>
@@ -182,8 +182,8 @@ export default function ProductView() {
                 </div>
 
                 {selectedTenure >= 6 && (
-                  <div className="mt-3 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-2">
-                    <span className="text-green-600 text-sm font-semibold">
+                  <div className="mt-3 flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
+                    <span className="text-red-600 text-sm font-semibold">
                       🎉 {selectedTenure === 12 ? "Best value!" : "Great choice!"} {selectedTenure} months selected
                     </span>
                   </div>
@@ -194,10 +194,10 @@ export default function ProductView() {
                 onClick={handleAddToCart}
                 disabled={cartStatus !== "idle" || !product.available}
                 className={`w-full py-4 rounded-xl transition font-bold text-lg shadow-md flex items-center justify-center gap-3
-                  ${cartStatus === "done" ? "bg-green-100 text-green-700 border border-green-300 cursor-default"
-                  : cartStatus === "loading" ? "bg-green-500 text-white opacity-80 cursor-wait"
+                  ${cartStatus === "done" ? "bg-red-100 text-red-700 border border-red-300 cursor-default"
+                  : cartStatus === "loading" ? "bg-red-500 text-white opacity-80 cursor-wait"
                   : !product.available ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700 active:bg-green-800 text-white cursor-pointer"}`}
+                  : "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white cursor-pointer"}`}
               >
                 {cartStatus === "loading" && <Loader2 size={20} className="animate-spin" />}
                 {cartStatus === "done"    && <Check size={20} />}
@@ -208,7 +208,7 @@ export default function ProductView() {
               </button>
 
               {cartStatus === "done" && (
-                <button onClick={() => navigate("/cart")} className="w-full py-3 rounded-xl border-2 border-green-500 text-green-600 font-semibold hover:bg-green-50 transition text-sm">
+                <button onClick={() => navigate("/cart")} className="w-full py-3 rounded-xl border-2 border-red-500 text-red-600 font-semibold hover:bg-red-50 transition text-sm">
                   Go to Cart →
                 </button>
               )}
@@ -221,7 +221,7 @@ export default function ProductView() {
                 <hr className="border-gray-100" />
                 <div className="flex justify-between font-semibold text-gray-900">
                   <span>Total (rent + deposit)</span>
-                  <span className="text-green-600">₹{product.rent * selectedTenure + product.deposit}</span>
+                  <span className="text-red-600">₹{product.rent * selectedTenure + product.deposit}</span>
                 </div>
               </div>
 

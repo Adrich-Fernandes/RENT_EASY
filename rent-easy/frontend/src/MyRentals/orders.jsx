@@ -60,7 +60,7 @@ export default function Orders() {
         <TabBar />
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
             <p className="text-zinc-400 text-sm">Loading orders...</p>
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function Orders() {
           <p className="text-red-500">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition"
+            className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition"
           >
             Retry
           </button>
@@ -113,7 +113,7 @@ export default function Orders() {
               onClick={() => setActiveTab("active")}
               className={`pb-2 text-sm font-semibold border-b-2 transition ${
                 activeTab === "active"
-                  ? "border-green-500 text-green-600"
+                  ? "border-red-500 text-red-600"
                   : "border-transparent text-zinc-400 hover:text-zinc-600"
               }`}
             >
@@ -123,7 +123,7 @@ export default function Orders() {
               onClick={() => setActiveTab("past")}
               className={`pb-2 text-sm font-semibold border-b-2 transition ${
                 activeTab === "past"
-                  ? "border-green-500 text-green-600"
+                  ? "border-red-500 text-red-600"
                   : "border-transparent text-zinc-400 hover:text-zinc-600"
               }`}
             >
@@ -177,7 +177,7 @@ function ProductCard({ rental, isPast, onClick }) {
       case "ordered":          return "bg-yellow-100 text-yellow-700";
       case "dispatch":         return "bg-blue-100 text-blue-700";
       case "out for delivery": return "bg-purple-100 text-purple-700";
-      case "complete":         return "bg-green-100 text-green-700";
+      case "complete":         return "bg-red-100 text-red-700";
       default:                 return "bg-gray-100 text-gray-600";
     }
   };
@@ -279,9 +279,9 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
                 key={step}
                 className={`capitalize font-medium ${
                   index === currentStep
-                    ? "text-green-600"
+                    ? "text-red-600"
                     : index < currentStep
-                    ? "text-green-500"
+                    ? "text-red-500"
                     : "text-zinc-400"
                 }`}
               >
@@ -291,7 +291,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
           </div>
           <div className="relative h-2 bg-zinc-200 rounded">
             <div
-              className="absolute top-0 left-0 h-2 bg-green-500 rounded transition-all duration-500"
+              className="absolute top-0 left-0 h-2 bg-red-500 rounded transition-all duration-500"
               style={{ width: `${progressWidth}%` }}
             />
           </div>
@@ -347,7 +347,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
 
             <button
               type="submit"
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium"
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium"
             >
               Submit
             </button>

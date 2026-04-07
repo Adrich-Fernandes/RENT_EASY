@@ -184,7 +184,7 @@ export const CustomerRequest = [
         orderdate:"27/02/2026"
     },
     {
-        name: "Bonnie Green",
+        name: "Bonnie red",
         email: "bonnie@flowbite.com",
         product: "iPhone 15",
         tenure: "3 Months",
@@ -377,7 +377,7 @@ export const products = [
     price: "$249.00",
     description: "Sleek stainless-steel case with sapphire crystal face. Water-resistant up to 50m. Only 14 units left.",
     status: "OUT FOR DELIVERY",
-    statusColor: "bg-green-100 text-green-700",
+    statusColor: "bg-red-100 text-red-700",
     bg: "bg-amber-50",
   },
   {

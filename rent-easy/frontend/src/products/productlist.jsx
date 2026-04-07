@@ -75,16 +75,16 @@ export default function Layout() {
                         placeholder="Search..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                        className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
                     />
                     <button
                         onClick={() => setShowMobileFilter(!showMobileFilter)}
-                        className="flex items-center gap-1.5 px-3 py-2 border rounded-lg text-sm text-green-700 bg-green-50 hover:bg-green-100 transition"
+                        className="flex items-center gap-1.5 px-3 py-2 border rounded-lg text-sm text-red-700 bg-red-50 hover:bg-red-100 transition"
                     >
                         <SlidersHorizontal size={16} />
                         Filters
                         {selectedTypes.length > 0 && (
-                            <span className="ml-1 bg-green-600 text-white text-xs rounded-full px-1.5 py-0.5">
+                            <span className="ml-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
                                 {selectedTypes.length}
                             </span>
                         )}
@@ -98,8 +98,8 @@ export default function Layout() {
                             onClick={() => handleChange(cat)}
                             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition
                                 ${selected === cat
-                                    ? "bg-green-600 text-white border-green-600"
-                                    : "bg-white text-gray-700 border-gray-300 hover:border-green-400"
+                                    ? "bg-red-600 text-white border-red-600"
+                                    : "bg-white text-gray-700 border-gray-300 hover:border-red-400"
                                 }`}
                         >
                             {cat}
@@ -117,8 +117,8 @@ export default function Layout() {
                                     onClick={() => handleType(v)}
                                     className={`px-3 py-1 rounded-full text-sm border transition
                                         ${selectedTypes.includes(v)
-                                            ? "bg-green-600 text-white border-green-600"
-                                            : "bg-white text-gray-600 border-gray-300 hover:border-green-400"
+                                            ? "bg-red-600 text-white border-red-600"
+                                            : "bg-white text-gray-600 border-gray-300 hover:border-red-400"
                                         }`}
                                 >
                                     {v}
@@ -136,7 +136,7 @@ export default function Layout() {
                     placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full border rounded px-3 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    className="w-full border rounded px-3 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-red-400"
                 />
 
                 <p className="font-bold text-2xl mb-4">Filters</p>
@@ -146,7 +146,7 @@ export default function Layout() {
                     {categories.map((cat) => (
                         <label key={cat} className="flex items-center gap-2 cursor-pointer">
                             <input
-                                className="rounded-sm text-green-600 focus:ring-green-500"
+                                className="rounded-sm text-red-600 focus:ring-red-500"
                                 type="checkbox"
                                 checked={selected === cat}
                                 onChange={() => handleChange(cat)}
@@ -161,7 +161,7 @@ export default function Layout() {
                             {subcategories.map((v, i) => (
                                 <label key={i} className="flex items-center gap-2 cursor-pointer">
                                     <input
-                                        className="rounded-sm text-green-600 focus:ring-green-500"
+                                        className="rounded-sm text-red-600 focus:ring-red-500"
                                         type="checkbox"
                                         checked={selectedTypes.includes(v)}
                                         onChange={() => handleType(v)}
@@ -197,15 +197,15 @@ export default function Layout() {
                 {(selected || selectedTypes.length > 0) && (
                     <div className="flex flex-wrap gap-2 mb-4">
                         {selected && (
-                            <span className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                            <span className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">
                                 {selected}
-                                <button onClick={() => handleChange(selected)} className="ml-1 font-bold hover:text-green-900">×</button>
+                                <button onClick={() => handleChange(selected)} className="ml-1 font-bold hover:text-red-900">×</button>
                             </span>
                         )}
                         {selectedTypes.map((t) => (
-                            <span key={t} className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                            <span key={t} className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">
                                 {t}
-                                <button onClick={() => handleType(t)} className="ml-1 font-bold hover:text-green-900">×</button>
+                                <button onClick={() => handleType(t)} className="ml-1 font-bold hover:text-red-900">×</button>
                             </span>
                         ))}
                     </div>
@@ -215,7 +215,7 @@ export default function Layout() {
                 {loading && (
                     <div className="flex items-center justify-center h-64">
                         <div className="flex flex-col items-center gap-3">
-                            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+                            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
                             <p className="text-gray-400 text-sm">Loading products...</p>
                         </div>
                     </div>
@@ -228,7 +228,7 @@ export default function Layout() {
                             <p className="text-red-500 text-lg mb-3">{error}</p>
                             <button
                                 onClick={() => window.location.reload()}
-                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
                             >
                                 Retry
                             </button>
@@ -253,7 +253,7 @@ export default function Layout() {
                                     />
                                     <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-semibold shadow
                                         ${v.available
-                                            ? "bg-green-500 text-white"
+                                            ? "bg-red-500 text-white"
                                             : "bg-gray-400 text-white"
                                         }`}>
                                         {v.available ? "Available" : "Unavailable"}
@@ -267,7 +267,7 @@ export default function Layout() {
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
                                             <span className="text-base font-medium text-gray-700">Monthly Rent</span>
-                                            <div className="text-xl font-bold text-green-600">₹{v.rent}</div>
+                                            <div className="text-xl font-bold text-red-600">₹{v.rent}</div>
                                         </div>
                                         <div className="text-right">
                                             <span className="text-base font-medium text-gray-700">Deposit</span>
@@ -276,9 +276,9 @@ export default function Layout() {
                                     </div>
 
                                     <div className="flex gap-2 mt-3">
-                                        <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">3mo</span>
-                                        <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">6mo</span>
-                                        <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-full">12mo</span>
+                                        <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">3mo</span>
+                                        <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">6mo</span>
+                                        <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">12mo</span>
                                     </div>
                                 </div>
                             </div>

@@ -27,25 +27,25 @@ export default function ActiveRents() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-green-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-red-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-emerald-50 flex flex-col items-center justify-center px-4">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <Sofa className="text-green-500" size={32} />
-            <h1 className="text-4xl font-extrabold text-green-900 tracking-tight">
+            <Sofa className="text-red-500" size={32} />
+            <h1 className="text-4xl font-extrabold text-red-900 tracking-tight">
               RentEase
             </h1>
           </div>
-          <p className="text-green-700 text-lg font-medium">
+          <p className="text-red-700 text-lg font-medium">
             Create an account to view and manage your active rentals
           </p>
-          <p className="text-green-500 text-sm mt-1">
+          <p className="text-red-500 text-sm mt-1">
             Track deliveries, request maintenance, and more
           </p>
         </div>
@@ -54,14 +54,14 @@ export default function ActiveRents() {
           routing="hash"
           appearance={{
             elements: {
-              card: "shadow-2xl rounded-2xl border border-green-100",
-              headerTitle: "text-green-900 font-extrabold",
-              headerSubtitle: "text-green-600",
-              formButtonPrimary: "bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl",
-              footerActionLink: "text-green-600 hover:text-green-500 font-semibold",
-              formFieldInput: "border border-green-200 rounded-lg focus:ring-green-400 focus:border-green-400",
-              identityPreviewEditButton: "text-green-600",
-              formFieldLabel: "text-green-800 font-semibold text-sm",
+              card: "shadow-2xl rounded-2xl border border-red-100",
+              headerTitle: "text-red-900 font-extrabold",
+              headerSubtitle: "text-red-600",
+              formButtonPrimary: "bg-red-500 hover:bg-red-400 text-white font-bold rounded-xl",
+              footerActionLink: "text-red-600 hover:text-red-500 font-semibold",
+              formFieldInput: "border border-red-200 rounded-lg focus:ring-red-400 focus:border-red-400",
+              identityPreviewEditButton: "text-red-600",
+              formFieldLabel: "text-red-800 font-semibold text-sm",
             },
           }}
         />
@@ -72,7 +72,7 @@ export default function ActiveRents() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-green-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-red-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -123,7 +123,7 @@ function Card({ data, clerkId }) {
 
   return (
     <>
-      <div className="w-full max-w-lg bg-green-50 rounded-2xl overflow-hidden shadow-xl hover:scale-[1.02] transition-transform duration-300 border border-green-200">
+      <div className="w-full max-w-lg bg-red-50 rounded-2xl overflow-hidden shadow-xl hover:scale-[1.02] transition-transform duration-300 border border-red-200">
 
         {/* Image */}
         <div className="relative w-full h-52">
@@ -132,28 +132,28 @@ function Card({ data, clerkId }) {
             alt={product?.title || product?.name}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-green-50 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-red-50 via-transparent to-transparent" />
         </div>
 
         {/* Content */}
         <div className="p-5 flex flex-col gap-4">
           <div>
-            <h2 className="text-green-900 text-2xl font-extrabold">
+            <h2 className="text-red-900 text-2xl font-extrabold">
               {product?.title || product?.name}
             </h2>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-green-800 font-bold">
+              <span className="text-red-800 font-bold">
                 ₹{data.price} / Month
               </span>
               <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${
-                data.status === "complete" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                data.status === "complete" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"
               }`}>
                 {data.status === "complete" ? "Active / Delivered" : data.status}
               </span>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 text-sm text-green-700">
+          <div className="flex flex-col gap-2 text-sm text-red-700">
             <div className="flex items-center gap-2">
               <CalendarIcon size={18} />
               <span>Start: {data.rentalStartDate ? new Date(data.rentalStartDate).toLocaleDateString() : "—"}</span>
@@ -168,11 +168,11 @@ function Card({ data, clerkId }) {
             </div>
           </div>
 
-          <div className="border-t border-green-200" />
+          <div className="border-t border-red-200" />
 
           <button
             onClick={() => setShowModal(true)}
-            className="w-full py-2.5 bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl transition"
+            className="w-full py-2.5 bg-red-500 hover:bg-red-400 text-white font-bold rounded-xl transition"
           >
             Request Maintenance
           </button>
@@ -197,19 +197,19 @@ function Card({ data, clerkId }) {
             </div>
 
             <p className="text-sm font-semibold">Product</p>
-            <p className="text-green-600 mb-4">{product?.name || product?.title}</p>
+            <p className="text-red-600 mb-4">{product?.name || product?.title}</p>
 
             <textarea
               rows={4}
               value={issue}
               onChange={(e) => setIssue(e.target.value)}
               placeholder="Describe the issue..."
-              className="w-full border rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full border rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-red-400"
             />
 
             <button
               onClick={submitMaintenance}
-              className="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-400 transition"
+              className="w-full bg-red-500 text-white py-3 rounded-xl hover:bg-red-400 transition"
             >
               Submit Request
             </button>

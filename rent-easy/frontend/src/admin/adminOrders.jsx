@@ -19,7 +19,7 @@ const statusStyle = (status) => {
     case "ordered":          return "bg-yellow-100 text-yellow-700";
     case "dispatch":         return "bg-blue-100 text-blue-700";
     case "out for delivery": return "bg-purple-100 text-purple-700";
-    case "complete":         return "bg-green-100 text-green-700";
+    case "complete":         return "bg-red-100 text-red-700";
     default:                 return "bg-gray-100 text-gray-600";
   }
 };
@@ -156,7 +156,7 @@ export default function AdminOrders() {
             { label: "Ordered",          key: "ordered",          color: "bg-yellow-50 border-yellow-200 text-yellow-700" },
             { label: "Dispatched",       key: "dispatch",         color: "bg-blue-50 border-blue-200 text-blue-700" },
             { label: "Out for Delivery", key: "out for delivery", color: "bg-purple-50 border-purple-200 text-purple-700" },
-            { label: "Completed",        key: "complete",         color: "bg-green-50 border-green-200 text-green-700" },
+            { label: "Completed",        key: "complete",         color: "bg-red-50 border-red-200 text-red-700" },
           ].map((card) => (
             <button
               key={card.key}
@@ -175,7 +175,7 @@ export default function AdminOrders() {
         <div className="flex flex-wrap items-center gap-3 mb-5">
 
           {/* Search input + field dropdown combined */}
-          <div className="relative flex-1 min-w-[260px] flex rounded-lg border border-gray-300 overflow-visible focus-within:ring-2 focus-within:ring-green-400 focus-within:border-transparent bg-white">
+          <div className="relative flex-1 min-w-[260px] flex rounded-lg border border-gray-300 overflow-visible focus-within:ring-2 focus-within:ring-red-400 focus-within:border-transparent bg-white">
 
             {/* Field selector dropdown trigger */}
             <div ref={searchFieldRef} className="relative flex-shrink-0">
@@ -195,11 +195,11 @@ export default function AdminOrders() {
                       key={f.value}
                       onClick={() => { setSearchField(f.value); setSearchFieldOpen(false); }}
                       className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm transition hover:bg-gray-50 ${
-                        searchField === f.value ? "font-bold text-green-600" : "text-gray-700"
+                        searchField === f.value ? "font-bold text-red-600" : "text-gray-700"
                       }`}
                     >
                       {f.label}
-                      {searchField === f.value && <span className="ml-auto text-green-500">✓</span>}
+                      {searchField === f.value && <span className="ml-auto text-red-500">✓</span>}
                     </button>
                   ))}
                 </div>
@@ -278,7 +278,7 @@ export default function AdminOrders() {
         {/* ── Table ── */}
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <div className="w-full overflow-x-auto">
@@ -371,7 +371,7 @@ export default function AdminOrders() {
                             onBlur={(e) => {
                               if (e.target.value) updateDeliveryDate(order._id, e.target.value);
                             }}
-                            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
                           />
                         </td>
 
@@ -403,7 +403,7 @@ export default function AdminOrders() {
                                   onClick={() => updateStatus(order._id, option)}
                                   className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${
                                     order.status === option
-                                      ? "font-bold text-green-600"
+                                      ? "font-bold text-red-600"
                                       : "text-gray-700"
                                   }`}
                                 >
@@ -486,7 +486,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
             )}
             <div>
               <p className="font-bold text-gray-800 text-lg">{product?.title || "—"}</p>
-              <p className="text-green-600 font-semibold">₹{order.price} / month</p>
+              <p className="text-red-600 font-semibold">₹{order.price} / month</p>
               <span className={`mt-1 inline-block px-3 py-0.5 text-xs font-semibold rounded-full capitalize ${statusStyle(order.status)}`}>
                 {order.status}
               </span>
@@ -561,7 +561,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-gray-400 text-xs mb-1">Monthly Rent</p>
-                <p className="font-bold text-green-600 text-lg">₹{order.price}</p>
+                <p className="font-bold text-red-600 text-lg">₹{order.price}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-gray-400 text-xs mb-1">Security Deposit</p>
@@ -581,11 +581,11 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
                 type="date"
                 value={localDate}
                 onChange={(e) => setLocalDate(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
               />
               <button
                 onClick={() => localDate && onDateChange(order._id, localDate)}
-                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition"
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition"
               >
                 Save
               </button>
@@ -602,8 +602,8 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
                   onClick={() => onStatusChange(order._id, option)}
                   className={`py-2.5 rounded-xl text-sm font-semibold capitalize transition border-2 ${
                     order.status === option
-                      ? "border-green-500 bg-green-50 text-green-700"
-                      : "border-gray-200 hover:border-green-300 text-gray-600 hover:bg-gray-50"
+                      ? "border-red-500 bg-red-50 text-red-700"
+                      : "border-gray-200 hover:border-red-300 text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   {option}

@@ -17,7 +17,7 @@ const AdminNavBar = () => {
   return (
     <>
       <nav className="flex items-center justify-between px-6 h-16 sticky top-0 z-[100]
-        border-b border-green-400/30
+        border-b border-red-400/30
         bg-white/55 backdrop-blur-xl
         shadow-[0_2px_24px_0_rgba(34,197,94,0.18),0_1px_0_0_rgba(34,197,94,0.10)]">
 
@@ -28,7 +28,7 @@ const AdminNavBar = () => {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
-            <Menu size={24} className="text-green-600" />
+            <Menu size={24} className="text-red-600" />
           </button>
 
           <img
@@ -38,8 +38,8 @@ const AdminNavBar = () => {
           />
 
           <span className="font-extrabold text-[1.2rem] text-gray-900">
-            <span className="text-green-600">Rent</span>Ease
-            <span className="ml-2 text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+            <span className="text-red-600">Rent</span>Ease
+            <span className="ml-2 text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
               Admin
             </span>
           </span>
@@ -56,8 +56,8 @@ const AdminNavBar = () => {
                 `flex items-center gap-1.5 font-medium text-[0.95rem]
                 px-4 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-green-700 bg-green-100/70 shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
-                    : "text-gray-700 hover:text-green-700 hover:bg-green-100/70 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
+                    ? "text-red-700 bg-red-100/70 shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
+                    : "text-gray-700 hover:text-red-700 hover:bg-red-100/70 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.25)]"
                 }`
               }
             >
@@ -109,9 +109,9 @@ const AdminNavBar = () => {
               className="h-8 w-auto"
             />
             <span className="font-extrabold text-[1.1rem] text-gray-900">
-              <span className="text-green-600">Rent</span>Ease
+              <span className="text-red-600">Rent</span>Ease
             </span>
-            <span className="text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
               Admin
             </span>
           </div>
@@ -130,13 +130,13 @@ const AdminNavBar = () => {
               `flex items-center gap-3 px-4 py-3 rounded-xl font-medium
               transition-all duration-200 ${
                 isActive
-                  ? "bg-green-100/80 text-green-700 shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
-                  : "text-gray-800 hover:bg-green-100/80 hover:text-green-700 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
+                  ? "bg-red-100/80 text-red-700 shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
+                  : "text-gray-800 hover:bg-red-100/80 hover:text-red-700 hover:shadow-[0_0_10px_2px_rgba(34,197,94,0.2)]"
               }`
             }
             onClick={() => setMenuOpen(false)}
           >
-            <span className="text-green-600">{item.icon}</span>
+            <span className="text-red-600">{item.icon}</span>
             {item.label}
           </NavLink>
         ))}
