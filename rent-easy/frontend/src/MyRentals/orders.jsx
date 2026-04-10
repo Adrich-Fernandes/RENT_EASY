@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import TabBar from "./tabBar";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
+import UserNavBar from "../components/userNavBar";
 
 export default function Orders() {
   const { user, isLoaded } = useUser();
@@ -99,56 +100,59 @@ export default function Orders() {
   const displayedRentals = activeTab === "active" ? activeRentals : pastRentals;
 
   return (
-    <div className="min-h-screen bg-zinc-100">
-      <TabBar />
+    <>
+      <UserNavBar />
+      <div className="flex flex-col md:flex-row min-h-screen bg-zinc-100">
+        <TabBar />
 
-      <div className="px-4 py-10 sm:px-8">
-        <div className="max-w-5xl mx-auto">
+        <div className="flex-1 md:ml-64 px-4 py-10 sm:px-8">
+          <div className="max-w-5xl mx-auto">
 
-          <h1 className="text-2xl font-semibold text-zinc-800 mb-6">Orders</h1>
+            <h1 className="text-3xl font-black text-zinc-800 mb-8 tracking-tight">Your <span className="text-red-600">Orders</span></h1>
 
-          {/* Tabs */}
-          <div className="flex gap-4 mb-8 border-b border-zinc-200">
-            <button
-              onClick={() => setActiveTab("active")}
-              className={`pb-2 text-sm font-semibold border-b-2 transition ${
-                activeTab === "active"
-                  ? "border-red-500 text-red-600"
-                  : "border-transparent text-zinc-400 hover:text-zinc-600"
-              }`}
-            >
-              Active Rentals ({activeRentals.length})
-            </button>
-            <button
-              onClick={() => setActiveTab("past")}
-              className={`pb-2 text-sm font-semibold border-b-2 transition ${
-                activeTab === "past"
-                  ? "border-red-500 text-red-600"
-                  : "border-transparent text-zinc-400 hover:text-zinc-600"
-              }`}
-            >
-              Past Rentals ({pastRentals.length})
-            </button>
+            {/* Tabs */}
+            <div className="flex gap-6 mb-8 border-b border-zinc-200">
+              <button
+                onClick={() => setActiveTab("active")}
+                className={`pb-4 text-xs font-black uppercase tracking-widest transition-all ${
+                  activeTab === "active"
+                    ? "border-b-4 border-red-600 text-red-600"
+                    : "border-b-4 border-transparent text-zinc-400 hover:text-zinc-600"
+                }`}
+              >
+                Active ({activeRentals.length})
+              </button>
+              <button
+                onClick={() => setActiveTab("past")}
+                className={`pb-4 text-xs font-black uppercase tracking-widest transition-all ${
+                  activeTab === "past"
+                    ? "border-b-4 border-red-600 text-red-600"
+                    : "border-b-4 border-transparent text-zinc-400 hover:text-zinc-600"
+                }`}
+              >
+                History ({pastRentals.length})
+              </button>
+            </div>
+
+            {displayedRentals.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border border-dashed border-zinc-300">
+                <p className="text-zinc-400 font-bold">
+                  No {activeTab === "active" ? "active" : "past"} rentals found.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {displayedRentals.map((rental) => (
+                  <ProductCard
+                    key={rental._id}
+                    rental={rental}
+                    isPast={activeTab === "past"}
+                    onClick={() => setSelectedProduct(rental)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-
-          {displayedRentals.length === 0 ? (
-            <div className="flex items-center justify-center h-48">
-              <p className="text-zinc-400 text-lg">
-                No {activeTab === "active" ? "active" : "past"} rentals found.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayedRentals.map((rental) => (
-                <ProductCard
-                  key={rental._id}
-                  rental={rental}
-                  isPast={activeTab === "past"}
-                  onClick={() => setSelectedProduct(rental)}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -161,7 +165,7 @@ export default function Orders() {
           clerkId={user.id}
         />
       )}
-    </div>
+    </>
   );
 }
 

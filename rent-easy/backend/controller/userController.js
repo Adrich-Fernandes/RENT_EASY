@@ -286,3 +286,25 @@ exports.createMaintenanceRequest = async (req, res) => {
   }
 
 };
+
+/* =========================
+   REQUEST MAINTENANCE REPLY
+========================= */
+
+exports.requestMaintenanceReply = async (req, res) => {
+  try {
+    const { clerkId, requestId } = req.params;
+    const user = await User.findOne({ clerkId });
+    const request = user.maintenanceRequests.id(requestId);
+
+    if (!request) {
+      return res.status(404).json({ message: "Maintenance request not found" });
+    }
+
+    request.replyRequested = true;
+    await user.save();
+    res.json(user.maintenanceRequests);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

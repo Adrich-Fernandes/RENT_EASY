@@ -19,5 +19,6 @@ router.post("/:clerkId/rental", userController.createRental);
 router.patch("/:clerkId/rental/:rentalId", userController.completeRental);
 
 router.post("/:clerkId/maintenance", userController.createMaintenanceRequest);
+router.patch("/:clerkId/maintenance/:requestId/reply-request", userController.requestMaintenanceReply);
 
 module.exports = router;

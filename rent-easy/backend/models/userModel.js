@@ -166,6 +166,11 @@ const userSchema = new mongoose.Schema(
         default: Date.now
       },
 
+      replyRequested: {
+        type: Boolean,
+        default: false
+      },
+
       expectedCompletionDate: Date,
 
       pickupDate: Date,

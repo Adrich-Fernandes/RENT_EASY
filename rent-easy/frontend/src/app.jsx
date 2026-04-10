@@ -13,6 +13,8 @@ import ActiveRents from "./MyRentals/activeRentals.jsx";
 import Maintain from "./MyRentals/maintenance.jsx";
 import Order from "./MyRentals/orders.jsx";
 import AdminOrders from "./admin/AdminOrders.jsx";
+import Contact from "./home/contact.jsx";
+import IssueStatus from "./home/issueStatus.jsx";
 
 function UserSync({ setRole, setRoleLoaded }) {
   const { user, isLoaded } = useUser();
@@ -80,9 +82,13 @@ export default function App() {
         <Route path="/productlist" element={<UserRoute role={role} roleLoaded={roleLoaded}><ProductList /></UserRoute>} />
         <Route path="/productview" element={<UserRoute role={role} roleLoaded={roleLoaded}><ProductView /></UserRoute>} />
         <Route path="/cart" element={<UserRoute role={role} roleLoaded={roleLoaded}><Cart /></UserRoute>} />
+        <Route path="/myrentals" element={<Navigate to="/myrentals/ActiveRents" replace />} />
         <Route path="/myrentals/ActiveRents" element={<UserRoute role={role} roleLoaded={roleLoaded}><ActiveRents /></UserRoute>} />
         <Route path="/myrentals/maintenance" element={<UserRoute role={role} roleLoaded={roleLoaded}><Maintain /></UserRoute>} />
         <Route path="/myrentals/orders" element={<UserRoute role={role} roleLoaded={roleLoaded}><Order /></UserRoute>} />
+        <Route path="/contact" element={<UserRoute role={role} roleLoaded={roleLoaded}><Contact /></UserRoute>} />
+        <Route path="/report-issue" element={<UserRoute role={role} roleLoaded={roleLoaded}><div className="pt-20 text-center">Report Issue Page Coming Soon</div></UserRoute>} />
+        <Route path="/issue-status" element={<UserRoute role={role} roleLoaded={roleLoaded}><IssueStatus /></UserRoute>} />
 
         {/* ── Admin Routes — non-admins get redirected to / ── */}
         <Route path="/admin" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminDashboard /></AdminRoute>} />
