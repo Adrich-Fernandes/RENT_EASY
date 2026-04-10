@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TabBar from "./tabBar";
-import axios from "axios";
+import API from "../api/api";
 import { useUser } from "@clerk/clerk-react";
 import { Wrench, Clock, CheckCircle2, AlertCircle, Loader2, PlusCircle } from "lucide-react";
 
@@ -12,7 +12,7 @@ export default function Maintain() {
   useEffect(() => {
     const fetchMaintenance = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
+        const res = await API.get(`/api/user/${user.id}`);
         setRequests(res.data?.maintenanceRequests || []);
       } catch (err) {
         console.error(err);

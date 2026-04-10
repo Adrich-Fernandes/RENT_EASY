@@ -2,9 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronUp, Loader2 } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
 import { useUser } from "@clerk/clerk-react";
-import axios from "axios";
-
-const API = "http://localhost:4000/api/user";
+import API from "../api/api";
 
 export default function Cart() {
   const { user, isLoaded } = useUser();
@@ -27,7 +25,7 @@ export default function Cart() {
     if (!user) return;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${API}/${user.id}`);
+        const res = await API.get(`/api/user/${user.id}`);
         setCartItems(res.data?.cart || []);
         setSavedAddresses(res.data?.address || []);
       } catch (err) {
@@ -55,7 +53,7 @@ export default function Cart() {
 
   const handleRemoveFromCart = async (productId) => {
     try {
-      await axios.delete(`${API}/${user.id}/cart/${productId}`);
+      await API.delete(`/api/user/${user.id}/cart/${productId}`);
       setCartItems((prev) => prev.filter((item) => item.product._id !== productId));
     } catch (err) {
       console.error(err);
@@ -70,7 +68,7 @@ export default function Cart() {
       return;
     }
     try {
-      const res = await axios.post(`${API}/${user.id}/address`, form);
+      const res = await API.post(`/api/user/${user.id}/address`, form);
       setSavedAddresses(res.data);
       setForm({ fullname: "", phone: "", addressline1: "", addressline2: "", city: "", state: "", pincode: "" });
       setShowDelivery(false);
@@ -82,7 +80,7 @@ export default function Cart() {
 
   const handleDeleteAddress = async (addressId, idx) => {
     try {
-      const res = await axios.delete(`${API}/${user.id}/address/${addressId}`);
+      const res = await API.delete(`/api/user/${user.id}/address/${addressId}`);
       setSavedAddresses(res.data);
       if (selectedAddressIdx === idx) setSelectedAddressIdx(null);
     } catch (err) {
@@ -107,7 +105,7 @@ export default function Cart() {
           const tenure = item.tenure || 3;
           rentalEnd.setMonth(rentalEnd.getMonth() + tenure);
 
-          return axios.post(`${API}/${user.id}/rental`, {
+          return API.post(`/api/user/${user.id}/rental`, {
             productId:       item.product._id,
             rentalStartDate: rentalStart.toISOString(),
             rentalEndDate:   rentalEnd.toISOString(),
@@ -119,7 +117,7 @@ export default function Cart() {
 
       await Promise.all(
         cartItems.map((item) =>
-          axios.delete(`${API}/${user.id}/cart/${item.product._id}`)
+          API.delete(`/api/user/${user.id}/cart/${item.product._id}`)
         )
       );
 

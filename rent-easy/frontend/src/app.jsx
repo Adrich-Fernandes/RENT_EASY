@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router";
 import { useUser } from "@clerk/clerk-react";
-import axios from "axios";
+import API from "./api/api";
 import Homepage from "./home/homepage";
 import ProductList from "./products/productlist";
 import ProductView from "./products/productView";
@@ -26,13 +26,13 @@ function UserSync({ setRole, setRoleLoaded }) {
       return;
     }
 
-    axios
-      .post("http://localhost:4000/api/user/create", {
+    API
+      .post("/api/user/create", {
         clerkId: user.id,
         name: user.fullName || user.firstName || "User",
         email: user.primaryEmailAddress?.emailAddress,
       })
-      .then(() => axios.get(`http://localhost:4000/api/user/${user.id}`))
+      .then(() => API.get(`/api/user/${user.id}`))
       .then((res) => setRole(res.data?.role || "user"))
       .catch((err) => {
         console.error("Failed to sync user:", err);
