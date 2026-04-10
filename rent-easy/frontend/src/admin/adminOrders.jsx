@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import API from "../api/api";
+import axios from "axios";
 import AdminNavBar from "../components/adminNavBar";
 import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, MapPin } from "lucide-react";
+
+const API = "http://localhost:4000/api/rent";
 
 const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete"];
 
@@ -58,7 +60,7 @@ export default function AdminOrders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await API.get("/api/rent/allRents");
+      const res = await axios.get(`${API}/allRents`);
       setOrders(res.data);
     } catch (err) {
       console.error(err);
@@ -83,7 +85,7 @@ export default function AdminOrders() {
 
   const updateStatus = async (orderId, newStatus) => {
     try {
-      const res = await API.put(`/api/rent/updateStatus/${orderId}`, { status: newStatus });
+      const res = await axios.put(`${API}/updateStatus/${orderId}`, { status: newStatus });
       setOrders((prev) => prev.map((o) => (o._id === orderId ? res.data : o)));
       if (selectedOrder?._id === orderId) setSelectedOrder(res.data);
       setOpenDropdown(null);
@@ -95,7 +97,7 @@ export default function AdminOrders() {
 
   const updateDeliveryDate = async (orderId, date) => {
     try {
-      const res = await API.put(`/api/rent/updateDelivery/${orderId}`, { deliveryDate: date });
+      const res = await axios.put(`${API}/updateDelivery/${orderId}`, { deliveryDate: date });
       setOrders((prev) => prev.map((o) => (o._id === orderId ? res.data : o)));
       if (selectedOrder?._id === orderId) setSelectedOrder(res.data);
     } catch (err) {

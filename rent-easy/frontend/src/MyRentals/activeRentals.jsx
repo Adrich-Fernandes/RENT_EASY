@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TabBar from "./tabBar";
-import API from "../api/api";
+import axios from "axios";
 import { useUser, SignUp } from "@clerk/clerk-react";
 import { CalendarIcon, MapPinIcon, TimerIcon, Sofa, X } from "lucide-react";
 
@@ -12,7 +12,7 @@ export default function ActiveRents() {
   useEffect(() => {
     const fetchUserRentals = async () => {
       try {
-        const res = await API.get(`/api/user/${user.id}`);
+        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
         setRentals(res.data?.activeRentals || []);
       } catch (err) {
         console.error(err);
@@ -105,8 +105,8 @@ function Card({ data, clerkId }) {
       return;
     }
     try {
-      await API.post(
-        `/api/user/${clerkId}/maintenance`,
+      await axios.post(
+        `http://localhost:4000/api/user/${clerkId}/maintenance`,
         {
           productId: product._id,
           issue: issue,

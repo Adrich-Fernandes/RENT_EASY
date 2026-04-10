@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import API from '../api/api'
+import axios from 'axios'
 import { Package, ClipboardList, Wrench, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react'
 import AdminNavBar from '../components/adminNavBar'
 
@@ -23,12 +23,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const productsRes = await API.get("/api/product/allProducts")
+        const productsRes = await axios.get("http://localhost:4000/api/product/allProducts")
         const products = productsRes.data
         setStats(prev => ({ ...prev, totalProducts: products.length }))
 
         try {
-          const rentsRes = await API.get("/api/rent/allRents")
+          const rentsRes = await axios.get("http://localhost:4000/api/rent/allRents")
           const rents = rentsRes.data
           setStats(prev => ({
             ...prev,
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
         }
 
         try {
-          const maintenanceRes = await API.get("/api/maintenance/allRequests")
+          const maintenanceRes = await axios.get("http://localhost:4000/api/maintenance/allRequests")
           const maintenance = maintenanceRes.data
           setStats(prev => ({
             ...prev,

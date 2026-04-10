@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import API from "../api/api";
+import axios from "axios";
 import AdminNavBar from "../components/adminNavBar";
 import { Search, Calendar, ChevronDown, Wrench } from "lucide-react";
 
@@ -18,7 +18,7 @@ export default function MaintenanceRequests() {
 
   const fetchRequests = async () => {
     try {
-      const res = await API.get("/api/rent/allMaintenance");
+      const res = await axios.get("http://localhost:4000/api/rent/allMaintenance");
       setRequests(res.data);
     } catch (err) {
       console.error(err);
@@ -52,7 +52,7 @@ export default function MaintenanceRequests() {
 
   const updateStatus = async (userId, requestId, newStatus) => {
     try {
-      const res = await API.put(`/api/rent/updateMaintenance/${userId}/${requestId}`, { status: newStatus });
+      const res = await axios.put(`http://localhost:4000/api/rent/updateMaintenance/${userId}/${requestId}`, { status: newStatus });
       setRequests(prev => prev.map(r => r._id === requestId ? { ...r, ...res.data } : r));
       setOpenDropdown(null);
     } catch (err) {
@@ -63,7 +63,7 @@ export default function MaintenanceRequests() {
 
   const handleSaveDate = async (userId, requestId) => {
     try {
-      const res = await API.put(`/api/rent/updateMaintenance/${userId}/${requestId}`, { expectedCompletionDate: tempDate });
+      const res = await axios.put(`http://localhost:4000/api/rent/updateMaintenance/${userId}/${requestId}`, { expectedCompletionDate: tempDate });
       setRequests(prev => prev.map(r => r._id === requestId ? { ...r, ...res.data } : r));
       setEditingDate(null);
       setTempDate("");
@@ -75,7 +75,7 @@ export default function MaintenanceRequests() {
 
   const handleSavePickup = async (userId, requestId) => {
     try {
-      const res = await API.put(`/api/rent/updateMaintenance/${userId}/${requestId}`, { pickupDate: tempPickup });
+      const res = await axios.put(`http://localhost:4000/api/rent/updateMaintenance/${userId}/${requestId}`, { pickupDate: tempPickup });
       setRequests(prev => prev.map(r => r._id === requestId ? { ...r, ...res.data } : r));
       setEditingPickup(null);
       setTempPickup("");

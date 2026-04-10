@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import API from "../api/api";
+import axios from "axios";
 import UserNavBar from "../components/userNavBar";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export default function Layout() {
 
     useEffect(() => {
         setLoading(true);
-        API.get("/api/product/allProducts")
+        axios.get("http://localhost:4000/api/product/allProducts")
             .then((res) => {
                 setProducts(res.data);
                 setError(null);

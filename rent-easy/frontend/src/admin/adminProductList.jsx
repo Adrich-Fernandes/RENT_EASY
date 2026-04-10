@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import API from '../api/api'
 import AdminNavBar from '../components/adminNavBar'
 
 
@@ -26,7 +25,7 @@ export default function AdminProductList() {
   const [previewProduct, setPreviewProduct] = useState(null)
 
   const fetchProducts = () => {
-    API.get("/api/product/allProducts")
+    axios.get("http://localhost:4000/api/product/allProducts")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err))
   }
@@ -94,7 +93,7 @@ export default function AdminProductList() {
                 <button
                   onClick={() => {
                     if (window.confirm("Are you sure you want to delete this product?")) {
-                      API.delete(`/api/product/deleteProduct/${previewProduct._id}`)
+                      axios.delete(`http://localhost:4000/api/product/deleteProduct/${previewProduct._id}`)
                         .then(() => { fetchProducts(); setPreviewProduct(null) })
                         .catch((err) => console.error(err))
                     }
@@ -197,7 +196,7 @@ export default function AdminProductList() {
                         onClick={(e) => {
                           e.stopPropagation()
                           if (window.confirm("Are you sure you want to delete this product?")) {
-                            API.delete(`/api/product/deleteProduct/${v._id}`)
+                            axios.delete(`http://localhost:4000/api/product/deleteProduct/${v._id}`)
                               .then(() => fetchProducts())
                               .catch((err) => console.error(err))
                           }
@@ -303,7 +302,7 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (formData.imgs.length === 0) return alert("Please upload at least one image.")
-    API.put(`/api/product/updateProduct/${product._id}`, formData)
+    axios.put(`http://localhost:4000/api/product/updateProduct/${product._id}`, formData)
       .then(() => { onSuccess(); setEditProduct(null) })
       .catch((err) => console.error(err))
   }
@@ -385,7 +384,7 @@ function AddProduct({ setShowAdd, onSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (formData.imgs.length === 0) return alert("Please upload at least one image.")
-    API.post("/api/product/insertProduct", formData)
+    axios.post("http://localhost:4000/api/product/insertProduct", formData)
       .then(() => { onSuccess(); setShowAdd(false) })
       .catch((err) => console.error(err))
   }

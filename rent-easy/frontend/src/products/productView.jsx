@@ -4,7 +4,9 @@ import { useState } from "react";
 import Footer from "../components/footer";
 import { X, ChevronLeft, ChevronRight, ShoppingCart, Check, Loader2 } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
-import API from "../api/api";
+import axios from "axios";
+
+const API = "http://localhost:4000/api/user";
 
 export default function ProductView() {
 
@@ -27,7 +29,7 @@ export default function ProductView() {
 
     setCartStatus("loading");
     try {
-      await API.post(`/api/user/${user.id}/cart`, {
+      await axios.post(`${API}/${user.id}/cart`, {
         productId: product._id,
         tenure: selectedTenure,
       });

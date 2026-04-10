@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import TabBar from "./tabBar";
 import { useUser } from "@clerk/clerk-react";
-import API from "../api/api";
+import axios from "axios";
 
 export default function Orders() {
   const { user, isLoaded } = useUser();
@@ -18,7 +18,7 @@ export default function Orders() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const res = await API.get(`/api/user/${user.id}`);
+        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
         setActiveRentals(res.data?.activeRentals || []);
         setPastRentals(res.data?.pastRentals || []);
         setError(null);
@@ -35,8 +35,8 @@ export default function Orders() {
 
   const handleCompleteRental = async (rentalId) => {
     try {
-      await API.patch(
-        `/api/user/${user.id}/rental/${rentalId}`
+      await axios.patch(
+        `http://localhost:4000/api/user/${user.id}/rental/${rentalId}`
       );
       // Move from active to past locally
       const completed = activeRentals.find((r) => r._id === rentalId);
