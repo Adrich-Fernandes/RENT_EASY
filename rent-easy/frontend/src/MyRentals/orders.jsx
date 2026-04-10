@@ -20,7 +20,8 @@ export default function Orders() {
       try {
         setLoading(true);
         const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
-        setActiveRentals(res.data?.activeRentals || []);
+        const allActive = res.data?.activeRentals || [];
+        setActiveRentals(allActive.filter(r => r.status !== "complete"));
         setPastRentals(res.data?.pastRentals || []);
         setError(null);
       } catch (err) {

@@ -15,7 +15,8 @@ export default function ActiveRents() {
     const fetchUserRentals = async () => {
       try {
         const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
-        setRentals(res.data?.activeRentals || []);
+        const allActive = res.data?.activeRentals || [];
+        setRentals(allActive.filter(r => r.status === "complete"));
       } catch (err) {
         console.error(err);
       } finally {
