@@ -255,10 +255,10 @@ export default function MaintenanceRequests() {
         )}
       </div>
 
-      {/* Fixed dropdown — rendered outside the table so overflow:hidden never clips it */}
+      {/* Absolute dropdown — rendered outside the table so overflow:hidden never clips it */}
       {openDropdown && (
         <div
-          className="fixed w-40 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] overflow-hidden"
+          className="absolute w-40 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] overflow-hidden"
           style={{ top: dropdownPos.top, left: dropdownPos.left }}
           onClick={(e) => e.stopPropagation()}
         >

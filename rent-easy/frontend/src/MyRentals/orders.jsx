@@ -185,7 +185,10 @@ function ProductCard({ rental, isPast, onClick }) {
       case "complete":         return "bg-red-100 text-red-700";
       case "cancelled":        return "bg-gray-100 text-gray-500 line-through";
       case "return requested": return "bg-orange-100 text-orange-700";
-      case "returned":         return "bg-green-100 text-green-700";
+      case "request conformed":return "bg-amber-100 text-amber-700";
+      case "out for pickup":   return "bg-cyan-100 text-cyan-700";
+      case "returned":         return "bg-emerald-100 text-emerald-700";
+      case "completed":        return "bg-green-100 text-green-700";
       default:                 return "bg-gray-100 text-gray-600";
     }
   };
@@ -325,7 +328,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
         </div>
 
         {/* Action Button */}
-        {!showForm && rental.status !== "cancelled" && rental.status !== "return requested" && rental.status !== "returned" && (
+        {!showForm && rental.status !== "cancelled" && !["return requested", "request conformed", "out for pickup", "returned", "completed"].includes(rental.status) && (
           <button
             onClick={() => setShowForm(true)}
             className={`mt-6 w-full py-2 rounded-lg font-medium text-white ${
@@ -336,11 +339,15 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
           </button>
         )}
 
-        {(rental.status === "cancelled" || rental.status === "return requested") && (
+        {(rental.status === "cancelled" || ["return requested", "request conformed", "out for pickup", "returned", "completed"].includes(rental.status)) && (
             <div className={`mt-6 w-full py-2 rounded-lg font-medium text-center text-sm border ${
-                rental.status === "cancelled" ? "bg-gray-50 text-gray-400 border-gray-200" : "bg-orange-50 text-orange-600 border-orange-100"
+                rental.status === "cancelled" ? "bg-gray-50 text-gray-400 border-gray-200" : 
+                (rental.status === "returned" || rental.status === "completed") ? "bg-green-50 text-green-600 border-green-100" :
+                "bg-orange-50 text-orange-600 border-orange-100"
             }`}>
-                {rental.status === "cancelled" ? "This order was cancelled" : "Return request is being processed"}
+                {rental.status === "cancelled" ? "This order was cancelled" : 
+                 (rental.status === "returned" || rental.status === "completed") ? "This rental is completed" :
+                 "Return request is being processed"}
             </div>
         )}
 

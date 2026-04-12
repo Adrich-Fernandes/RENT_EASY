@@ -105,7 +105,11 @@ const userSchema = new mongoose.Schema(
           "active",
           "cancelled",
           "return requested",
-          "returned"
+          "rejected",
+          "request conformed",
+          "out for pickup",
+          "returned",
+          "completed"
         ],
         default: "ordered"
       },

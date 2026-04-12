@@ -34,8 +34,8 @@ export default function AdminDashboard() {
             ...prev,
             totalRents: rents.length,
             activeRents: rents.filter(r => r.status === "active" || r.status === "complete").length,
-            pendingRents: rents.filter(r => r.status === "ordered" || r.status === "dispatch" || r.status === "out for delivery" || r.status === "return requested").length,
-            returnedRents: rents.filter(r => r.status === "returned").length,
+            pendingRents: rents.filter(r => ["ordered", "dispatch", "out for delivery", "return requested", "request conformed", "out for pickup"].includes(r.status)).length,
+            returnedRents: rents.filter(r => r.status === "returned" || r.status === "completed").length,
             cancelledRents: rents.filter(r => r.status === "cancelled").length,
           }))
           setRecentRents(rents.slice(0, 5))
@@ -191,8 +191,8 @@ export default function AdminDashboard() {
                           <span className={`px-2 py-1 text-xs rounded-full font-medium ${
                             (r.status === "active" || r.status === "complete") ? "bg-blue-100 text-blue-600" :
                             (r.status === "ordered" || r.status === "dispatch" || r.status === "out for delivery") ? "bg-yellow-100 text-yellow-600" :
-                            r.status === "return requested" ? "bg-orange-100 text-orange-600" :
-                            r.status === "returned" ? "bg-emerald-100 text-emerald-600" :
+                            (r.status === "return requested" || r.status === "request conformed" || r.status === "out for pickup") ? "bg-orange-100 text-orange-600" :
+                            (r.status === "returned" || r.status === "completed") ? "bg-emerald-100 text-emerald-600" :
                             "bg-red-100 text-red-500"
                           }`}>
                             {r.status}

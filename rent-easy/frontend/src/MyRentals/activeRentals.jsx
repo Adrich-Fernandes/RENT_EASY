@@ -1,4 +1,3 @@
-// ActiveRents.jsx
 import React, { useEffect, useState } from "react";
 import TabBar from "./tabBar";
 import axios from "axios";
@@ -174,14 +173,16 @@ function Card({ data, clerkId }) {
     }
   };
 
-  const statusSteps = (data.status === "return requested" || data.status === "returned")
-    ? ["Delivered", "Return Requested", "Picked Up", "Finalized"]
+  const statusSteps = (data.status === "return requested" || data.status === "request conformed" || data.status === "out for pickup" || data.status === "completed" || data.status === "returned")
+    ? ["Request Sent", "Request Conformed", "Out for Pickup", "Completed"]
     : ["Confirmed", "Preparing", "Picked up", "Delivered"];
 
   const currentStep =
     (data.status === "complete" || data.status === "active") ? 3 :
-    data.status === "return requested" ? 1 :
-    data.status === "returned" ? 3 :
+    data.status === "return requested" ? 0 :
+    data.status === "request conformed" ? 1 :
+    data.status === "out for pickup" ? 2 :
+    (data.status === "completed" || data.status === "returned") ? 3 :
     data.status === "picked up" ? 2 :
     data.status === "preparing" ? 1 : 0;
 
@@ -222,7 +223,7 @@ function Card({ data, clerkId }) {
               </div>
               <div className="flex flex-col items-end gap-2">
                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
-                  data.status === 'return requested' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                  data.status === 'return requested' || data.status === 'request conformed' || data.status === 'out for pickup' ? 'bg-orange-50 text-orange-600 border-orange-100' :
                   data.status === 'ordered' ? 'bg-yellow-50 text-yellow-600 border-yellow-100' :
                   'bg-emerald-50 text-emerald-600 border-emerald-100'
                 }`}>
@@ -381,10 +382,12 @@ function Card({ data, clerkId }) {
                   </div>
                 )}
                 
-                {data.status === "return requested" && !data.pickupDate && (
+                {(data.status === "return requested" || data.status === "request conformed") && !data.pickupDate && (
                   <div className="bg-orange-50 border border-orange-100 p-5 rounded-2xl">
-                     <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-1 italic">Waiting for approval</p>
-                     <p className="text-[10px] text-orange-500 leading-relaxed font-semibold">Admin is processing your return. We will assign a pickup date shortly.</p>
+                     <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-1 italic">Processing Return</p>
+                     <p className="text-[10px] text-orange-500 leading-relaxed font-semibold">
+                       {data.status === "return requested" ? "Admin is reviewing your return request." : "Return request confirmed! We will assign a pickup date shortly."}
+                     </p>
                   </div>
                 )}
               </div>

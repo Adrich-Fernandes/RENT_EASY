@@ -5,7 +5,7 @@ import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, M
 
 const API = "http://localhost:4000/api/rent";
 
-const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete", "active", "cancelled", "return requested", "returned"];
+const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete", "active", "cancelled", "return requested", "request conformed", "out for pickup", "completed"];
 
 const SEARCH_FIELDS = [
   { label: "All", value: "all" },
@@ -23,7 +23,10 @@ const statusStyle = (status) => {
     case "active":           return "bg-green-100 text-green-700";
     case "cancelled":        return "bg-gray-100 text-gray-500";
     case "return requested": return "bg-orange-100 text-orange-700";
+    case "request conformed":return "bg-amber-100 text-amber-700";
+    case "out for pickup":   return "bg-cyan-100 text-cyan-700";
     case "returned":         return "bg-emerald-100 text-emerald-700";
+    case "completed":        return "bg-green-100 text-green-700";
     default:                 return "bg-gray-100 text-gray-600";
   }
 };
@@ -58,6 +61,7 @@ export default function AdminOrders() {
   const [searchFieldOpen, setSearchFieldOpen] = useState(false);
   const [statusFilter, setStatusFilter]   = useState("all");
   const [openDropdown, setOpenDropdown]   = useState(null);
+  const [dropdownPos, setDropdownPos]     = useState({ top: 0, left: 0 });
   const [selectedOrder, setSelectedOrder] = useState(null);
   const dropdownRef    = useRef(null);
   const searchFieldRef = useRef(null);
@@ -86,6 +90,20 @@ export default function AdminOrders() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  const handleStatusDropdownToggle = (e, index) => {
+    e.stopPropagation();
+    if (openDropdown === index) {
+      setOpenDropdown(null);
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDropdownPos({
+      top: rect.bottom + window.scrollY + 4,
+      left: rect.right + window.scrollX - 192, // 192 matches w-48 width
+    });
+    setOpenDropdown(index);
+  };
 
   const updateStatus = async (orderId, newStatus) => {
     try {
@@ -171,7 +189,7 @@ export default function AdminOrders() {
             { label: "Ordered",          key: "ordered",          color: "bg-yellow-50 border-yellow-200 text-yellow-700" },
             { label: "Dispatched",       key: "dispatch",         color: "bg-blue-50 border-blue-200 text-blue-700" },
             { label: "Out for Delivery", key: "out for delivery", color: "bg-purple-50 border-purple-200 text-purple-700" },
-            { label: "Completed",        key: "complete",         color: "bg-red-50 border-red-200 text-red-700" },
+            { label: "Return Finalized", key: "completed",        color: "bg-green-50 border-green-200 text-green-700" },
           ].map((card) => (
             <button
               key={card.key}
@@ -397,37 +415,17 @@ export default function AdminOrders() {
                           </span>
                         </td>
 
-                        {/* Status dropdown */}
+                        {/* Status dropdown — button only, dropdown is rendered fixed below */}
                         <td
-                          className="px-5 py-4 relative"
+                          className="px-5 py-4"
                           onClick={(e) => e.stopPropagation()}
-                          ref={openDropdown === index ? dropdownRef : null}
                         >
                           <button
-                            onClick={() => setOpenDropdown(openDropdown === index ? null : index)}
+                            onClick={(e) => handleStatusDropdownToggle(e, index)}
                             className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-sm transition"
                           >
                             Status <ChevronDown size={14} />
                           </button>
-
-                          {openDropdown === index && (
-                            <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
-                              {STATUS_OPTIONS.map((option) => (
-                                <button
-                                  key={option}
-                                  onClick={() => updateStatus(order._id, option)}
-                                  className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${
-                                    order.status === option
-                                      ? "font-bold text-red-600"
-                                      : "text-gray-700"
-                                  }`}
-                                >
-                                  <span className={`w-2 h-2 rounded-full ${statusStyle(option).split(" ")[0]}`} />
-                                  {option}
-                                </button>
-                              ))}
-                            </div>
-                          )}
                         </td>
                       </tr>
                     ))
@@ -447,6 +445,33 @@ export default function AdminOrders() {
           onDateChange={updateDeliveryDate}
           onPickupDateChange={updatePickupDate}
         />
+      )}
+
+      {/* Absolute Status Dropdown — Rendered outside the table to avoid clipping */}
+      {openDropdown !== null && (
+        <div
+          ref={dropdownRef}
+          className="absolute w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-[9999] overflow-hidden"
+          style={{ top: dropdownPos.top, left: dropdownPos.left }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {STATUS_OPTIONS.map((option) => {
+            const order = filtered[openDropdown];
+            if (!order) return null;
+            return (
+              <button
+                key={option}
+                onClick={() => updateStatus(order._id, option)}
+                className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${
+                  order.status === option ? "font-bold text-red-600" : "text-gray-700"
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${statusStyle(option).split(" ")[0]}`} />
+                {option}
+              </button>
+            );
+          })}
+        </div>
       )}
     </>
   );
