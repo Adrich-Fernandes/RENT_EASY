@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import TabBar from "./tabBar";
 import axios from "axios";
 import { useUser, SignUp } from "@clerk/clerk-react";
-import { CalendarIcon, MapPinIcon, X, Sofa } from "lucide-react";
+import { CalendarIcon, MapPinIcon, X, Sofa, ChevronRight, Clock } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
 
 export default function ActiveRents() {
@@ -79,27 +79,29 @@ export default function ActiveRents() {
         <TabBar />
         {/* Main content — offset for sidebar on desktop */}
         <div className="flex-1 md:ml-64 p-6 md:p-12 flex flex-col gap-8">
-          
-          {/* Page Content Header (Context) */}
+
+          {/* Page Content Header */}
           <div className="flex items-center justify-between mb-2">
-             <h1 className="text-3xl font-black text-gray-900 tracking-tight">Active <span className="text-red-600">Leases</span></h1>
-             <div className="px-4 py-1.5 bg-red-100 text-red-700 rounded-full text-[11px] font-black uppercase tracking-widest border border-red-200">
-                {rentals.length} Deliveries
-             </div>
+            <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+              Active <span className="text-red-600">Leases</span>
+            </h1>
+            <div className="px-4 py-1.5 bg-red-100 text-red-700 rounded-full text-[11px] font-black uppercase tracking-widest border border-red-200">
+              {rentals.length} Deliveries
+            </div>
           </div>
 
           {rentals.length === 0 ? (
             <div className="bg-white rounded-[2.5rem] border border-gray-100 p-20 flex flex-col items-center gap-6 shadow-sm">
-               <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
-                  <Sofa size={32} className="text-gray-300" />
-               </div>
-               <div className="text-center">
-                  <p className="text-xl font-bold text-gray-900">No active rentals found</p>
-                  <p className="text-sm text-gray-400 mt-2">Browse our products to start your first lease!</p>
-               </div>
-               <button className="mt-4 bg-red-600 text-white font-bold px-8 py-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
-                  Explore Catalog
-               </button>
+              <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
+                <Sofa size={32} className="text-gray-300" />
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-bold text-gray-900">No active rentals found</p>
+                <p className="text-sm text-gray-400 mt-2">Browse our products to start your first lease!</p>
+              </div>
+              <button className="mt-4 bg-red-600 text-white font-bold px-8 py-3 rounded-2xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                Explore Catalog
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6">
@@ -118,6 +120,13 @@ function Card({ data, clerkId }) {
   const [showModal, setShowModal] = useState(false);
   const [issue, setIssue] = useState("");
   const product = data.product;
+
+  const endDate = new Date(data.rentalEndDate);
+  const now = new Date();
+  const timeDiff = endDate.getTime() - now.getTime();
+  const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const isExpiringSoon = daysLeft <= 3 && daysLeft >= 0;
+  const isOverdue = daysLeft < 0;
 
   const submitMaintenance = async () => {
     if (!issue) return alert("Please describe the issue");
@@ -158,7 +167,21 @@ function Card({ data, clerkId }) {
         {/* Right: All Details */}
         <div className="flex-1 flex flex-col justify-between p-6 gap-4 min-w-0">
 
-          {/* Row 1: Name + Price + Button */}
+          {(isExpiringSoon || isOverdue) && (
+            <div className={`text-xs font-bold px-3 py-1.5 rounded-xl border inline-flex items-center gap-2 w-fit ${
+              isOverdue 
+                ? "bg-red-50 text-red-600 border-red-100 shadow-[0_0_10px_rgba(239,68,68,0.2)]" 
+                : "bg-orange-50 text-orange-600 border-orange-100 shadow-[0_0_10px_rgba(249,115,22,0.2)]"
+            }`}>
+              <Clock size={14} className={isOverdue ? "text-red-500" : "text-orange-500"} />
+              {isOverdue 
+                ? `Subscription Overdue (${Math.abs(daysLeft)} ${Math.abs(daysLeft) === 1 ? 'day' : 'days'})` 
+                : `Subscription ending in ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'}`
+              }
+            </div>
+          )}
+
+          {/* Row 1: Name + Price + Maintenance Button */}
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
@@ -184,9 +207,9 @@ function Card({ data, clerkId }) {
 
           {/* Row 2: Progress tracker */}
           <div className="relative flex items-center justify-between px-1">
-            {/* background line */}
+            {/* Background line */}
             <div className="absolute top-2 left-0 right-0 h-[2px] bg-gray-100 rounded-full" />
-            {/* filled line */}
+            {/* Filled line */}
             <div
               className="absolute top-2 left-0 h-[2px] bg-red-500 rounded-full transition-all duration-700"
               style={{ width: `${(currentStep / (statusSteps.length - 1)) * 100}%` }}
@@ -196,14 +219,17 @@ function Card({ data, clerkId }) {
               const isCurrent = i === currentStep;
               return (
                 <div key={step} className="relative z-10 flex flex-col items-center">
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300
-                    ${isCompleted ? "bg-red-500 border-red-500" : "bg-white border-gray-300"}
-                    ${isCurrent ? "ring-4 ring-red-100" : ""}`}
+                  <div
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300
+                      ${isCompleted ? "bg-red-500 border-red-500" : "bg-white border-gray-300"}
+                      ${isCurrent ? "ring-4 ring-red-100" : ""}`}
                   >
                     {isCompleted && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                   </div>
-                  <span className={`text-[10px] mt-1.5 font-semibold whitespace-nowrap
-                    ${isCompleted ? "text-red-500" : "text-gray-300"}`}>
+                  <span
+                    className={`text-[10px] mt-1.5 font-semibold whitespace-nowrap
+                      ${isCompleted ? "text-red-500" : "text-gray-300"}`}
+                  >
                     {step}
                   </span>
                 </div>
@@ -211,35 +237,61 @@ function Card({ data, clerkId }) {
             })}
           </div>
 
-          {/* Row 3: Date + Address */}
-          <div className="flex flex-wrap items-center gap-5 pt-3 border-t border-gray-50 text-xs text-gray-500">
-            <div className="flex items-center gap-2">
-              <CalendarIcon size={13} className="text-red-400" />
-              <span>
-                {data.rentalStartDate ? new Date(data.rentalStartDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "—"}
-                <span className="mx-1.5 text-gray-300">→</span>
-                {data.rentalEndDate ? new Date(data.rentalEndDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "—"}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPinIcon size={13} className="text-red-400" />
-              <span>Delivery Address</span>
-            </div>
-          </div>
+          {/* Row 3: Date + Address + View Details */}
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-gray-50">
 
+            {/* Left: Date & Address */}
+            <div className="flex flex-wrap items-center gap-5 text-xs text-gray-500">
+              <div className="flex items-center gap-2">
+                <CalendarIcon size={13} className="text-red-400" />
+                <span>
+                  {data.rentalStartDate
+                    ? new Date(data.rentalStartDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+                    : "—"}
+                  <span className="mx-1.5 text-gray-300">→</span>
+                  {data.rentalEndDate
+                    ? new Date(data.rentalEndDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+                    : "—"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPinIcon size={13} className="text-red-400" />
+                <span>Delivery Address</span>
+              </div>
+            </div>
+
+            {/* Right: View Details button */}
+            <button
+              onClick={() => window.location.href = `/myrentals/orders`}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 border border-gray-200 rounded-xl text-xs font-semibold text-gray-500 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-all"
+            >
+              View details
+              <ChevronRight size={13} />
+            </button>
+
+          </div>
         </div>
       </div>
 
       {/* MODAL */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6" onClick={() => setShowModal(false)}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-xl font-bold text-gray-900">Request Maintenance</h2>
                 <p className="text-xs text-gray-400 mt-0.5">We'll get back to you shortly</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition">
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition"
+              >
                 <X size={18} />
               </button>
             </div>

@@ -12,6 +12,7 @@ import {
   AlertTriangle,
   History
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import UserNavBar from "../components/userNavBar";
 import Footer from "../components/footer";
 
@@ -84,6 +85,8 @@ export default function IssueStatus() {
 
   const getStatusInfo = (status) => statusConfig[status] || { label: status, color: "text-gray-600 bg-gray-50 border-gray-100", icon: <AlertCircle size={16} />, btnColor: "bg-gray-600" };
 
+  const navigate = useNavigate();
+
   if (!isLoaded || loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -149,7 +152,9 @@ export default function IssueStatus() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">No Issues Reported</h2>
                 <p className="text-gray-500 mt-2 mb-8 max-w-sm mx-auto">It looks like everything is running smoothly! If you ever have a problem, report it via the Support section.</p>
-                <button className="bg-red-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                <button 
+                  onClick={() => navigate('/contact')}
+                  className="bg-red-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
                   Contact Support
                 </button>
               </motion.div>

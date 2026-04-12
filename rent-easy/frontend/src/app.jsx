@@ -13,6 +13,7 @@ import ActiveRents from "./MyRentals/activeRentals.jsx";
 import Maintain from "./MyRentals/maintenance.jsx";
 import Order from "./MyRentals/orders.jsx";
 import AdminOrders from "./admin/AdminOrders.jsx";
+import ExpiringRentals from "./admin/expiringRentals.jsx";
 import Contact from "./home/contact.jsx";
 import IssueStatus from "./home/issueStatus.jsx";
 
@@ -95,6 +96,7 @@ export default function App() {
         <Route path="/admin/products" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminProductList /></AdminRoute>} />
         <Route path="/admin/maintenance" element={<AdminRoute role={role} roleLoaded={roleLoaded}><MaintenanceRequests /></AdminRoute>} />
         <Route path="/admin/orders" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminOrders/></AdminRoute>} />
+        <Route path="/admin/expiring" element={<AdminRoute role={role} roleLoaded={roleLoaded}><ExpiringRentals/></AdminRoute>} />
 
       </Routes>
     </>
