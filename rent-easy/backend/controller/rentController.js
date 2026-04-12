@@ -83,6 +83,34 @@ exports.updateDeliveryDate = async (req, res) => {
   }
 };
 
+// Update pickup date of a specific rental
+exports.updatePickupDate = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { pickupDate } = req.body;
+
+    const user = await User.findOne({ "activeRentals._id": orderId });
+    if (!user) return res.status(404).json({ message: "Rental not found" });
+
+    const rental = user.activeRentals.id(orderId);
+    rental.pickupDate = new Date(pickupDate);
+
+    await user.save();
+
+    const updatedRental = user.activeRentals.id(orderId);
+    res.status(200).json({
+      ...updatedRental.toObject(),
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get all maintenance requests across all users
 exports.getAllMaintenance = async (req, res) => {
   try {

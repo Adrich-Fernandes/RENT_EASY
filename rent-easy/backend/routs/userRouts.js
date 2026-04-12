@@ -21,4 +21,7 @@ router.patch("/:clerkId/rental/:rentalId", userController.completeRental);
 router.post("/:clerkId/maintenance", userController.createMaintenanceRequest);
 router.patch("/:clerkId/maintenance/:requestId/reply-request", userController.requestMaintenanceReply);
 
+router.patch("/:clerkId/cancel/:rentalId", userController.cancelRental);
+router.patch("/:clerkId/return/:rentalId", userController.returnRental);
+
 module.exports = router;

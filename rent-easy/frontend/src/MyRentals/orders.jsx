@@ -183,6 +183,9 @@ function ProductCard({ rental, isPast, onClick }) {
       case "dispatch":         return "bg-blue-100 text-blue-700";
       case "out for delivery": return "bg-purple-100 text-purple-700";
       case "complete":         return "bg-red-100 text-red-700";
+      case "cancelled":        return "bg-gray-100 text-gray-500 line-through";
+      case "return requested": return "bg-orange-100 text-orange-700";
+      case "returned":         return "bg-green-100 text-green-700";
       default:                 return "bg-gray-100 text-gray-600";
     }
   };
@@ -239,12 +242,26 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
     if (!reason) return alert("Please select a reason");
     if (reason === "other" && !otherReason.trim()) return alert("Please enter your reason");
 
-    if (isPast) {
-      // Return request — you can wire to a new endpoint later
-      alert("Return request submitted");
-    } else {
-      // Cancel = complete the rental early
-      await onComplete(rental._id);
+    const submitReason = reason === "other" ? otherReason : reason;
+
+    try {
+      if (isPast || rental.status === "complete" || rental.status === "active") {
+        // Return request
+        await axios.patch(`http://localhost:4000/api/user/${clerkId}/return/${rental._id}`, {
+          reason: submitReason
+        });
+        alert("Return request submitted successfully");
+      } else {
+        // Cancel request
+        await axios.patch(`http://localhost:4000/api/user/${clerkId}/cancel/${rental._id}`, {
+          reason: submitReason
+        });
+        alert("Cancellation request submitted successfully");
+      }
+      window.location.reload(); // Refresh to show new status
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Action failed");
     }
 
     setShowForm(false);
@@ -274,6 +291,11 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
         <div className="text-sm text-zinc-500 mt-2 space-y-1">
           <p>Start: {new Date(rental.rentalStartDate).toLocaleDateString()}</p>
           <p>End: {new Date(rental.rentalEndDate).toLocaleDateString()}</p>
+          {rental.pickupDate && (
+            <p className="text-orange-600 font-bold bg-orange-50 p-2 rounded-lg mt-2">
+              Assigned Pickup: {new Date(rental.pickupDate).toLocaleDateString()}
+            </p>
+          )}
         </div>
 
         {/* Order Tracker */}
@@ -303,15 +325,23 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
         </div>
 
         {/* Action Button */}
-        {!showForm && (
+        {!showForm && rental.status !== "cancelled" && rental.status !== "return requested" && rental.status !== "returned" && (
           <button
             onClick={() => setShowForm(true)}
             className={`mt-6 w-full py-2 rounded-lg font-medium text-white ${
-              isPast ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600"
+              (isPast || rental.status === "complete" || rental.status === "active") ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-600"
             }`}
           >
-            {isPast ? "Return Product" : "Request Cancellation"}
+            {(isPast || rental.status === "complete" || rental.status === "active") ? "Return Product" : "Request Cancellation"}
           </button>
+        )}
+
+        {(rental.status === "cancelled" || rental.status === "return requested") && (
+            <div className={`mt-6 w-full py-2 rounded-lg font-medium text-center text-sm border ${
+                rental.status === "cancelled" ? "bg-gray-50 text-gray-400 border-gray-200" : "bg-orange-50 text-orange-600 border-orange-100"
+            }`}>
+                {rental.status === "cancelled" ? "This order was cancelled" : "Return request is being processed"}
+            </div>
         )}
 
         {/* Form */}
@@ -323,7 +353,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
               className="w-full border rounded-lg p-2"
             >
               <option value="">Select a reason</option>
-              {isPast ? (
+              {(isPast || rental.status === "complete" || rental.status === "active") ? (
                 <>
                   <option value="damaged">Product damaged</option>
                   <option value="wrong item">Wrong item received</option>

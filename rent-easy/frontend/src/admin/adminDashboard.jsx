@@ -33,8 +33,8 @@ export default function AdminDashboard() {
           setStats(prev => ({
             ...prev,
             totalRents: rents.length,
-            activeRents: rents.filter(r => r.status === "active").length,
-            pendingRents: rents.filter(r => r.status === "pending").length,
+            activeRents: rents.filter(r => r.status === "active" || r.status === "complete").length,
+            pendingRents: rents.filter(r => r.status === "ordered" || r.status === "dispatch" || r.status === "out for delivery" || r.status === "return requested").length,
             returnedRents: rents.filter(r => r.status === "returned").length,
             cancelledRents: rents.filter(r => r.status === "cancelled").length,
           }))
@@ -189,9 +189,10 @@ export default function AdminDashboard() {
                         <td className="px-4 py-3 text-gray-500">{r.product?.title || "—"}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            r.status === "active" ? "bg-blue-100 text-blue-600" :
-                            r.status === "pending" ? "bg-yellow-100 text-yellow-600" :
-                            r.status === "returned" ? "bg-red-100 text-red-600" :
+                            (r.status === "active" || r.status === "complete") ? "bg-blue-100 text-blue-600" :
+                            (r.status === "ordered" || r.status === "dispatch" || r.status === "out for delivery") ? "bg-yellow-100 text-yellow-600" :
+                            r.status === "return requested" ? "bg-orange-100 text-orange-600" :
+                            r.status === "returned" ? "bg-emerald-100 text-emerald-600" :
                             "bg-red-100 text-red-500"
                           }`}>
                             {r.status}

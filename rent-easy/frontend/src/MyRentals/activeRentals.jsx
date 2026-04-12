@@ -16,7 +16,7 @@ export default function ActiveRents() {
       try {
         const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
         const allActive = res.data?.activeRentals || [];
-        setRentals(allActive.filter(r => r.status === "complete"));
+        setRentals(allActive.filter(r => !["returned", "cancelled"].includes(r.status)));
       } catch (err) {
         console.error(err);
       } finally {
@@ -117,158 +117,278 @@ export default function ActiveRents() {
 }
 
 function Card({ data, clerkId }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [issue, setIssue] = useState("");
+  const [showCancelReturn, setShowCancelReturn] = useState(false);
+  const [cancelReturnReason, setCancelReturnReason] = useState("");
+  const [otherReason, setOtherReason] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const product = data.product;
 
   const endDate = new Date(data.rentalEndDate);
   const now = new Date();
-  const timeDiff = endDate.getTime() - now.getTime();
-  const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const daysLeft = Math.ceil((endDate - now) / (1000 * 3600 * 24));
   const isExpiringSoon = daysLeft <= 3 && daysLeft >= 0;
   const isOverdue = daysLeft < 0;
 
   const submitMaintenance = async () => {
-    if (!issue) return alert("Please describe the issue");
+    if (!issue.trim()) return alert("Please describe the issue");
+    setIsSubmitting(true);
     try {
       await axios.post(`http://localhost:4000/api/user/${clerkId}/maintenance`, {
         productId: product._id,
         issue,
       });
-      alert("Request sent successfully!");
+      alert("Maintenance request sent!");
       setShowModal(false);
       setIssue("");
     } catch (err) {
-      console.error(err);
       alert("Failed to send request");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const statusSteps = ["Confirmed", "Preparing", "Picked up", "Delivered"];
+  const handleCancelReturn = async () => {
+    const reason = cancelReturnReason === "other" ? otherReason : cancelReturnReason;
+    if (!reason) return alert("Please select a reason");
+    
+    setIsSubmitting(true);
+    try {
+      const endpoint = (data.status === "complete" || data.status === "active" || data.status === "out for delivery")
+        ? "return"
+        : "cancel";
+      
+      await axios.patch(`http://localhost:4000/api/user/${clerkId}/${endpoint}/${data._id}`, {
+        reason
+      });
+      
+      alert(`${endpoint === "return" ? "Return" : "Cancellation"} request submitted!`);
+      window.location.reload();
+    } catch (err) {
+      alert(err.response?.data?.message || "Action failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const statusSteps = (data.status === "return requested" || data.status === "returned")
+    ? ["Delivered", "Return Requested", "Picked Up", "Finalized"]
+    : ["Confirmed", "Preparing", "Picked up", "Delivered"];
+
   const currentStep =
-    data.status === "complete" ? 3 :
+    (data.status === "complete" || data.status === "active") ? 3 :
+    data.status === "return requested" ? 1 :
+    data.status === "returned" ? 3 :
     data.status === "picked up" ? 2 :
     data.status === "preparing" ? 1 : 0;
 
   return (
     <>
-      <div className="w-[85%] mx-auto bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-row">
+      <div className="w-[90%] mx-auto bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="flex flex-row">
+          {/* Left: Image */}
+          <div className="w-52 min-h-full flex-shrink-0">
+            <img
+              src={product?.imgs?.[0] || product?.image}
+              alt={product?.title || product?.name}
+              className="w-full h-full object-cover"
+              style={{ minHeight: "220px" }}
+            />
+          </div>
 
-        {/* Left: Image */}
-        <div className="w-44 min-h-full flex-shrink-0">
-          <img
-            src={product?.imgs?.[0] || product?.image}
-            alt={product?.title || product?.name}
-            className="w-full h-full object-cover"
-            style={{ minHeight: "180px" }}
-          />
+          {/* Right: Summary Information */}
+          <div className="flex-1 flex flex-col justify-between p-8 gap-6 min-w-0">
+            <div className="flex items-start justify-between">
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">
+                  Subscription #{data._id?.slice(-8).toUpperCase()}
+                </p>
+                <h2 className="text-xl font-extrabold text-gray-900 truncate">
+                  {product?.title || product?.name || "—"}
+                </h2>
+                <div className="flex items-center gap-4 mt-3">
+                   <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                     <CalendarIcon size={14} className="text-red-400" />
+                     Ends {new Date(data.rentalEndDate).toLocaleDateString("en-IN", { day: "numeric", month: "long" })}
+                   </div>
+                   <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 uppercase tracking-wider">
+                     <MapPinIcon size={14} className="text-red-400" />
+                     {data.shippingAddress?.city || "Active Area"}
+                   </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                  data.status === 'return requested' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                  data.status === 'ordered' ? 'bg-yellow-50 text-yellow-600 border-yellow-100' :
+                  'bg-emerald-50 text-emerald-600 border-emerald-100'
+                }`}>
+                  {data.status}
+                </span>
+                <p className="text-xl font-black text-gray-900">₹{data.price}<span className="text-[10px] text-gray-400 font-bold ml-1">/mo</span></p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="px-5 py-2.5 bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest rounded-xl hover:bg-gray-800 transition-all flex items-center gap-2"
+                >
+                  <Clock size={14} /> Maintenance
+                </button>
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className={`px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-xl border transition-all flex items-center gap-2 ${
+                    isExpanded ? "bg-red-50 text-red-600 border-red-200" : "bg-white text-gray-600 border-gray-200 hover:border-red-400 hover:text-red-600"
+                  }`}
+                >
+                  {isExpanded ? "Close Details" : "View Details"}
+                  <ChevronRight size={14} className={`transition-transform duration-300 ${isExpanded ? "rotate-90 text-red-500" : ""}`} />
+                </button>
+              </div>
+              
+              {(isExpiringSoon || isOverdue) && (
+                <div className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border flex items-center gap-2 ${
+                  isOverdue ? "bg-red-50 text-red-600 border-red-100" : "bg-orange-50 text-orange-600 border-orange-100"
+                }`}>
+                  <Clock size={13} />
+                  {isOverdue ? "Subscription Overdue" : "Expiring Soon"}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Right: All Details */}
-        <div className="flex-1 flex flex-col justify-between p-6 gap-4 min-w-0">
-
-          {(isExpiringSoon || isOverdue) && (
-            <div className={`text-xs font-bold px-3 py-1.5 rounded-xl border inline-flex items-center gap-2 w-fit ${
-              isOverdue 
-                ? "bg-red-50 text-red-600 border-red-100 shadow-[0_0_10px_rgba(239,68,68,0.2)]" 
-                : "bg-orange-50 text-orange-600 border-orange-100 shadow-[0_0_10px_rgba(249,115,22,0.2)]"
-            }`}>
-              <Clock size={14} className={isOverdue ? "text-red-500" : "text-orange-500"} />
-              {isOverdue 
-                ? `Subscription Overdue (${Math.abs(daysLeft)} ${Math.abs(daysLeft) === 1 ? 'day' : 'days'})` 
-                : `Subscription ending in ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'}`
-              }
-            </div>
-          )}
-
-          {/* Row 1: Name + Price + Maintenance Button */}
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
-                Order #{data._id?.slice(-8).toUpperCase()}
-              </p>
-              <h2 className="text-lg font-bold text-gray-900 truncate">
-                {product?.title || product?.name || "—"}
-              </h2>
-            </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="text-right">
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest">Monthly</p>
-                <p className="text-base font-bold text-gray-900">₹{data.price}</p>
+        {/* Expandable Details Section */}
+        <div className={`transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "max-h-[800px] border-t border-gray-100" : "max-h-0"}`}>
+          <div className="p-10 bg-gray-50/50 space-y-10">
+            
+            {/* Status Tracking */}
+            <div className="space-y-6">
+              <div className="flex justify-between items-end">
+                <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Order Status Tracking</h3>
+                <span className="text-[10px] font-bold text-red-500 italic">Expected Delivery: {new Date(data.deliveryDate || Date.now()).toLocaleDateString("en-IN")}</span>
               </div>
-              <button
-                onClick={() => setShowModal(true)}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-xl transition"
-              >
-                Maintenance
-              </button>
-            </div>
-          </div>
-
-          {/* Row 2: Progress tracker */}
-          <div className="relative flex items-center justify-between px-1">
-            {/* Background line */}
-            <div className="absolute top-2 left-0 right-0 h-[2px] bg-gray-100 rounded-full" />
-            {/* Filled line */}
-            <div
-              className="absolute top-2 left-0 h-[2px] bg-red-500 rounded-full transition-all duration-700"
-              style={{ width: `${(currentStep / (statusSteps.length - 1)) * 100}%` }}
-            />
-            {statusSteps.map((step, i) => {
-              const isCompleted = i <= currentStep;
-              const isCurrent = i === currentStep;
-              return (
-                <div key={step} className="relative z-10 flex flex-col items-center">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300
-                      ${isCompleted ? "bg-red-500 border-red-500" : "bg-white border-gray-300"}
-                      ${isCurrent ? "ring-4 ring-red-100" : ""}`}
-                  >
-                    {isCompleted && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </div>
-                  <span
-                    className={`text-[10px] mt-1.5 font-semibold whitespace-nowrap
-                      ${isCompleted ? "text-red-500" : "text-gray-300"}`}
-                  >
-                    {step}
-                  </span>
+              
+              <div className="relative pt-4 pb-8">
+                <div className="absolute top-6 left-0 right-0 h-1 bg-gray-200 rounded-full" />
+                <div
+                  className="absolute top-6 left-0 h-1 bg-red-500 rounded-full transition-all duration-1000"
+                  style={{ width: `${(currentStep / (statusSteps.length - 1)) * 100}%` }}
+                />
+                <div className="flex justify-between relative px-1">
+                  {statusSteps.map((step, i) => (
+                    <div key={step} className="flex flex-col items-center">
+                      <div className={`w-5 h-5 rounded-full border-4 flex items-center justify-center transition-all duration-500 z-10 ${
+                        i <= currentStep ? "bg-red-500 border-red-100 scale-110 shadow-lg shadow-red-200" : "bg-white border-gray-200"
+                      }`} />
+                      <span className={`mt-3 text-[10px] font-black uppercase tracking-widest ${i <= currentStep ? "text-gray-900" : "text-gray-300"}`}>
+                        {step}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Row 3: Date + Address + View Details */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-gray-50">
-
-            {/* Left: Date & Address */}
-            <div className="flex flex-wrap items-center gap-5 text-xs text-gray-500">
-              <div className="flex items-center gap-2">
-                <CalendarIcon size={13} className="text-red-400" />
-                <span>
-                  {data.rentalStartDate
-                    ? new Date(data.rentalStartDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                    : "—"}
-                  <span className="mx-1.5 text-gray-300">→</span>
-                  {data.rentalEndDate
-                    ? new Date(data.rentalEndDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                    : "—"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPinIcon size={13} className="text-red-400" />
-                <span>Delivery Address</span>
               </div>
             </div>
 
-            {/* Right: View Details button */}
-            <button
-              onClick={() => window.location.href = `/myrentals/orders`}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 border border-gray-200 rounded-xl text-xs font-semibold text-gray-500 hover:text-red-600 hover:border-red-300 hover:bg-red-50 transition-all"
-            >
-              View details
-              <ChevronRight size={13} />
-            </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Rental Meta */}
+              <div className="space-y-6">
+                <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Detailed Analytics</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                    <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">Total Period</p>
+                    <p className="text-sm font-black text-gray-800">
+                      {Math.ceil((new Date(data.rentalEndDate) - new Date(data.rentalStartDate)) / (1000*3600*24*30))} Months
+                    </p>
+                  </div>
+                  <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                    <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">Monthly Billing</p>
+                    <p className="text-sm font-black text-red-600">₹{data.price}</p>
+                  </div>
+                  {data.pickupDate && (
+                    <div className="bg-orange-50 p-5 rounded-2xl border border-orange-100 shadow-sm col-span-2">
+                       <p className="text-[9px] font-bold text-orange-400 uppercase mb-1">Assigned Pickup Date</p>
+                       <p className="text-sm font-black text-orange-700">{new Date(data.pickupDate).toLocaleDateString("en-IN", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
 
+              {/* Action Section */}
+              <div className="space-y-6">
+                <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Management Actions</h3>
+                
+                {showCancelReturn ? (
+                  <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-xl space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                     <div className="flex justify-between items-center">
+                        <p className="text-xs font-bold text-gray-700">Reason for Request</p>
+                        <button onClick={() => setShowCancelReturn(false)} className="text-gray-400 hover:text-red-500"><X size={14}/></button>
+                     </div>
+                     <select
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-100"
+                        value={cancelReturnReason}
+                        onChange={(e) => setCancelReturnReason(e.target.value)}
+                      >
+                        <option value="">Select a reason</option>
+                        <option value="Moving to another city">Moving to another city</option>
+                        <option value="No longer needed">No longer needed</option>
+                        <option value="Found better alternative">Found better alternative</option>
+                        <option value="Product damaged">Product damaged</option>
+                        <option value="Monthly rent is high">Monthly rent is high</option>
+                        <option value="other">Other</option>
+                      </select>
+                      
+                      {cancelReturnReason === "other" && (
+                        <input
+                          type="text"
+                          placeholder="Describe your reason..."
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-red-100"
+                          value={otherReason}
+                          onChange={(e) => setOtherReason(e.target.value)}
+                        />
+                      )}
+                      
+                      <button
+                        onClick={handleCancelReturn}
+                        disabled={isSubmitting}
+                        className="w-full bg-red-600 text-white font-black py-3.5 rounded-xl uppercase tracking-widest text-[10px] hover:bg-red-700 transition-all shadow-lg shadow-red-100 disabled:opacity-50"
+                      >
+                        {isSubmitting ? "Processing..." : "Confirm Request"}
+                      </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-4">
+                    {data.status === "ordered" ? (
+                      <button 
+                        onClick={() => setShowCancelReturn(true)}
+                        className="flex-1 bg-white border-2 border-red-500 text-red-600 font-black py-4 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-red-50 transition-all"
+                      >
+                        Cancel Order
+                      </button>
+                    ) : (data.status === "complete" || data.status === "active" || data.status === "out for delivery") && (
+                      <button 
+                         onClick={() => setShowCancelReturn(true)}
+                         className="flex-1 bg-white border-2 border-orange-500 text-orange-600 font-black py-4 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-orange-50 transition-all"
+                      >
+                         Initiate Return
+                      </button>
+                    )}
+                  </div>
+                )}
+                
+                {data.status === "return requested" && !data.pickupDate && (
+                  <div className="bg-orange-50 border border-orange-100 p-5 rounded-2xl">
+                     <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-1 italic">Waiting for approval</p>
+                     <p className="text-[10px] text-orange-500 leading-relaxed font-semibold">Admin is processing your return. We will assign a pickup date shortly.</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -308,3 +308,65 @@ exports.requestMaintenanceReply = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/* =========================
+   CANCEL RENTAL
+========================= */
+
+exports.cancelRental = async (req, res) => {
+  try {
+    const { clerkId, rentalId } = req.params;
+    const { reason } = req.body;
+
+    const user = await User.findOne({ clerkId });
+    const rental = user.activeRentals.id(rentalId);
+
+    if (!rental) {
+      return res.status(404).json({ message: "Rental not found" });
+    }
+
+    if (rental.status !== "ordered") {
+      return res.status(400).json({ message: "Only ordered items can be cancelled" });
+    }
+
+    rental.status = "cancelled";
+    rental.cancelReason = reason;
+
+    await user.save();
+    res.json(user.activeRentals);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/* =========================
+   RETURN RENTAL
+========================= */
+
+exports.returnRental = async (req, res) => {
+  try {
+    const { clerkId, rentalId } = req.params;
+    const { reason } = req.body;
+
+    const user = await User.findOne({ clerkId });
+    const rental = user.activeRentals.id(rentalId);
+
+    if (!rental) {
+      return res.status(404).json({ message: "Rental not found" });
+    }
+
+    // Allow return if already delivered (complete) or active
+    const allowedStatuses = ["complete", "active" , "out for delivery"];
+    if (!allowedStatuses.includes(rental.status)) {
+      return res.status(400).json({ message: "Product must be delivered before initiating return" });
+    }
+
+    rental.status = "return requested";
+    rental.returnReason = reason;
+
+    await user.save();
+    res.json(user.activeRentals);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -102,10 +102,17 @@ const userSchema = new mongoose.Schema(
           "dispatch",
           "out for delivery",
           "complete",
-          "active"
+          "active",
+          "cancelled",
+          "return requested",
+          "returned"
         ],
         default: "ordered"
       },
+
+      cancelReason: String,
+      returnReason: String,
+      pickupDate: Date,
 
       shippingAddress: {
         fullname: String,

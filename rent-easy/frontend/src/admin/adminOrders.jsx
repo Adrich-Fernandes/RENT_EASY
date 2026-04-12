@@ -5,7 +5,7 @@ import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, M
 
 const API = "http://localhost:4000/api/rent";
 
-const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete"];
+const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete", "active", "cancelled", "return requested", "returned"];
 
 const SEARCH_FIELDS = [
   { label: "All", value: "all" },
@@ -20,6 +20,10 @@ const statusStyle = (status) => {
     case "dispatch":         return "bg-blue-100 text-blue-700";
     case "out for delivery": return "bg-purple-100 text-purple-700";
     case "complete":         return "bg-red-100 text-red-700";
+    case "active":           return "bg-green-100 text-green-700";
+    case "cancelled":        return "bg-gray-100 text-gray-500";
+    case "return requested": return "bg-orange-100 text-orange-700";
+    case "returned":         return "bg-emerald-100 text-emerald-700";
     default:                 return "bg-gray-100 text-gray-600";
   }
 };
@@ -103,6 +107,17 @@ export default function AdminOrders() {
     } catch (err) {
       console.error(err);
       alert("Failed to update delivery date.");
+    }
+  };
+
+  const updatePickupDate = async (orderId, date) => {
+    try {
+      const res = await axios.put(`${API}/updatePickup/${orderId}`, { pickupDate: date });
+      setOrders((prev) => prev.map((o) => (o._id === orderId ? res.data : o)));
+      if (selectedOrder?._id === orderId) setSelectedOrder(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update pickup date.");
     }
   };
 
@@ -430,6 +445,7 @@ export default function AdminOrders() {
           onClose={() => setSelectedOrder(null)}
           onStatusChange={updateStatus}
           onDateChange={updateDeliveryDate}
+          onPickupDateChange={updatePickupDate}
         />
       )}
     </>
@@ -437,7 +453,7 @@ export default function AdminOrders() {
 }
 
 
-function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
+function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPickupDateChange }) {
   const product = order.product;
   const user    = order.user;
   const address = order.shippingAddress;
@@ -448,13 +464,25 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
       : ""
   );
 
+  const [localPickupDate, setLocalPickupDate] = useState(
+    order.pickupDate
+      ? new Date(order.pickupDate).toISOString().split("T")[0]
+      : ""
+  );
+
   useEffect(() => {
     setLocalDate(
       order.deliveryDate
         ? new Date(order.deliveryDate).toISOString().split("T")[0]
         : ""
     );
-  }, [order.deliveryDate]);
+    setLocalPickupDate(
+      order.pickupDate
+        ? new Date(order.pickupDate).toISOString().split("T")[0]
+        : ""
+    );
+  }, [order.deliveryDate, order.pickupDate]);
+
 
   return (
     <div
@@ -510,6 +538,18 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
               </div>
             </div>
           </div>
+
+          {/* Cancellation / Return Reason */}
+          {(order.cancelReason || order.returnReason) && (
+            <div className={`p-4 rounded-xl border ${order.cancelReason ? "bg-red-50 border-red-100" : "bg-orange-50 border-orange-100"}`}>
+              <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${order.cancelReason ? "text-red-400" : "text-orange-400"}`}>
+                {order.cancelReason ? "Cancellation Reason" : "Return Reason"}
+              </p>
+              <p className={`text-sm font-medium ${order.cancelReason ? "text-red-700" : "text-orange-700"}`}>
+                {order.cancelReason || order.returnReason}
+              </p>
+            </div>
+          )}
 
           {/* Delivery Address */}
           <div>
@@ -591,6 +631,30 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange }) {
               </button>
             </div>
           </div>
+
+          {/* Pickup Date (Return process) */}
+          {(order.status === "return requested" || order.status === "returned") && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Calendar size={16} className="text-orange-400" />
+                <p className="font-semibold text-gray-700">Assign Pickup Date</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="date"
+                  value={localPickupDate}
+                  onChange={(e) => setLocalPickupDate(e.target.value)}
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+                <button
+                  onClick={() => localPickupDate && onPickupDateChange(order._id, localPickupDate)}
+                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold rounded-lg transition"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Update Status */}
           <div>
