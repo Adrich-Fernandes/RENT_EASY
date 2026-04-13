@@ -37,12 +37,28 @@ export default function ReportIssue() {
     e.preventDefault();
     setLoading(true);
     try {
+      // 1. Save to internal Database
       await axios.post("http://localhost:4000/api/issue/create", {
         clerkId: user.id,
         userName: user.fullName || "User",
         userEmail: user.primaryEmailAddress.emailAddress,
         ...formData
       });
+
+      // 2. Send Email Notification via Web3Forms
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: "be76b3f8-7fb7-4a9e-8537-28fa5e21c7e9",
+          name: user.fullName,
+          email: user.primaryEmailAddress.emailAddress,
+          subject: `[Issue Report] ${formData.subject}`,
+          message: `Category: ${formData.category}\nPriority: ${formData.priority}\n\nMessage: ${formData.message}`,
+          from_name: "RentEase Support System"
+        })
+      });
+
       setSuccess(true);
       setTimeout(() => navigate("/issue-status"), 3000);
     } catch (error) {

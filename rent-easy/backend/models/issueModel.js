@@ -16,7 +16,7 @@ const issueSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Billing", "Technical Support", "Product Inquiry", "Feedback", "Other"],
+      enum: ["Billing", "Technical Support", "Product Inquiry", "Feedback", "General Inquiry", "Maintenance Request", "Partner With Us", "Other"],
       default: "Other"
     },
     subject: {

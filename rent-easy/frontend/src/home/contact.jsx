@@ -1,10 +1,79 @@
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Send, Instagram, Twitter, Facebook } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Instagram, Twitter, Facebook, Clock, User } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
+import axios from "axios";
 import UserNavBar from "../components/userNavBar";
 import Footer from "../components/footer";
 
 export default function Contact() {
+  const { user } = useUser();
+  const [formData, setFormData] = useState({
+    name: user?.fullName || user?.firstName || "",
+    email: user?.primaryEmailAddress?.emailAddress || "",
+    subject: "General Inquiry",
+    message: ""
+  });
+  const [status, setStatus] = useState("idle");
+
+  // Sync user data if it loads later
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: prev.name || user.fullName || user.firstName || "",
+        email: prev.email || user.primaryEmailAddress?.emailAddress || ""
+      }));
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      alert("Please sign in to send a trackable message.");
+      return;
+    }
+
+    setStatus("sending");
+    try {
+      // 1. Save to internal Database
+      await axios.post("http://localhost:4000/api/issue/create", {
+        clerkId: user.id,
+        userName: formData.name,
+        userEmail: formData.email,
+        category: formData.subject,
+        subject: formData.subject,
+        message: formData.message,
+        priority: "Medium"
+      });
+
+      // 2. Send Email Notification via Web3Forms
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: "be76b3f8-7fb7-4a9e-8537-28fa5e21c7e9",
+          name: formData.name,
+          email: formData.email,
+          subject: `[Contact Form] ${formData.subject}`,
+          message: formData.message,
+          from_name: "RentEase Support System"
+        })
+      });
+
+      setStatus("success");
+      setFormData({ name: "", email: "", subject: "General Inquiry", message: "" });
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+    }
+  };
+
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0 },
@@ -12,18 +81,13 @@ export default function Contact() {
 
   const staggerContainer = {
     hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+    visible: { transition: { staggerChildren: 0.1 } },
   };
 
   return (
     <>
       <UserNavBar />
       <div className="min-h-screen bg-white pt-16">
-        {/* Header Section */}
         <section className="bg-red-50 py-20 px-6">
           <div className="max-w-7xl mx-auto text-center">
             <motion.h1 
@@ -44,12 +108,10 @@ export default function Contact() {
           </div>
         </section>
 
-        {/* Contact Content */}
         <section className="py-20 px-6">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
               
-              {/* Contact Information */}
               <motion.div 
                 initial="hidden"
                 whileInView="visible"
@@ -95,7 +157,6 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Social Media */}
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-6">Follow Us</h3>
                   <div className="flex gap-4">
@@ -113,7 +174,6 @@ export default function Contact() {
                 </div>
               </motion.div>
 
-              {/* Contact Form */}
               <motion.div 
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -122,150 +182,113 @@ export default function Contact() {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -z-10"></div>
                 
-                {/* FORM LOGIC */}
-                {(() => {
-                  const [formData, setFormData] = React.useState({
-                    name: "",
-                    email: "",
-                    subject: "General Inquiry",
-                    message: ""
-                  });
-                  const [status, setStatus] = React.useState("idle"); // idle, sending, success, error
-                  const accessKey = "be76b3f8-7fb7-4a9e-8537-28fa5e21c7e9"; // User provided key
-
-                  const handleChange = (e) => {
-                    setFormData({ ...formData, [e.target.name]: e.target.value });
-                  };
-
-                  const handleSubmit = async (e) => {
-                    e.preventDefault();
-                    if (accessKey === "YOUR_ACCESS_KEY_HERE") {
-                      alert("Please paste your Web3Forms Access Key into the code first!");
-                      return;
-                    }
-
-                    setStatus("sending");
-                    try {
-                      const response = await fetch("https://api.web3forms.com/submit", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          access_key: accessKey,
-                          ...formData,
-                          from_name: "RentEase Contact Form"
-                        })
-                      });
-
-                      const data = await response.json();
-                      if (data.success) {
-                        setStatus("success");
-                        setFormData({ name: "", email: "", subject: "General Inquiry", message: "" });
-                      } else {
-                        setStatus("error");
-                      }
-                    } catch (error) {
-                      console.error(error);
-                      setStatus("error");
-                    }
-                  };
-
-                  if (status === "success") {
-                    return (
-                      <div className="text-center py-10">
-                        <div className="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                          <Send size={30} />
-                        </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
-                        <p className="text-gray-600 mb-8">Thank you for reaching out. We'll get back to you at {formData.email} soon.</p>
-                        <div className="flex flex-col gap-4 items-center">
-                          <button 
-                            onClick={() => setStatus("idle")}
-                            className="text-red-600 font-bold hover:underline"
-                          >
-                            Send another message
-                          </button>
-                          <Link to="/report-issue" className="text-gray-500 text-sm hover:text-red-600 font-medium">
-                            Need technical support? Report an Issue
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="text-sm font-semibold text-gray-700 ml-1">Full Name</label>
-                          <input 
-                            required
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            type="text" 
-                            placeholder="John Doe"
-                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-semibold text-gray-700 ml-1">Email Address</label>
-                          <input 
-                            required
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            type="email" 
-                            placeholder="john@example.com"
-                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 ml-1">Subject</label>
-                        <select 
-                          name="subject"
-                          value={formData.subject}
-                          onChange={handleChange}
-                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium appearance-none"
-                        >
-                          <option>General Inquiry</option>
-                          <option>Maintenance Request</option>
-                          <option>Billing Question</option>
-                          <option>Partner With Us</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 ml-1">Message</label>
-                        <textarea 
-                          required
-                          name="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          rows="5"
-                          placeholder="How can we help you?"
-                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium resize-none"
-                        ></textarea>
-                      </div>
-
-                      {status === "error" && (
-                        <p className="text-red-500 text-sm font-medium ml-1">Something went wrong. Please try again later.</p>
-                      )}
-
+                {status === "success" ? (
+                  <div className="text-center py-10">
+                    <div className="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Send size={30} />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
+                    <p className="text-gray-600 mb-8">Thank you for reaching out. We'll get back to you at {formData.email} soon.</p>
+                    <div className="flex flex-col gap-4 items-center">
                       <button 
-                        type="submit"
-                        disabled={status === "sending"}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 group disabled:bg-gray-400 disabled:shadow-none"
+                        onClick={() => setStatus("idle")}
+                        className="bg-red-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-red-100 hover:bg-red-700 transition-all"
                       >
-                        {status === "sending" ? "Sending..." : "Send Message"}
-                        <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                        Send another message
                       </button>
-                    </form>
-                  );
-                })()}
-              </motion.div>
+                      <Link to="/issue-status" className="flex items-center gap-2 text-gray-500 text-sm hover:text-red-600 font-bold transition-colors">
+                        <Clock size={16} /> Track your requests in Issue Status
+                      </Link>
+                    </div>
+                  </div>
+                ) : !user ? (
+                  <div className="text-center py-12 px-4 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                       <User className="text-gray-300" size={30} />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Sign in to contact us</h3>
+                    <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">
+                      Please sign in to send a message. This allows us to track your request and reply to you directly.
+                    </p>
+                    <button 
+                      onClick={() => window.location.href = "/"}
+                      className="bg-red-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all"
+                    >
+                      Sign In / Sign Up
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-gray-700 ml-1">Full Name</label>
+                        <input 
+                          required
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          type="text" 
+                          placeholder="John Doe"
+                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-gray-700 ml-1">Email Address</label>
+                        <input 
+                          required
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          type="email" 
+                          placeholder="john@example.com"
+                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium"
+                        />
+                      </div>
+                    </div>
 
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700 ml-1">Subject</label>
+                      <select 
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium appearance-none"
+                      >
+                        <option>General Inquiry</option>
+                        <option>Maintenance Request</option>
+                        <option>Billing Question</option>
+                        <option>Partner With Us</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-gray-700 ml-1">Message</label>
+                      <textarea 
+                        required
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        rows="5"
+                        placeholder="How can we help you?"
+                        className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium resize-none"
+                      ></textarea>
+                    </div>
+
+                    {status === "error" && (
+                      <p className="text-red-500 text-sm font-medium ml-1">Something went wrong. Please try again later.</p>
+                    )}
+
+                    <button 
+                      type="submit"
+                      disabled={status === "sending"}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 group disabled:bg-gray-400 disabled:shadow-none"
+                    >
+                      {status === "sending" ? "Sending..." : "Send Message"}
+                      <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </button>
+                  </form>
+                )}
+              </motion.div>
             </div>
           </div>
         </section>
