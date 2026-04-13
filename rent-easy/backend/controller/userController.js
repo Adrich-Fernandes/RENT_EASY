@@ -355,8 +355,8 @@ exports.returnRental = async (req, res) => {
       return res.status(404).json({ message: "Rental not found" });
     }
 
-    // Allow return if already delivered (complete) or active
-    const allowedStatuses = ["complete", "active" , "out for delivery"];
+    // Allow return if already delivered or active
+    const allowedStatuses = ["complete", "active", "delivered", "out for delivery"];
     if (!allowedStatuses.includes(rental.status)) {
       return res.status(400).json({ message: "Product must be delivered before initiating return" });
     }

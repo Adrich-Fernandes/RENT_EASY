@@ -5,8 +5,6 @@ import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, M
 
 const API = "http://localhost:4000/api/rent";
 
-const STATUS_OPTIONS = ["ordered", "dispatch", "out for delivery", "complete", "active", "cancelled", "return requested", "request conformed", "out for pickup", "completed"];
-
 const SEARCH_FIELDS = [
   { label: "All", value: "all" },
   { label: "Customer", value: "customer" },
@@ -14,19 +12,20 @@ const SEARCH_FIELDS = [
   { label: "Address", value: "address" },
 ];
 
+const FORWARD_STATUSES = ["ordered", "order conformed", "shiped", "out for delivery", "delivered"];
+const REVERSE_STATUSES = ["return requested", "request conformed", "out for pickup", "pickup complete"];
+
 const statusStyle = (status) => {
   switch (status) {
     case "ordered":          return "bg-yellow-100 text-yellow-700";
-    case "dispatch":         return "bg-blue-100 text-blue-700";
+    case "order conformed":  return "bg-amber-100 text-amber-700";
+    case "shiped":           return "bg-blue-100 text-blue-700";
     case "out for delivery": return "bg-purple-100 text-purple-700";
-    case "complete":         return "bg-red-100 text-red-700";
-    case "active":           return "bg-green-100 text-green-700";
-    case "cancelled":        return "bg-gray-100 text-gray-500";
+    case "delivered":        return "bg-green-100 text-green-700";
     case "return requested": return "bg-orange-100 text-orange-700";
-    case "request conformed":return "bg-amber-100 text-amber-700";
+    case "request conformed":return "bg-amber-100 text-amber-700 font-bold";
     case "out for pickup":   return "bg-cyan-100 text-cyan-700";
-    case "returned":         return "bg-emerald-100 text-emerald-700";
-    case "completed":        return "bg-green-100 text-green-700";
+    case "pickup complete":  return "bg-emerald-100 text-emerald-700";
     default:                 return "bg-gray-100 text-gray-600";
   }
 };
@@ -52,6 +51,8 @@ function Highlight({ text = "", term = "" }) {
     </span>
   );
 }
+
+const isReturn = (status) => ["return requested", "request conformed", "out for pickup", "pickup complete"].includes(status);
 
 export default function AdminOrders() {
   const [orders, setOrders]               = useState([]);
@@ -91,9 +92,9 @@ export default function AdminOrders() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleStatusDropdownToggle = (e, index) => {
+  const handleStatusDropdownToggle = (e, orderId) => {
     e.stopPropagation();
-    if (openDropdown === index) {
+    if (openDropdown === orderId) {
       setOpenDropdown(null);
       return;
     }
@@ -102,7 +103,7 @@ export default function AdminOrders() {
       top: rect.bottom + window.scrollY + 4,
       left: rect.right + window.scrollX - 192, // 192 matches w-48 width
     });
-    setOpenDropdown(index);
+    setOpenDropdown(orderId);
   };
 
   const updateStatus = async (orderId, newStatus) => {
@@ -169,271 +170,182 @@ export default function AdminOrders() {
     return matchSearch && matchStatus;
   });
 
-  const counts = STATUS_OPTIONS.reduce((acc, s) => {
-    acc[s] = orders.filter((o) => o.status === s).length;
-    return acc;
-  }, {});
+  const deliveryOrders = filtered.filter(o => !isReturn(o.status));
+  const returnOrders   = filtered.filter(o => isReturn(o.status));
 
   const currentSearchLabel = SEARCH_FIELDS.find((f) => f.value === searchField)?.label;
+
+  const renderTable = (data, title) => {
+    const count = data.length;
+    return (
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-4 px-1">
+          <h2 className="text-xl font-bold text-gray-700">{title}</h2>
+          <span className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs font-bold rounded-full border border-gray-200">
+            {count}
+          </span>
+        </div>
+        <div className="w-full overflow-x-auto">
+          <div className="bg-white shadow rounded-xl border border-gray-200 min-w-[900px]">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-50 border-b text-gray-500 uppercase text-xs">
+                <tr>
+                  <th className="px-5 py-3">Customer</th>
+                  <th className="px-5 py-3">Product</th>
+                  <th className="px-5 py-3">Address</th>
+                  <th className="px-5 py-3">Rental Period</th>
+                  <th className="px-5 py-3">Price / mo</th>
+                  <th className="px-5 py-3">{title.includes("Returns") ? "Pickup Date" : "Delivery Date"}</th>
+                  <th className="px-5 py-3">Status</th>
+                  <th className="px-5 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="text-center py-12 text-gray-400 italic">
+                      No records found in this section.
+                    </td>
+                  </tr>
+                ) : (
+                  data.map((order) => (
+                    <tr
+                      key={order._id}
+                      onClick={() => setSelectedOrder(order)}
+                      className="border-b hover:bg-gray-50 cursor-pointer transition"
+                    >
+                      <td className="px-5 py-4">
+                        <p className="font-semibold text-gray-800">
+                          <Highlight text={order.user?.name || "—"} term={searchField !== "product" ? searchTerm : ""} />
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          <Highlight text={order.user?.email || "—"} term={searchField !== "product" ? searchTerm : ""} />
+                        </p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          {getImg(order.product) && (
+                            <img
+                              src={getImg(order.product)}
+                              alt=""
+                              className="w-10 h-10 object-cover rounded-lg border flex-shrink-0"
+                            />
+                          )}
+                          <span className="font-medium text-gray-800">
+                            <Highlight text={order.product?.title || "—"} term={searchField !== "customer" && searchField !== "address" ? searchTerm : ""} />
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <p className="text-gray-800 font-medium">
+                          <Highlight text={order.shippingAddress?.city || "—"} term={searchField === "address" || searchField === "all" ? searchTerm : ""} />
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          <Highlight text={order.shippingAddress?.state || ""} term={searchField === "address" || searchField === "all" ? searchTerm : ""} />
+                        </p>
+                      </td>
+                      <td className="px-5 py-4 text-gray-600 text-xs space-y-1">
+                        <p>From: {order.rentalStartDate ? new Date(order.rentalStartDate).toLocaleDateString() : "—"}</p>
+                        <p>To: {order.rentalEndDate ? new Date(order.rentalEndDate).toLocaleDateString() : "—"}</p>
+                      </td>
+                      <td className="px-5 py-4 font-semibold text-gray-800">₹{order.price}</td>
+                      <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="date"
+                          defaultValue={
+                            (title.includes("Returns") ? order.pickupDate : order.deliveryDate) && !isNaN(new Date(title.includes("Returns") ? order.pickupDate : order.deliveryDate))
+                              ? new Date(title.includes("Returns") ? order.pickupDate : order.deliveryDate).toISOString().split("T")[0]
+                              : ""
+                          }
+                          onBlur={(e) => {
+                            if (e.target.value) {
+                              title.includes("Returns")
+                                ? updatePickupDate(order._id, e.target.value)
+                                : updateDeliveryDate(order._id, e.target.value);
+                            }
+                          }}
+                          className={`border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 ${title.includes("Returns") ? "focus:ring-orange-400 border-orange-200" : "focus:ring-red-400 border-gray-300"}`}
+                        />
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${statusStyle(order.status)}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={(e) => handleStatusDropdownToggle(e, order._id)}
+                          className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-sm transition"
+                        >
+                          Status <ChevronDown size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
       <AdminNavBar />
       <div className="p-4 md:p-6 w-full">
-
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Orders</h1>
-
-        {/* ── Summary Cards (also act as status filters) ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {[
-            { label: "Ordered",          key: "ordered",          color: "bg-yellow-50 border-yellow-200 text-yellow-700" },
-            { label: "Dispatched",       key: "dispatch",         color: "bg-blue-50 border-blue-200 text-blue-700" },
-            { label: "Out for Delivery", key: "out for delivery", color: "bg-purple-50 border-purple-200 text-purple-700" },
-            { label: "Return Finalized", key: "completed",        color: "bg-green-50 border-green-200 text-green-700" },
-          ].map((card) => (
-            <button
-              key={card.key}
-              onClick={() => setStatusFilter(statusFilter === card.key ? "all" : card.key)}
-              className={`border rounded-xl p-4 text-left transition hover:shadow-md ${card.color} ${
-                statusFilter === card.key ? "ring-2 ring-offset-1 ring-current" : ""
-              }`}
-            >
-              <p className="text-2xl font-extrabold">{counts[card.key] || 0}</p>
-              <p className="text-sm font-medium mt-1">{card.label}</p>
-            </button>
-          ))}
-        </div>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Orders Management</h1>
 
         {/* ── Search Bar with Field Selector ── */}
-        <div className="flex flex-wrap items-center gap-3 mb-5">
-
-          {/* Search input + field dropdown combined */}
+        <div className="flex flex-wrap items-center gap-3 mb-8 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
           <div className="relative flex-1 min-w-[260px] flex rounded-lg border border-gray-300 overflow-visible focus-within:ring-2 focus-within:ring-red-400 focus-within:border-transparent bg-white">
-
-            {/* Field selector dropdown trigger */}
             <div ref={searchFieldRef} className="relative flex-shrink-0">
               <button
                 onClick={() => setSearchFieldOpen((v) => !v)}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 border-r border-gray-300 hover:bg-gray-50 transition whitespace-nowrap h-full rounded-l-lg"
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 border-r border-gray-300 hover:bg-gray-50 transition h-full rounded-l-lg"
               >
                 <Filter size={13} className="text-gray-400" />
                 {currentSearchLabel}
                 <ChevronDown size={13} className={`text-gray-400 transition-transform ${searchFieldOpen ? "rotate-180" : ""}`} />
               </button>
-
               {searchFieldOpen && (
                 <div className="absolute left-0 top-full mt-1 w-36 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
                   {SEARCH_FIELDS.map((f) => (
                     <button
                       key={f.value}
                       onClick={() => { setSearchField(f.value); setSearchFieldOpen(false); }}
-                      className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm transition hover:bg-gray-50 ${
-                        searchField === f.value ? "font-bold text-red-600" : "text-gray-700"
-                      }`}
+                      className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm transition hover:bg-gray-50 ${searchField === f.value ? "font-bold text-red-600" : "text-gray-700"}`}
                     >
                       {f.label}
-                      {searchField === f.value && <span className="ml-auto text-red-500">✓</span>}
                     </button>
                   ))}
                 </div>
               )}
             </div>
-
-            {/* Search icon + input */}
             <div className="relative flex-1 flex items-center">
-              <Search size={15} className="absolute left-3 text-gray-400 pointer-events-none" />
+              <Search size={15} className="absolute left-3 text-gray-400" />
               <input
                 type="text"
-                placeholder={
-                  searchField === "product"
-                    ? "Search by product name..."
-                    : searchField === "customer"
-                    ? "Search by name or email..."
-                    : "Search by name, email or product..."
-                }
+                placeholder={`Search by ${currentSearchLabel?.toLowerCase()}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 text-sm bg-transparent focus:outline-none"
               />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute right-3 text-gray-400 hover:text-gray-600 transition"
-                >
-                  <X size={14} />
-                </button>
-              )}
+              {searchTerm && <button onClick={() => setSearchTerm("")} className="absolute right-3 text-gray-400 hover:text-gray-600"><X size={14} /></button>}
             </div>
-          </div>
-
-          {/* Status filter pills — "All" + each status */}
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setStatusFilter("all")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium border transition ${
-                statusFilter === "all"
-                  ? "bg-gray-800 text-white border-gray-800"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
-              }`}
-            >
-              All
-            </button>
-            {STATUS_OPTIONS.map((s) => (
-              <button
-                key={s}
-                onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium border capitalize transition ${
-                  statusFilter === s
-                    ? "bg-gray-800 text-white border-gray-800"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
           </div>
         </div>
 
-        {/* Result count */}
-        {(searchTerm || statusFilter !== "all") && (
-          <p className="text-sm text-gray-500 mb-3">
-            Showing <span className="font-semibold text-gray-700">{filtered.length}</span> of{" "}
-            <span className="font-semibold text-gray-700">{orders.length}</span> orders
-            {searchTerm && (
-              <> for <span className="font-semibold text-gray-700">"{searchTerm}"</span> in {currentSearchLabel.toLowerCase()}</>
-            )}
-            {statusFilter !== "all" && (
-              <> · filtered by <span className="capitalize font-semibold text-gray-700">{statusFilter}</span></>
-            )}
-          </p>
-        )}
-
-        {/* ── Table ── */}
         {loading ? (
           <div className="flex items-center justify-center h-48">
             <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
-          <div className="w-full overflow-x-auto">
-            <div className="bg-white shadow rounded-xl border border-gray-200 min-w-[900px]">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-gray-50 border-b text-gray-500 uppercase text-xs">
-                  <tr>
-                    <th className="px-5 py-3">Customer</th>
-                    <th className="px-5 py-3">Product</th>
-                    <th className="px-5 py-3">Address</th>
-                    <th className="px-5 py-3">Rental Period</th>
-                    <th className="px-5 py-3">Price / mo</th>
-                    <th className="px-5 py-3">Delivery Date</th>
-                    <th className="px-5 py-3">Status</th>
-                    <th className="px-5 py-3">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.length === 0 ? (
-                    <tr>
-                      <td colSpan="7" className="text-center py-12 text-gray-400">
-                        {searchTerm
-                          ? `No orders found matching "${searchTerm}" in ${currentSearchLabel.toLowerCase()}.`
-                          : "No orders found."}
-                      </td>
-                    </tr>
-                  ) : (
-                    filtered.map((order, index) => (
-                      <tr
-                        key={order._id}
-                        onClick={() => setSelectedOrder(order)}
-                        className="border-b hover:bg-gray-50 cursor-pointer transition"
-                      >
-                        {/* Customer */}
-                        <td className="px-5 py-4">
-                          <p className="font-semibold text-gray-800">
-                            <Highlight text={order.user?.name || "—"} term={searchField !== "product" ? searchTerm : ""} />
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            <Highlight text={order.user?.email || "—"} term={searchField !== "product" ? searchTerm : ""} />
-                          </p>
-                        </td>
-
-                        {/* Product */}
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-2">
-                            {getImg(order.product) && (
-                              <img
-                                src={getImg(order.product)}
-                                alt=""
-                                className="w-10 h-10 object-cover rounded-lg border flex-shrink-0"
-                              />
-                            )}
-                            <span className="font-medium text-gray-800">
-                              <Highlight text={order.product?.title || "—"} term={searchField !== "customer" && searchField !== "address" ? searchTerm : ""} />
-                            </span>
-                          </div>
-                        </td>
-
-                        {/* Address */}
-                        <td className="px-5 py-4">
-                          <p className="text-gray-800 font-medium">
-                            <Highlight text={order.shippingAddress?.city || "—"} term={searchField === "address" || searchField === "all" ? searchTerm : ""} />
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            <Highlight text={order.shippingAddress?.state || ""} term={searchField === "address" || searchField === "all" ? searchTerm : ""} />
-                          </p>
-                        </td>
-
-                        {/* Rental Period */}
-                        <td className="px-5 py-4 text-gray-600 text-xs space-y-1">
-                          <p>From: {order.rentalStartDate ? new Date(order.rentalStartDate).toLocaleDateString() : "—"}</p>
-                          <p>To: {order.rentalEndDate ? new Date(order.rentalEndDate).toLocaleDateString() : "—"}</p>
-                        </td>
-
-                        {/* Price */}
-                        <td className="px-5 py-4 font-semibold text-gray-800">
-                          ₹{order.price}
-                        </td>
-
-                        {/* Delivery Date */}
-                        <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
-                          <input
-                            type="date"
-                            defaultValue={
-                              order.deliveryDate && !isNaN(new Date(order.deliveryDate))
-                                ? new Date(order.deliveryDate).toISOString().split("T")[0]
-                                : ""
-                            }
-                            onBlur={(e) => {
-                              if (e.target.value) updateDeliveryDate(order._id, e.target.value);
-                            }}
-                            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-                          />
-                        </td>
-
-                        {/* Status badge */}
-                        <td className="px-5 py-4">
-                          <span className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${statusStyle(order.status)}`}>
-                            {order.status}
-                          </span>
-                        </td>
-
-                        {/* Status dropdown — button only, dropdown is rendered fixed below */}
-                        <td
-                          className="px-5 py-4"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <button
-                            onClick={(e) => handleStatusDropdownToggle(e, index)}
-                            className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-sm transition"
-                          >
-                            Status <ChevronDown size={14} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <>
+            {renderTable(deliveryOrders, "Active Deliveries")}
+            {renderTable(returnOrders, "Return Requests")}
+          </>
         )}
       </div>
 
@@ -447,36 +359,33 @@ export default function AdminOrders() {
         />
       )}
 
-      {/* Absolute Status Dropdown — Rendered outside the table to avoid clipping */}
-      {openDropdown !== null && (
+      {/* Absolute Status Dropdown */}
+      {openDropdown && (
         <div
           ref={dropdownRef}
-          className="absolute w-48 bg-white border border-gray-200 rounded-xl shadow-2xl z-[9999] overflow-hidden"
+          className="absolute w-52 bg-white border border-gray-200 rounded-xl shadow-2xl z-[9999] overflow-hidden"
           style={{ top: dropdownPos.top, left: dropdownPos.left }}
-          onClick={(e) => e.stopPropagation()}
         >
-          {STATUS_OPTIONS.map((option) => {
-            const order = filtered[openDropdown];
+          {(() => {
+            const order = orders.find(o => o._id === openDropdown);
             if (!order) return null;
-            return (
+            const options = isReturn(order.status) ? REVERSE_STATUSES : FORWARD_STATUSES;
+            return options.map((option) => (
               <button
                 key={option}
                 onClick={() => updateStatus(order._id, option)}
-                className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${
-                  order.status === option ? "font-bold text-red-600" : "text-gray-700"
-                }`}
+                className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${order.status === option ? "font-bold text-red-600" : "text-gray-700"}`}
               >
                 <span className={`w-2 h-2 rounded-full ${statusStyle(option).split(" ")[0]}`} />
                 {option}
               </button>
-            );
-          })}
+            ));
+          })()}
         </div>
       )}
     </>
   );
 }
-
 
 function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPickupDateChange }) {
   const product = order.product;
@@ -507,7 +416,6 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
         : ""
     );
   }, [order.deliveryDate, order.pickupDate]);
-
 
   return (
     <div
@@ -636,29 +544,31 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
           </div>
 
           {/* Delivery Date */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Package size={16} className="text-gray-400" />
-              <p className="font-semibold text-gray-700">Expected Delivery Date</p>
+          {!isReturn(order.status) && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Package size={16} className="text-gray-400" />
+                <p className="font-semibold text-gray-700">Expected Delivery Date</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="date"
+                  value={localDate}
+                  onChange={(e) => setLocalDate(e.target.value)}
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                />
+                <button
+                  onClick={() => localDate && onDateChange(order._id, localDate)}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition"
+                >
+                  Save
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <input
-                type="date"
-                value={localDate}
-                onChange={(e) => setLocalDate(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-              />
-              <button
-                onClick={() => localDate && onDateChange(order._id, localDate)}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition"
-              >
-                Save
-              </button>
-            </div>
-          </div>
+          )}
 
           {/* Pickup Date (Return process) */}
-          {(order.status === "return requested" || order.status === "returned") && (
+          {isReturn(order.status) && (
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Calendar size={16} className="text-orange-400" />
@@ -685,7 +595,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
           <div>
             <p className="font-semibold text-gray-700 mb-3">Update Status</p>
             <div className="grid grid-cols-2 gap-2">
-              {STATUS_OPTIONS.map((option) => (
+              {(isReturn(order.status) ? REVERSE_STATUSES : FORWARD_STATUSES).map((option) => (
                 <button
                   key={option}
                   onClick={() => onStatusChange(order._id, option)}
