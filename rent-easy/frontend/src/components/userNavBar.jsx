@@ -10,8 +10,8 @@ const navItems = [
 ];
 
 const moreItems = [
-  { label: "Contact", path: "/contact" },
-  { label: "Your Issues", path: "/issue-status" },
+  { label: "Report Issue", path: "/report-issue" },
+  { label: "Issue Status", path: "/issue-status" },
 ];
 
 const UserNavBar = () => {

@@ -24,12 +24,31 @@ export default function IssueStatus() {
 
   const fetchIssues = async () => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
-      // Sort: most recent first
-      const sorted = (res.data?.maintenanceRequests || []).sort(
-        (a, b) => new Date(b.requestedAt) - new Date(a.requestedAt)
+      // 1. Fetch Maintenance Requests (from User Model)
+      const userRes = await axios.get(`http://localhost:4000/api/user/${user.id}`);
+      const maintenance = (userRes.data?.maintenanceRequests || []).map(item => ({
+        ...item,
+        type: "maintenance",
+        title: item.product?.title || item.product?.name || "Maintenance Request",
+        date: item.requestedAt
+      }));
+
+      // 2. Fetch General Issues (from Issue Model)
+      const issueRes = await axios.get(`http://localhost:4000/api/issue/user/${user.id}`);
+      const general = (issueRes.data || []).map(item => ({
+        ...item,
+        type: "general",
+        title: `${item.category}: ${item.subject}`,
+        date: item.createdAt,
+        issue: item.message // Normalize field name
+      }));
+
+      // 3. Combine and Sort
+      const combined = [...maintenance, ...general].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
       );
-      setRequests(sorted);
+      
+      setRequests(combined);
     } catch (err) {
       console.error("Failed to fetch issues:", err);
     } finally {
@@ -41,13 +60,16 @@ export default function IssueStatus() {
     if (user) fetchIssues();
   }, [user]);
 
-  const handleRequestReply = async (requestId) => {
-    setUpdatingId(requestId);
+  const handleRequestReply = async (req) => {
+    setUpdatingId(req._id);
     try {
-      await axios.patch(`http://localhost:4000/api/user/${user.id}/maintenance/${requestId}/reply-request`);
-      // Update local state instead of re-fetching for better UX
-      setRequests(prev => prev.map(req => 
-        req._id === requestId ? { ...req, replyRequested: true } : req
+      if (req.type === "maintenance") {
+        await axios.patch(`http://localhost:4000/api/user/${user.id}/maintenance/${req._id}/reply-request`);
+      }
+      // General issues might not have a manual "reply request" button since admins can reply anytime
+      
+      setRequests(prev => prev.map(r => 
+        r._id === req._id ? { ...r, replyRequested: true } : r
       ));
     } catch (err) {
       alert("Failed to send reply request. Please try again.");
@@ -57,33 +79,24 @@ export default function IssueStatus() {
   };
 
   const statusConfig = {
-    requested: { 
-      label: "Request Received", 
-      color: "text-amber-600 bg-amber-50 border-amber-100", 
-      icon: <Clock size={16} />,
-      btnColor: "bg-amber-600 hover:bg-amber-700 shadow-amber-200"
-    },
-    approved: { 
-      label: "Approved", 
-      color: "text-blue-600 bg-blue-50 border-blue-100", 
-      icon: <CheckCircle2 size={16} />,
-      btnColor: "bg-blue-600 hover:bg-blue-700 shadow-blue-200"
-    },
-    "in progress": { 
-      label: "In Progress", 
-      color: "text-violet-600 bg-violet-50 border-violet-100", 
-      icon: <Loader2 size={16} className="animate-spin" />,
-      btnColor: "bg-violet-600 hover:bg-violet-700 shadow-violet-200"
-    },
-    completed: { 
-      label: "Resolved", 
-      color: "text-emerald-600 bg-emerald-50 border-emerald-100", 
-      icon: <CheckCircle2 size={16} />,
-      btnColor: "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200"
-    },
+    // Maintenance Statuses
+    requested: { label: "Request Received", color: "text-amber-600 bg-amber-50 border-amber-100", icon: <Clock size={16} />, btnColor: "bg-amber-600 shadow-amber-200" },
+    approved:  { label: "Approved", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <CheckCircle2 size={16} />, btnColor: "bg-blue-600 shadow-blue-200" },
+    "in progress": { label: "In Progress", color: "text-violet-600 bg-violet-50 border-violet-100", icon: <Loader2 size={16} className="animate-spin" />, btnColor: "bg-violet-600 shadow-violet-200" },
+    completed: { label: "Resolved", color: "text-emerald-600 bg-emerald-50 border-emerald-100", icon: <CheckCircle2 size={16} />, btnColor: "bg-emerald-600 shadow-emerald-200" },
+    
+    // General Issue Statuses (Normalizing case and names)
+    Pending:     { label: "Pending", color: "text-amber-600 bg-amber-50 border-amber-100", icon: <Clock size={16} />, btnColor: "bg-amber-600 shadow-amber-200" },
+    "In Progress": { label: "In Progress", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <Loader2 size={16} className="animate-spin" />, btnColor: "bg-blue-600 shadow-blue-200" },
+    Resolved:    { label: "Resolved", color: "text-emerald-600 bg-emerald-50 border-emerald-100", icon: <CheckCircle2 size={16} />, btnColor: "bg-emerald-600 shadow-emerald-200" },
   };
 
-  const getStatusInfo = (status) => statusConfig[status] || { label: status, color: "text-gray-600 bg-gray-50 border-gray-100", icon: <AlertCircle size={16} />, btnColor: "bg-gray-600" };
+  const getStatusInfo = (status) => statusConfig[status] || { 
+    label: status, 
+    color: "text-gray-600 bg-gray-50 border-gray-100", 
+    icon: <AlertCircle size={16} />, 
+    btnColor: "bg-gray-600" 
+  };
 
   const navigate = useNavigate();
 
@@ -181,15 +194,28 @@ export default function IssueStatus() {
                               {info.icon}
                               {info.label.toUpperCase()}
                             </span>
-                            <span className="text-gray-300 text-sm">{new Date(req.requestedAt).toLocaleDateString()}</span>
+                            <span className="text-gray-300 text-sm">{new Date(req.date).toLocaleDateString()}</span>
+                            {req.type === "general" && (
+                              <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold border border-blue-100 uppercase tracking-widest">General Support</span>
+                            )}
                           </div>
 
-                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 group-hover:text-red-700 transition-colors">
-                            {req.product?.title || req.product?.name || "Issue Request"}
+                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 group-hover:text-red-700 transition-colors uppercase">
+                            {req.title}
                           </h3>
                           <p className="text-gray-600 line-clamp-2 md:line-clamp-none leading-relaxed">
                             {req.issue}
                           </p>
+
+                          {/* Admin Reply for General Issues */}
+                          {req.type === "general" && req.adminReply && (
+                            <div className="mt-4 bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                               <p className="text-xs font-bold text-emerald-700 mb-1 flex items-center gap-2">
+                                 <MessageSquare size={14} /> Admin Response:
+                               </p>
+                               <p className="text-sm text-emerald-800 italic">"{req.adminReply}"</p>
+                            </div>
+                          )}
 
                           {req.replyRequested && (
                             <div className="mt-4 flex items-center gap-2 text-amber-600 text-sm font-bold bg-amber-50 w-fit px-3 py-1 rounded-lg">
@@ -201,9 +227,9 @@ export default function IssueStatus() {
 
                         {/* Action Block */}
                         <div className="flex flex-col gap-3 min-w-[200px]">
-                          {req.status !== 'completed' && !req.replyRequested ? (
+                          {req.status !== 'completed' && req.status !== 'Resolved' && !req.replyRequested && req.type === "maintenance" ? (
                             <button
-                              onClick={() => handleRequestReply(req._id)}
+                              onClick={() => handleRequestReply(req)}
                               disabled={isUpdating}
                               className={`w-full py-4 rounded-2xl text-white font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${info.btnColor}`}
                             >
@@ -218,7 +244,7 @@ export default function IssueStatus() {
                             </button>
                           ) : (
                             <div className="w-full py-4 rounded-2xl bg-gray-50 border border-gray-100 text-gray-400 font-bold flex items-center justify-center gap-2">
-                              {req.status === 'completed' ? (
+                              {req.status === 'completed' || req.status === 'Resolved' ? (
                                 <>
                                   <CheckCircle2 size={18} />
                                   Issue Resolved
@@ -226,7 +252,7 @@ export default function IssueStatus() {
                               ) : (
                                 <>
                                   <Clock size={18} />
-                                  Awaiting Response
+                                  {req.type === 'general' ? "In Review" : "Awaiting Response"}
                                 </>
                               )}
                             </div>

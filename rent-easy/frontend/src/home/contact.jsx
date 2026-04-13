@@ -1,5 +1,5 @@
-import React from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Send, Instagram, Twitter, Facebook } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
 import Footer from "../components/footer";
@@ -177,12 +177,17 @@ export default function Contact() {
                         </div>
                         <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
                         <p className="text-gray-600 mb-8">Thank you for reaching out. We'll get back to you at {formData.email} soon.</p>
-                        <button 
-                          onClick={() => setStatus("idle")}
-                          className="text-red-600 font-bold hover:underline"
-                        >
-                          Send another message
-                        </button>
+                        <div className="flex flex-col gap-4 items-center">
+                          <button 
+                            onClick={() => setStatus("idle")}
+                            className="text-red-600 font-bold hover:underline"
+                          >
+                            Send another message
+                          </button>
+                          <Link to="/report-issue" className="text-gray-500 text-sm hover:text-red-600 font-medium">
+                            Need technical support? Report an Issue
+                          </Link>
+                        </div>
                       </div>
                     );
                   }

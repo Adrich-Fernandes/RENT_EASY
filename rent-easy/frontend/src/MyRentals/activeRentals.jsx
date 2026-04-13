@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import TabBar from "./tabBar";
 import axios from "axios";
 import { useUser, SignUp } from "@clerk/clerk-react";
-import { CalendarIcon, MapPinIcon, X, Sofa, ChevronRight, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
+import { CalendarIcon, MapPinIcon, X, Sofa, ChevronRight, Clock, AlertCircle } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
 
 export default function ActiveRents() {
@@ -247,10 +248,17 @@ function Card({ data, clerkId }) {
                     isExpanded ? "bg-red-50 text-red-600 border-red-200" : "bg-white text-gray-600 border-gray-200 hover:border-red-400 hover:text-red-600"
                   }`}
                 >
-                  {isExpanded ? "Close Details" : "View Details"}
-                  <ChevronRight size={14} className={`transition-transform duration-300 ${isExpanded ? "rotate-90 text-red-500" : ""}`} />
-                </button>
-              </div>
+                    {isExpanded ? "Close Details" : "View Details"}
+                    <ChevronRight size={14} className={`transition-transform duration-300 ${isExpanded ? "rotate-90 text-red-500" : ""}`} />
+                  </button>
+                  <Link 
+                    to={`/report-issue?subject=${encodeURIComponent("Issue with " + (product?.title || product?.name))}`}
+                    className="text-[10px] font-bold text-gray-400 hover:text-red-500 flex items-center gap-1 transition-colors"
+                  >
+                    <AlertCircle size={12} />
+                    Report Problem
+                  </Link>
+                </div>
               
               {(isExpiringSoon || isOverdue) && (
                 <div className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border flex items-center gap-2 ${

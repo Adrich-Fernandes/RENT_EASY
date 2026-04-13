@@ -16,6 +16,8 @@ import AdminOrders from "./admin/AdminOrders.jsx";
 import ExpiringRentals from "./admin/expiringRentals.jsx";
 import Contact from "./home/contact.jsx";
 import IssueStatus from "./home/issueStatus.jsx";
+import ReportIssue from "./home/reportIssue.jsx";
+import AdminIssues from "./admin/adminIssues.jsx";
 
 function UserSync({ setRole, setRoleLoaded }) {
   const { user, isLoaded } = useUser();
@@ -88,13 +90,14 @@ export default function App() {
         <Route path="/myrentals/maintenance" element={<UserRoute role={role} roleLoaded={roleLoaded}><Maintain /></UserRoute>} />
         <Route path="/myrentals/orders" element={<UserRoute role={role} roleLoaded={roleLoaded}><Order /></UserRoute>} />
         <Route path="/contact" element={<UserRoute role={role} roleLoaded={roleLoaded}><Contact /></UserRoute>} />
-        <Route path="/report-issue" element={<UserRoute role={role} roleLoaded={roleLoaded}><div className="pt-20 text-center">Report Issue Page Coming Soon</div></UserRoute>} />
+        <Route path="/report-issue" element={<UserRoute role={role} roleLoaded={roleLoaded}><ReportIssue /></UserRoute>} />
         <Route path="/issue-status" element={<UserRoute role={role} roleLoaded={roleLoaded}><IssueStatus /></UserRoute>} />
 
         {/* ── Admin Routes — non-admins get redirected to / ── */}
         <Route path="/admin" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/products" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminProductList /></AdminRoute>} />
         <Route path="/admin/maintenance" element={<AdminRoute role={role} roleLoaded={roleLoaded}><MaintenanceRequests /></AdminRoute>} />
+        <Route path="/admin/issues" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminIssues /></AdminRoute>} />
         <Route path="/admin/orders" element={<AdminRoute role={role} roleLoaded={roleLoaded}><AdminOrders/></AdminRoute>} />
         <Route path="/admin/expiring" element={<AdminRoute role={role} roleLoaded={roleLoaded}><ExpiringRentals/></AdminRoute>} />
 

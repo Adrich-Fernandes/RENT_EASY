@@ -3,6 +3,7 @@ const ConnectDB = require("./config/db");
 const productRouts = require("./routs/ProductRouts");
 const userRoutes = require("./routs/UserRouts");
 const rentRouts = require("./routs/RentRouts");
+const issueRouts = require("./routs/issueRouts");
 const cors = require("cors");
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors());
 app.use("/api/product", productRouts);
 app.use("/api/user", userRoutes);
 app.use("/api/rent", rentRouts);
+app.use("/api/issue", issueRouts);
 
 ConnectDB().then(() => {
   const PORT = process.env.PORT || 4000;

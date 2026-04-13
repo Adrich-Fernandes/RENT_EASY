@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, Wrench, X, Menu, ShoppingBag, Clock } from "lucide-react";
+import { LayoutDashboard, Package, Wrench, X, Menu, ShoppingBag, Clock, MessageSquare } from "lucide-react";
 import { useUser, UserButton } from "@clerk/clerk-react";
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   { label: "Products",    icon: <Package size={18} />,         path: "/admin/products" },
   { label: "Orders",      icon: <ShoppingBag size={18} />,     path: "/admin/orders" },
   { label: "Maintenance", icon: <Wrench size={18} />,          path: "/admin/maintenance" },
+  { label: "Issues",      icon: <MessageSquare size={18} />,    path: "/admin/issues" },
   { label: "Expiring",    icon: <Clock size={18} />,           path: "/admin/expiring" },
 ];
 
