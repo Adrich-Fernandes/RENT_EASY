@@ -2,8 +2,10 @@ import UserNavBar from '../components/userNavBar';
 import { work_flow, Features, Category } from '../Alldata'
 import { motion } from "framer-motion"
 import Footer from '../components/footer'
+import { useNavigate } from 'react-router-dom';
 
 export default function Homepage() {
+    const navigate = useNavigate();
 
     const fadeUp = {
         hidden: { opacity: 0, y: 40 },
@@ -55,11 +57,17 @@ export default function Homepage() {
     {/* BUTTONS */}
     <div className="mt-6 flex gap-4 flex-wrap justify-center md:justify-start">
         
-        <button className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition shadow-md">
+        <button 
+            onClick={() => navigate('/productlist')}
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition shadow-md"
+        >
             Browse Products →
         </button>
 
-        <button className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-6 py-3 rounded-lg transition">
+        <button 
+            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+            className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-6 py-3 rounded-lg transition"
+        >
             How It Works
         </button>
 
@@ -183,7 +191,12 @@ export default function Homepage() {
 
                 {/* Button */}
                 <div className="mt-4 md:mt-0">
-                    <button className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-md transition">All Products</button>
+                    <button 
+                        onClick={() => navigate('/productlist')}
+                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-md transition"
+                    >
+                        All Products
+                    </button>
                 </div>
 
             </div>
@@ -203,7 +216,7 @@ export default function Homepage() {
 
 
             {/* workflow */}
-            <div className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-6 bg-white">
+            <div id="how-it-works" className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-6 bg-white">
                 {/* TOP CENTER CONTENT */}
                 <div className="text-center max-w-2xl mb-14">
                     <span className="text-red-600 font-bold text-lg">
@@ -306,12 +319,11 @@ function Categorycard({ data }) {
             variants={fadeUp}
             transition={{ duration: 0.6 }}
             whileHover={{ y: -8 }}
+            onClick={() => navigate('/productlist')}
             className="relative w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] overflow-hidden rounded-xl group cursor-pointer"
         >
 
-            <a href="">
-                <img src={data.img} alt="Flexible Plans" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-            </a>
+            <img src={data.img} alt={data.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
 
             <div className="absolute inset-0 bg-black/30"></div>
 
