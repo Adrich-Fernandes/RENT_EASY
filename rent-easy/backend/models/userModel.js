@@ -111,7 +111,8 @@ const userSchema = new mongoose.Schema(
           "out for pickup",
           "pickup complete",
           "returned",
-          "completed"
+          "completed",
+          "complete"
         ],
         default: "ordered"
       },
@@ -128,6 +129,12 @@ const userSchema = new mongoose.Schema(
         city: String,
         state: String,
         pincode: String
+      },
+
+      paymentType: {
+        type: String,
+        enum: ["Cash", "Online"],
+        default: "Cash"
       }
     }
   ],

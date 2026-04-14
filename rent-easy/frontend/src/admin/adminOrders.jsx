@@ -196,6 +196,7 @@ export default function AdminOrders() {
                   <th className="px-5 py-3">Rental Period</th>
                   <th className="px-5 py-3">Price / mo</th>
                   <th className="px-5 py-3">{title.includes("Returns") ? "Pickup Date" : "Delivery Date"}</th>
+                  <th className="px-5 py-3">Payment</th>
                   <th className="px-5 py-3">Status</th>
                   <th className="px-5 py-3">Actions</th>
                 </tr>
@@ -203,7 +204,7 @@ export default function AdminOrders() {
               <tbody>
                 {data.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="text-center py-12 text-gray-400 italic">
+                    <td colSpan="9" className="text-center py-12 text-gray-400 italic">
                       No records found in this section.
                     </td>
                   </tr>
@@ -266,6 +267,11 @@ export default function AdminOrders() {
                           }}
                           className={`border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 ${title.includes("Returns") ? "focus:ring-orange-400 border-orange-200" : "focus:ring-red-400 border-gray-300"}`}
                         />
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${order.paymentType === "Online" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>
+                          {order.paymentType || "—"}
+                        </span>
                       </td>
                       <td className="px-5 py-4">
                         <span className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${statusStyle(order.status)}`}>
@@ -539,6 +545,10 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-gray-400 text-xs mb-1">Security Deposit</p>
                 <p className="font-bold text-gray-800 text-lg">₹{product?.deposit || "—"}</p>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-3 col-span-2">
+                <p className="text-gray-400 text-xs mb-1">Payment Method</p>
+                <p className={`font-bold ${order.paymentType === "Online" ? "text-green-600" : "text-blue-600"}`}>{order.paymentType || "—"}</p>
               </div>
             </div>
           </div>

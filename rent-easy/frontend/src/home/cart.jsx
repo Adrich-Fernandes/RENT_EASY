@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronUp, Loader2 } from "lucide-react";
+import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronUp, Loader2, IndianRupee } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
@@ -16,6 +16,7 @@ export default function Cart() {
   const [pageLoading, setPageLoading]           = useState(true);
   const [placingOrder, setPlacingOrder]         = useState(false);
   const [date, setDate]                         = useState("");
+  const [paymentType, setPaymentType]           = useState(""); // "Cash" | "Online"
   const [form, setForm] = useState({
     fullname: "", phone: "", addressline1: "",
     addressline2: "", city: "", state: "", pincode: "",
@@ -96,6 +97,7 @@ export default function Cart() {
     if (cartItems.length === 0)        return alert("Your cart is empty.");
     if (selectedAddressIdx === null)   return alert("Please select a delivery address.");
     if (!date)                         return alert("Please select a delivery date.");
+    if (!paymentType)                  return alert("Please select a payment method.");
 
     setPlacingOrder(true);
     try {
@@ -112,7 +114,8 @@ export default function Cart() {
             rentalStartDate: rentalStart.toISOString(),
             rentalEndDate:   rentalEnd.toISOString(),
             price:           item.product.rent,
-            shippingAddress: savedAddresses[selectedAddressIdx]
+            shippingAddress: savedAddresses[selectedAddressIdx],
+            paymentType:     paymentType
           });
         })
       );
@@ -126,6 +129,7 @@ export default function Cart() {
       setCartItems([]);
       setSelectedAddressIdx(null);
       setDate("");
+      setPaymentType("");
       alert("Order placed successfully! 🎉");
     } catch (err) {
       console.error(err);
@@ -207,6 +211,42 @@ export default function Cart() {
                   className="absolute opacity-0 pointer-events-none"
                 />
                 {date && <span className="text-red-600 text-sm font-medium">✓ {date}</span>}
+              </div>
+            </div>
+          )}
+
+          {date && (
+            <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <IndianRupee className="text-red-600" size={20} />
+                <span className="font-bold text-lg">Select Payment Method</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div
+                  onClick={() => setPaymentType("Online")}
+                  className={`border rounded-xl p-4 flex items-center justify-between cursor-pointer transition ${
+                    paymentType === "Online" ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-red-300"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-4 h-4 rounded-full border-2 transition ${paymentType === "Online" ? "border-red-500 bg-red-500" : "border-gray-400"}`} />
+                    <span className="font-medium text-gray-800">Online Payment</span>
+                  </div>
+                  <ArrowRight size={16} className="text-gray-400" />
+                </div>
+
+                <div
+                  onClick={() => setPaymentType("Cash")}
+                  className={`border rounded-xl p-4 flex items-center justify-between cursor-pointer transition ${
+                    paymentType === "Cash" ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-red-300"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-4 h-4 rounded-full border-2 transition ${paymentType === "Cash" ? "border-red-500 bg-red-500" : "border-gray-400"}`} />
+                    <span className="font-medium text-gray-800">Cash on Delivery</span>
+                  </div>
+                  <IndianRupee size={16} className="text-gray-400" />
+                </div>
               </div>
             </div>
           )}
@@ -324,7 +364,7 @@ export default function Cart() {
 
             <button
               onClick={handlePlaceOrder}
-              disabled={placingOrder || cartItems.length === 0}
+              disabled={placingOrder || cartItems.length === 0 || !paymentType || !date || selectedAddressIdx === null}
               className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
             >
               {placingOrder ? (

@@ -37,7 +37,8 @@ export default function ProductView() {
       setTimeout(() => setCartStatus("idle"), 2000);
     } catch (err) {
       console.error(err);
-      alert("Failed to add to cart. Please try again.");
+      const msg = err.response?.data?.message || "Failed to add to cart. Please try again.";
+      alert(msg);
       setCartStatus("idle");
     }
   };

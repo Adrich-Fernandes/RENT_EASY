@@ -299,6 +299,9 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
         <div className="text-sm text-zinc-500 mt-2 space-y-1">
           <p>Start: {new Date(rental.rentalStartDate).toLocaleDateString()}</p>
           <p>End: {new Date(rental.rentalEndDate).toLocaleDateString()}</p>
+          <p className={`font-bold mt-2 ${rental.paymentType === "Online" ? "text-green-600" : "text-blue-600"}`}>
+            Payment Method: {rental.paymentType || "Cash"}
+          </p>
           {rental.pickupDate && (
             <p className="text-orange-600 font-bold bg-orange-50 p-2 rounded-lg mt-2">
               Assigned Pickup: {new Date(rental.pickupDate).toLocaleDateString()}
