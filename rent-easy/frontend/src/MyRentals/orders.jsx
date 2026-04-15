@@ -183,13 +183,13 @@ function ProductCard({ rental, isPast, onClick }) {
       case "order conformed":  return "bg-amber-100 text-amber-700";
       case "shiped":           return "bg-blue-100 text-blue-700";
       case "out for delivery": return "bg-purple-100 text-purple-700";
-      case "delivered":        return "bg-green-100 text-green-700";
-      case "active":           return "bg-emerald-100 text-emerald-700";
+      case "delivered":        return "bg-red-100 text-red-700";
+      case "active":           return "bg-red-100 text-red-700";
       case "cancelled":        return "bg-gray-100 text-gray-400 line-through";
       case "return requested": return "bg-orange-100 text-orange-700";
       case "request conformed":return "bg-amber-100 text-amber-700 font-bold";
       case "out for pickup":   return "bg-cyan-100 text-cyan-700";
-      case "pickup complete":  return "bg-green-100 text-green-700";
+      case "pickup complete":  return "bg-red-100 text-red-700";
       default:                 return "bg-gray-100 text-gray-600";
     }
   };
@@ -299,7 +299,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
         <div className="text-sm text-zinc-500 mt-2 space-y-1">
           <p>Start: {new Date(rental.rentalStartDate).toLocaleDateString()}</p>
           <p>End: {new Date(rental.rentalEndDate).toLocaleDateString()}</p>
-          <p className={`font-bold mt-2 ${rental.paymentType === "Online" ? "text-green-600" : "text-blue-600"}`}>
+          <p className={`font-bold mt-2 ${rental.paymentType === "Online" ? "text-red-600" : "text-blue-600"}`}>
             Payment Method: {rental.paymentType || "Cash"}
           </p>
           {rental.pickupDate && (
@@ -350,7 +350,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
         {(rental.status === "cancelled" || ["return requested", "request conformed", "out for pickup", "returned", "completed"].includes(rental.status)) && (
             <div className={`mt-6 w-full py-2 rounded-lg font-medium text-center text-sm border ${
                 rental.status === "cancelled" ? "bg-gray-50 text-gray-400 border-gray-200" : 
-                (rental.status === "returned" || rental.status === "completed") ? "bg-green-50 text-green-600 border-green-100" :
+                (rental.status === "returned" || rental.status === "completed") ? "bg-red-50 text-red-600 border-red-100" :
                 "bg-orange-50 text-orange-600 border-orange-100"
             }`}>
                 {rental.status === "cancelled" ? "This order was cancelled" : 

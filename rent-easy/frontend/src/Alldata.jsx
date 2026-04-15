@@ -398,7 +398,7 @@ export const products = [
     description: "Limited run of 500 bottles. Notes of cedar, bergamot, and white musk. Arrives in a luxury gift box.",
     status: "ordered",
     statusColor: "bg-violet-100 text-violet-700",
-    bg: "bg-emerald-50",
+    bg: "bg-red-50",
   },
   {
     id: 4,
@@ -407,7 +407,7 @@ export const products = [
     price: "$79.00",
     description: "Breathable mesh upper with responsive foam sole. Sizes 6–12 available. Size 9 selling fast.",
     status: "ordered",
-    statusColor: "bg-rose-100 text-rose-700",
+    statusColor: "bg-red-100 text-red-700",
     bg: "bg-rose-50",
   },
   {

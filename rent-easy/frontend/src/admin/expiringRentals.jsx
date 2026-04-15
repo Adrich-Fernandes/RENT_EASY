@@ -123,7 +123,7 @@ export default function ExpiringRentals() {
                     )) : (
                       <tr>
                         <td colSpan={3} className="px-5 py-8 text-center text-gray-400">
-                          <CheckCircle className="mx-auto mb-2 text-green-300" size={24} />
+                          <CheckCircle className="mx-auto mb-2 text-red-300" size={24} />
                           No overdue rentals
                         </td>
                       </tr>

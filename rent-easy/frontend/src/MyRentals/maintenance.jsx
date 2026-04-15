@@ -28,7 +28,7 @@ export default function Maintain() {
     requested:   { label: "Requested",   color: "bg-amber-50 text-amber-700 border border-amber-200",   dot: "bg-amber-400",   icon: <AlertCircle size={14} /> },
     approved:    { label: "Approved",    color: "bg-blue-50 text-blue-700 border border-blue-200",       dot: "bg-blue-400",    icon: <CheckCircle2 size={14} /> },
     "in progress":{ label: "In Progress", color: "bg-violet-50 text-violet-700 border border-violet-200", dot: "bg-violet-400",  icon: <Loader2 size={14} className="animate-spin" /> },
-    completed:   { label: "Completed",   color: "bg-emerald-50 text-emerald-700 border border-emerald-200", dot: "bg-emerald-400", icon: <CheckCircle2 size={14} /> },
+    completed:   { label: "Completed",   color: "bg-red-50 text-red-700 border border-red-200", dot: "bg-red-400", icon: <CheckCircle2 size={14} /> },
   };
 
   const getConfig = (status) => statusConfig[status] || { label: status, color: "bg-gray-100 text-gray-600 border border-gray-200", dot: "bg-gray-400", icon: null };
@@ -167,8 +167,8 @@ export default function Maintain() {
                           </div>
                         )}
                         {req.completedAt && (
-                          <div className="flex items-center gap-2 text-emerald-600">
-                            <div className="bg-emerald-50 p-1.5 rounded-lg text-emerald-600"><CheckCircle2 size={12} /></div>
+                          <div className="flex items-center gap-2 text-red-600">
+                            <div className="bg-red-50 p-1.5 rounded-lg text-red-600"><CheckCircle2 size={12} /></div>
                             <span>Completed {new Date(req.completedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
                           </div>
                         )}

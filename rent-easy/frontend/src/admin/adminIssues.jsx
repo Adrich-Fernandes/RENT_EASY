@@ -84,7 +84,7 @@ export default function AdminIssues() {
     switch (status) {
       case "Pending": return "bg-amber-100 text-amber-700 border-amber-200";
       case "In Progress": return "bg-blue-100 text-blue-700 border-blue-200";
-      case "Resolved": return "bg-green-100 text-green-700 border-green-200";
+      case "Resolved": return "bg-red-100 text-red-700 border-red-200";
       default: return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
@@ -93,7 +93,7 @@ export default function AdminIssues() {
     switch (priority) {
       case "High": return "text-red-600";
       case "Medium": return "text-amber-600";
-      case "Low": return "text-green-600";
+      case "Low": return "text-red-600";
       default: return "text-gray-600";
     }
   };
@@ -171,7 +171,7 @@ export default function AdminIssues() {
                     >
                       <div className="flex items-start gap-4">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                          iss.status === 'Resolved' ? "bg-green-50 text-green-600" : "bg-amber-50 text-amber-600"
+                          iss.status === 'Resolved' ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600"
                         }`}>
                           {iss.status === 'Resolved' ? <CheckCircle2 size={24} /> : <AlertTriangle size={24} />}
                         </div>
@@ -284,9 +284,9 @@ export default function AdminIssues() {
                         </h4>
                         
                         {selectedIssue.adminReply && !updating && (
-                          <div className="mb-4 bg-green-50 p-4 rounded-2xl border border-green-100">
-                             <p className="text-xs text-green-800 font-medium leading-relaxed">{selectedIssue.adminReply}</p>
-                             <p className="text-[10px] text-green-600 mt-2">Sent: {new Date(selectedIssue.repliedAt).toLocaleString()}</p>
+                          <div className="mb-4 bg-red-50 p-4 rounded-2xl border border-red-100">
+                             <p className="text-xs text-red-800 font-medium leading-relaxed">{selectedIssue.adminReply}</p>
+                             <p className="text-[10px] text-red-600 mt-2">Sent: {new Date(selectedIssue.repliedAt).toLocaleString()}</p>
                           </div>
                         )}
 

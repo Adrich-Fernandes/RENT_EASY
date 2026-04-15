@@ -21,11 +21,11 @@ const statusStyle = (status) => {
     case "order conformed":  return "bg-amber-100 text-amber-700";
     case "shiped":           return "bg-blue-100 text-blue-700";
     case "out for delivery": return "bg-purple-100 text-purple-700";
-    case "delivered":        return "bg-green-100 text-green-700";
+    case "delivered":        return "bg-red-100 text-red-700";
     case "return requested": return "bg-orange-100 text-orange-700";
     case "request conformed":return "bg-amber-100 text-amber-700 font-bold";
     case "out for pickup":   return "bg-cyan-100 text-cyan-700";
-    case "pickup complete":  return "bg-emerald-100 text-emerald-700";
+    case "pickup complete":  return "bg-red-100 text-red-700";
     default:                 return "bg-gray-100 text-gray-600";
   }
 };
@@ -269,7 +269,7 @@ export default function AdminOrders() {
                         />
                       </td>
                       <td className="px-5 py-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${order.paymentType === "Online" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${order.paymentType === "Online" ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"}`}>
                           {order.paymentType || "—"}
                         </span>
                       </td>
@@ -548,7 +548,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
               </div>
               <div className="bg-gray-50 rounded-lg p-3 col-span-2">
                 <p className="text-gray-400 text-xs mb-1">Payment Method</p>
-                <p className={`font-bold ${order.paymentType === "Online" ? "text-green-600" : "text-blue-600"}`}>{order.paymentType || "—"}</p>
+                <p className={`font-bold ${order.paymentType === "Online" ? "text-red-600" : "text-blue-600"}`}>{order.paymentType || "—"}</p>
               </div>
             </div>
           </div>

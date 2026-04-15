@@ -36,7 +36,7 @@ export default function ActiveRents() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-emerald-50 flex flex-col items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 flex flex-col items-center justify-center px-4">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-3">
             <Sofa className="text-red-500" size={32} />
@@ -226,7 +226,7 @@ function Card({ data, clerkId }) {
                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
                   data.status === 'return requested' || data.status === 'request conformed' || data.status === 'out for pickup' ? 'bg-orange-50 text-orange-600 border-orange-100' :
                   data.status === 'ordered' ? 'bg-yellow-50 text-yellow-600 border-yellow-100' :
-                  'bg-emerald-50 text-emerald-600 border-emerald-100'
+                  'bg-red-50 text-red-600 border-red-100'
                 }`}>
                   {data.status}
                 </span>

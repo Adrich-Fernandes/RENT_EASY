@@ -138,20 +138,20 @@ export default function ReportIssue() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="bg-white border-2 border-green-100 rounded-3xl p-12 text-center shadow-xl shadow-green-50"
+                    className="bg-white border-2 border-rose-100 rounded-3xl p-12 text-center shadow-xl shadow-rose-50"
                   >
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 size={40} className="text-green-600" />
+                    <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 size={40} className="text-rose-600" />
                     </div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">Issue Reported!</h2>
                     <p className="text-gray-600 mb-8">Your ticket has been created successfully. Redirecting you to your issue history...</p>
                     <div className="flex justify-center">
-                      <div className="w-12 h-1 bg-green-100 rounded-full overflow-hidden">
+                      <div className="w-12 h-1 bg-rose-100 rounded-full overflow-hidden">
                         <motion.div 
                           initial={{ x: "-100%" }}
                           animate={{ x: "0%" }}
                           transition={{ duration: 3 }}
-                          className="w-full h-full bg-green-500"
+                          className="w-full h-full bg-rose-500"
                         />
                       </div>
                     </div>
