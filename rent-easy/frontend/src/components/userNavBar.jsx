@@ -35,7 +35,7 @@ const UserNavBar = () => {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
-            <Menu size={24} className="text-red-600" />
+            <Menu size={24} className="text-[#1D3557]" />
           </button>
 
           <img
@@ -45,7 +45,7 @@ const UserNavBar = () => {
           />
 
           <span className="font-extrabold text-[1.2rem] text-gray-900">
-            <span className="text-red-600">Rent</span>Ease
+            <span className="text-[#1D3557]">Rent</span>Ease
           </span>
         </div>
 
@@ -119,7 +119,7 @@ const UserNavBar = () => {
         {/* RIGHT */}
         <div className="flex items-center gap-4">
           <Link to="/cart">
-            <ShoppingCartIcon className="h-6 cursor-pointer text-red-600 hover:text-red-700" />
+            <ShoppingCartIcon className="h-6 cursor-pointer text-[#1D3557] hover:text-[#457B9D]" />
           </Link>
 
           {!user ? (

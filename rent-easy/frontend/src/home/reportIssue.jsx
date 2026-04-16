@@ -174,7 +174,7 @@ export default function ReportIssue() {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium appearance-none"
+                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1D3557] transition-all font-medium appearance-none"
                           >
                             {categories.map(c => <option key={c} value={c}>{c}</option>)}
                           </select>
@@ -185,7 +185,7 @@ export default function ReportIssue() {
                             name="priority"
                             value={formData.priority}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium appearance-none"
+                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1D3557] transition-all font-medium appearance-none"
                           >
                             {priorities.map(p => <option key={p} value={p}>{p}</option>)}
                           </select>
@@ -201,7 +201,7 @@ export default function ReportIssue() {
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="Briefly describe the problem"
-                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium"
+                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1D3557] transition-all font-medium"
                         />
                       </div>
 
@@ -214,7 +214,7 @@ export default function ReportIssue() {
                           onChange={handleChange}
                           rows="6"
                           placeholder="Provide as much detail as possible..."
-                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium resize-none"
+                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1D3557] transition-all font-medium resize-none"
                         ></textarea>
                       </div>
 

@@ -36,25 +36,25 @@ export default function ActiveRents() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F1FAEE] via-white to-[#F1FAEE] flex flex-col items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex flex-col items-center justify-center px-4">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-3">
             <Sofa className="text-[#1D3557]" size={32} />
             <h1 className="text-4xl font-extrabold text-[#1D3557] tracking-tight">RentEase</h1>
           </div>
           <p className="text-[#457B9D] text-lg font-medium">Create an account to view and manage your active rentals</p>
-          <p className="text-[#A8DADC] text-sm mt-1">Track deliveries, request maintenance, and more</p>
+          <p className="text-[#457B9D] text-sm mt-1">Track deliveries, request maintenance, and more</p>
         </div>
         <SignUp
           routing="hash"
           appearance={{
             elements: {
-              card: "shadow-2xl rounded-2xl border border-[#A8DADC]",
+              card: "shadow-2xl rounded-2xl border border-gray-200",
               headerTitle: "text-[#1D3557] font-extrabold",
               headerSubtitle: "text-[#457B9D]",
               formButtonPrimary: "bg-[#1D3557] hover:bg-[#457B9D] text-white font-bold rounded-xl",
-              footerActionLink: "text-[#A8DADC] hover:text-[#457B9D] font-semibold",
-              formFieldInput: "border border-[#A8DADC] rounded-lg focus:ring-[#A8DADC] focus:border-[#A8DADC]",
+              footerActionLink: "text-[#457B9D] font-semibold",
+              formFieldInput: "border border-gray-300 rounded-lg focus:ring-[#1D3557] focus:border-[#1D3557]",
               identityPreviewEditButton: "text-[#1D3557]",
               formFieldLabel: "text-[#1D3557] font-semibold text-sm",
             },
@@ -85,7 +85,7 @@ export default function ActiveRents() {
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
               Active <span className="text-[#1D3557]">Leases</span>
             </h1>
-            <div className="px-4 py-1.5 bg-[#F1FAEE] text-[#457B9D] rounded-full text-[11px] font-black uppercase tracking-widest border border-[#A8DADC]">
+            <div className="px-4 py-1.5 bg-[#1D3557]/10 text-[#457B9D] rounded-full text-[11px] font-black uppercase tracking-widest border border-gray-200">
               {rentals.length} Deliveries
             </div>
           </div>
@@ -226,7 +226,7 @@ function Card({ data, clerkId }) {
                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
                   data.status === 'return requested' || data.status === 'request conformed' || data.status === 'out for pickup' ? 'bg-orange-50 text-orange-600 border-orange-100' :
                   data.status === 'ordered' ? 'bg-yellow-50 text-yellow-600 border-yellow-100' :
-                  'bg-[#F1FAEE] text-[#457B9D] border-[#A8DADC]'
+                  'bg-[#1D3557]/10 text-[#457B9D] border-gray-200'
                 }`}>
                   {data.status}
                 </span>
@@ -245,7 +245,7 @@ function Card({ data, clerkId }) {
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
                   className={`px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-xl border transition-all flex items-center gap-2 ${
-                    isExpanded ? "bg-[#F1FAEE] text-[#457B9D] border-[#A8DADC]" : "bg-white text-gray-600 border-gray-200 hover:border-[#A8DADC] hover:text-[#457B9D]"
+                    isExpanded ? "bg-[#1D3557]/10 text-[#457B9D] border-gray-200" : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-[#1D3557]/5 hover:text-[#457B9D]"
                   }`}
                 >
                     {isExpanded ? "Close Details" : "View Details"}
