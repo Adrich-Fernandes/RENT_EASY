@@ -267,7 +267,7 @@ export default function Layout() {
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
                                             <span className="text-base font-medium text-gray-700">Monthly Rent</span>
-                                            <div className="text-xl font-bold text-[#E63946]">₹{v.rent}</div>
+                                            <div className="text-xl font-bold text-[#1D3557]">₹{v.rent}</div>
                                         </div>
                                         <div className="text-right">
                                             <span className="text-base font-medium text-gray-700">Deposit</span>

@@ -64,7 +64,7 @@ export default function AdminProductList() {
               <p className="text-sm text-gray-500">{previewProduct.description}</p>
 
               <div className="flex gap-2 flex-wrap">
-                <span className="px-3 py-1 text-xs bg-[#E63946]/10 text-[#E63946] rounded-full">{previewProduct.category}</span>
+                <span className="px-3 py-1 text-xs bg-[#1D3557]/10 text-[#1D3557] rounded-full">{previewProduct.category}</span>
                 {previewProduct.subcategory && (
                   <span className="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">{previewProduct.subcategory}</span>
                 )}
@@ -73,7 +73,7 @@ export default function AdminProductList() {
               <div className="flex gap-6">
                 <div>
                   <p className="text-xs text-gray-400">Monthly Rent</p>
-                  <p className="text-lg font-semibold text-[#E63946]">₹{previewProduct.rent}</p>
+                  <p className="text-lg font-semibold text-[#1D3557]">₹{previewProduct.rent}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Security Deposit</p>
@@ -98,7 +98,7 @@ export default function AdminProductList() {
                         .catch((err) => console.error(err))
                     }
                   }}
-                  className="flex-1 py-2 text-sm border border-[#E63946] text-[#E63946] rounded-lg hover:bg-[#F1FAEE] transition"
+                  className="flex-1 py-2 text-sm border border-[#1D3557] text-[#1D3557] rounded-lg hover:bg-[#F1FAEE] transition"
                 >Delete</button>
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function AdminProductList() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="px-3 py-1 text-sm bg-[#E63946]/10 text-[#E63946] rounded-full">{v.category}</span>
+                      <span className="px-3 py-1 text-sm bg-[#1D3557]/10 text-[#1D3557] rounded-full">{v.category}</span>
                     </td>
                     <td className="p-4">₹ {v.rent}</td>
                     <td className="p-4">₹ {v.deposit}</td>
@@ -201,7 +201,7 @@ export default function AdminProductList() {
                               .catch((err) => console.error(err))
                           }
                         }}
-                        className="px-4 py-2 text-sm border border-[#E63946] text-[#E63946] rounded-lg hover:bg-[#F1FAEE] transition"
+                        className="px-4 py-2 text-sm border border-[#1D3557] text-[#1D3557] rounded-lg hover:bg-[#F1FAEE] transition"
                       >Delete</button>
                     </td>
                   </tr>

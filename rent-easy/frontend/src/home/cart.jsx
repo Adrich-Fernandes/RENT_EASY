@@ -195,7 +195,7 @@ export default function Cart() {
           {selectedAddressIdx !== null && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-3">
               <div className="flex items-center gap-2">
-                <Calendar className="text-[#E63946]" size={20} />
+                <Calendar className="text-[#1D3557]" size={20} />
                 <span className="font-bold text-lg">Select Delivery Date</span>
               </div>
               <div className="flex items-center gap-3">
@@ -210,7 +210,7 @@ export default function Cart() {
                   onChange={(e) => setDate(e.target.value)}
                   className="absolute opacity-0 pointer-events-none"
                 />
-                {date && <span className="text-[#E63946] text-sm font-medium">✓ {date}</span>}
+                {date && <span className="text-[#1D3557] text-sm font-medium">✓ {date}</span>}
               </div>
             </div>
           )}
@@ -218,7 +218,7 @@ export default function Cart() {
           {date && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <IndianRupee className="text-[#E63946]" size={20} />
+                <IndianRupee className="text-[#1D3557]" size={20} />
                 <span className="font-bold text-lg">Select Payment Method</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -262,7 +262,7 @@ export default function Cart() {
           {showDelivery && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="text-[#E63946]" size={20} />
+                <MapPin className="text-[#1D3557]" size={20} />
                 <span className="font-bold text-lg">New Delivery Address</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -293,7 +293,7 @@ export default function Cart() {
           {savedAddresses.length > 0 && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="text-[#E63946]" size={20} />
+                <MapPin className="text-[#1D3557]" size={20} />
                 <span className="font-bold text-lg">Select Delivery Address</span>
               </div>
               {savedAddresses.map((addr, i) => (
@@ -313,7 +313,7 @@ export default function Cart() {
                     </div>
                   </div>
                   <Trash2
-                    className="text-[#E63946] hover:text-[#c1121f] cursor-pointer flex-shrink-0 transition"
+                    className="text-[#1D3557] hover:text-[#457B9D] cursor-pointer flex-shrink-0 transition"
                     size={18}
                     onClick={(e) => { e.stopPropagation(); handleDeleteAddress(addr._id, i); }}
                   />
@@ -359,7 +359,7 @@ export default function Cart() {
 
             <div className="flex justify-between items-center">
               <span className="font-semibold text-lg">Total Payable</span>
-              <span className="font-bold text-lg text-[#E63946]">₹{totalPayable}</span>
+              <span className="font-bold text-lg text-[#1D3557]">₹{totalPayable}</span>
             </div>
 
             <button
@@ -404,7 +404,7 @@ function CartItemCard({ data, tenure, onRemove }) {
         <div className="flex items-center gap-6">
           <div>
             <span className="block text-sm text-gray-500">Monthly Rent</span>
-            <span className="block text-[#E63946] font-bold text-lg">₹{data?.rent}</span>
+            <span className="block text-[#1D3557] font-bold text-lg">₹{data?.rent}</span>
           </div>
           <div>
             <span className="block text-sm text-gray-500">Tenure</span>
@@ -417,7 +417,7 @@ function CartItemCard({ data, tenure, onRemove }) {
         </div>
       </div>
       <div className="flex flex-col items-end justify-between gap-4">
-        <Trash2 className="text-[#E63946] cursor-pointer hover:text-[#c1121f] transition" size={20} onClick={onRemove} />
+        <Trash2 className="text-[#1D3557] cursor-pointer hover:text-[#457B9D] transition" size={20} onClick={onRemove} />
         <div className="text-right">
           <span className="block text-gray-400 text-sm">Total</span>
           <span className="block font-bold text-xl text-gray-800">₹{cardTotal}</span>

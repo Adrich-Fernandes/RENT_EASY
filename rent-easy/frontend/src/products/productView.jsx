@@ -100,7 +100,7 @@ export default function ProductView() {
               {images.length > 1 && (
                 <div className="order-2 lg:order-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px]">
                   {images.map((src, i) => (
-                    <button key={i} onClick={() => setActiveImg(i)} className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${i === activeImg ? "border-[#E63946] shadow-md" : "border-gray-200 opacity-70 hover:opacity-100 hover:border-[#A8DADC]"}`}>
+                    <button key={i} onClick={() => setActiveImg(i)} className={`flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition ${i === activeImg ? "border-[#1D3557] shadow-md" : "border-gray-200 opacity-70 hover:opacity-100 hover:border-[#A8DADC]"}`}>
                       <img src={src} alt={`thumb ${i + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
@@ -115,7 +115,7 @@ export default function ProductView() {
                       <button onClick={() => setActiveImg((i) => (i + 1) % images.length)} className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow opacity-0 group-hover:opacity-100 transition text-xl">›</button>
                       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                         {images.map((_, i) => (
-                          <button key={i} onClick={() => setActiveImg(i)} className={`w-2 h-2 rounded-full transition ${i === activeImg ? "bg-[#E63946] scale-125" : "bg-white/70 hover:bg-white"}`} />
+                          <button key={i} onClick={() => setActiveImg(i)} className={`w-2 h-2 rounded-full transition ${i === activeImg ? "bg-[#1D3557] scale-125" : "bg-white/70 hover:bg-white"}`} />
                         ))}
                       </div>
                     </>
@@ -141,7 +141,7 @@ export default function ProductView() {
 
               <div className="space-y-1">
                 <p className="text-sm text-gray-500">Monthly Rent</p>
-                <p className="text-4xl font-bold text-[#E63946]">₹{product.rent} <span className="text-lg font-medium text-gray-400">/mo</span></p>
+                <p className="text-4xl font-bold text-[#1D3557]">₹{product.rent} <span className="text-lg font-medium text-gray-400">/mo</span></p>
                 <p className="text-sm text-gray-500 mt-1">Security Deposit: <span className="font-semibold text-gray-700">₹{product.deposit}</span></p>
               </div>
 
@@ -158,7 +158,7 @@ export default function ProductView() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-gray-700">Select Rental Tenure</p>
-                  <span className="text-sm font-bold text-[#E63946]">
+                  <span className="text-sm font-bold text-[#1D3557]">
                     {selectedTenure} month{selectedTenure > 1 ? "s" : ""}
                   </span>
                 </div>
@@ -170,11 +170,11 @@ export default function ProductView() {
                       onClick={() => setSelectedTenure(months)}
                       className={`rounded-xl py-3 text-center transition border-2 ${
                         selectedTenure === months
-                          ? "border-[#E63946] bg-[#F1FAEE] shadow-sm"
+                          ? "border-[#1D3557] bg-[#F1FAEE] shadow-sm"
                           : "border-gray-200 hover:border-[#A8DADC] bg-white"
                       }`}
                     >
-                      <span className={`block text-lg font-bold ${selectedTenure === months ? "text-[#E63946]" : "text-gray-800"}`}>
+                      <span className={`block text-lg font-bold ${selectedTenure === months ? "text-[#1D3557]" : "text-gray-800"}`}>
                         {months}
                       </span>
                       <span className="block text-[10px] text-gray-400">mo</span>
@@ -196,9 +196,9 @@ export default function ProductView() {
                 disabled={cartStatus !== "idle" || !product.available}
                 className={`w-full py-4 rounded-xl transition font-bold text-lg shadow-md flex items-center justify-center gap-3
                   ${cartStatus === "done" ? "bg-[#F1FAEE] text-[#457B9D] border border-[#A8DADC] cursor-default"
-                  : cartStatus === "loading" ? "bg-[#E63946] text-white opacity-80 cursor-wait"
+                  : cartStatus === "loading" ? "bg-[#1D3557] text-white opacity-80 cursor-wait"
                   : !product.available ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-[#E63946] hover:bg-[#c1121f] active:bg-[#9d0208] text-white cursor-pointer"}`}
+                  : "bg-[#1D3557] hover:bg-[#457B9D] active:bg-[#9d0208] text-white cursor-pointer"}`}
               >
                 {cartStatus === "loading" && <Loader2 size={20} className="animate-spin" />}
                 {cartStatus === "done"    && <Check size={20} />}
@@ -222,7 +222,7 @@ export default function ProductView() {
                 <hr className="border-gray-100" />
                 <div className="flex justify-between font-semibold text-gray-900">
                   <span>Total (rent + deposit)</span>
-                  <span className="text-[#E63946]">₹{product.rent * selectedTenure + product.deposit}</span>
+                  <span className="text-[#1D3557]">₹{product.rent * selectedTenure + product.deposit}</span>
                 </div>
               </div>
 

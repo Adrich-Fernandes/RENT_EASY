@@ -72,7 +72,7 @@ export default function AdminDashboard() {
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="w-full p-4 md:p-8 space-y-8">
@@ -87,8 +87,8 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-[#E63946]/10 p-3 rounded-lg">
-                <Package size={22} className="text-[#E63946]" />
+              <div className="bg-[#1D3557]/10 p-3 rounded-lg">
+                <Package size={22} className="text-[#1D3557]" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Total Products</p>
@@ -117,8 +117,8 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-[#E63946]/10 p-3 rounded-lg">
-                <Wrench size={22} className="text-[#E63946]" />
+              <div className="bg-[#1D3557]/10 p-3 rounded-lg">
+                <Wrench size={22} className="text-[#1D3557]" />
               </div>
               <div>
                 <p className="text-xs text-gray-400">Open Maintenance</p>
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <CheckCircle size={18} className="text-[#E63946]" />
+              <CheckCircle size={18} className="text-[#1D3557]" />
               <div>
                 <p className="text-xs text-gray-400">Returned</p>
                 <p className="text-lg font-semibold text-gray-700">{stats.returnedRents}</p>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <XCircle size={18} className="text-[#E63946]" />
+              <XCircle size={18} className="text-[#1D3557]" />
               <div>
                 <p className="text-xs text-gray-400">Cancelled</p>
                 <p className="text-lg font-semibold text-gray-700">{stats.cancelledRents}</p>
@@ -192,8 +192,8 @@ export default function AdminDashboard() {
                             (r.status === "active" || r.status === "complete") ? "bg-[#A8DADC]/30 text-[#457B9D]" :
                             (r.status === "ordered" || r.status === "dispatch" || r.status === "out for delivery") ? "bg-yellow-100 text-yellow-600" :
                             (r.status === "return requested" || r.status === "request conformed" || r.status === "out for pickup") ? "bg-orange-100 text-orange-600" :
-                            (r.status === "returned" || r.status === "completed") ? "bg-[#E63946]/10 text-[#E63946]" :
-                            "bg-[#E63946]/10 text-[#E63946]"
+                            (r.status === "returned" || r.status === "completed") ? "bg-[#1D3557]/10 text-[#1D3557]" :
+                            "bg-[#1D3557]/10 text-[#1D3557]"
                           }`}>
                             {r.status}
                           </span>
@@ -230,9 +230,9 @@ export default function AdminDashboard() {
                         <td className="px-4 py-3 text-gray-500 truncate max-w-[150px]">{m.issue}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            m.status === "open" ? "bg-[#F1FAEE] text-[#E63946]" :
+                            m.status === "open" ? "bg-[#F1FAEE] text-[#1D3557]" :
                             m.status === "in-progress" ? "bg-yellow-100 text-yellow-600" :
-                            "bg-[#E63946]/10 text-[#E63946]"
+                            "bg-[#1D3557]/10 text-[#1D3557]"
                           }`}>
                             {m.status}
                           </span>

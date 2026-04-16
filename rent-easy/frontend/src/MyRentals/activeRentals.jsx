@@ -29,7 +29,7 @@ export default function ActiveRents() {
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function ActiveRents() {
       <div className="min-h-screen bg-gradient-to-br from-[#F1FAEE] via-white to-[#F1FAEE] flex flex-col items-center justify-center px-4">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <Sofa className="text-[#E63946]" size={32} />
+            <Sofa className="text-[#1D3557]" size={32} />
             <h1 className="text-4xl font-extrabold text-[#1D3557] tracking-tight">RentEase</h1>
           </div>
           <p className="text-[#457B9D] text-lg font-medium">Create an account to view and manage your active rentals</p>
@@ -55,7 +55,7 @@ export default function ActiveRents() {
               formButtonPrimary: "bg-[#1D3557] hover:bg-[#457B9D] text-white font-bold rounded-xl",
               footerActionLink: "text-[#A8DADC] hover:text-[#457B9D] font-semibold",
               formFieldInput: "border border-[#A8DADC] rounded-lg focus:ring-[#A8DADC] focus:border-[#A8DADC]",
-              identityPreviewEditButton: "text-[#E63946]",
+              identityPreviewEditButton: "text-[#1D3557]",
               formFieldLabel: "text-[#1D3557] font-semibold text-sm",
             },
           }}
@@ -67,7 +67,7 @@ export default function ActiveRents() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -83,7 +83,7 @@ export default function ActiveRents() {
           {/* Page Content Header */}
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-              Active <span className="text-[#E63946]">Leases</span>
+              Active <span className="text-[#1D3557]">Leases</span>
             </h1>
             <div className="px-4 py-1.5 bg-[#F1FAEE] text-[#457B9D] rounded-full text-[11px] font-black uppercase tracking-widest border border-[#A8DADC]">
               {rentals.length} Deliveries
@@ -253,7 +253,7 @@ function Card({ data, clerkId }) {
                   </button>
                   <Link 
                     to={`/report-issue?subject=${encodeURIComponent("Issue with " + (product?.title || product?.name))}`}
-                    className="text-[10px] font-bold text-gray-400 hover:text-[#E63946] flex items-center gap-1 transition-colors"
+                    className="text-[10px] font-bold text-gray-400 hover:text-[#1D3557] flex items-center gap-1 transition-colors"
                   >
                     <AlertCircle size={12} />
                     Report Problem
@@ -262,7 +262,7 @@ function Card({ data, clerkId }) {
               
               {(isExpiringSoon || isOverdue) && (
                 <div className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border flex items-center gap-2 ${
-                  isOverdue ? "bg-[#F1FAEE] text-[#E63946] border-[#A8DADC]" : "bg-orange-50 text-orange-600 border-orange-100"
+                  isOverdue ? "bg-[#F1FAEE] text-[#1D3557] border-[#A8DADC]" : "bg-orange-50 text-orange-600 border-orange-100"
                 }`}>
                   <Clock size={13} />
                   {isOverdue ? "Subscription Overdue" : "Expiring Soon"}
@@ -280,20 +280,20 @@ function Card({ data, clerkId }) {
             <div className="space-y-6">
               <div className="flex justify-between items-end">
                 <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Order Status Tracking</h3>
-                <span className="text-[10px] font-bold text-[#E63946] italic">Expected Delivery: {new Date(data.deliveryDate || Date.now()).toLocaleDateString("en-IN")}</span>
+                <span className="text-[10px] font-bold text-[#1D3557] italic">Expected Delivery: {new Date(data.deliveryDate || Date.now()).toLocaleDateString("en-IN")}</span>
               </div>
               
               <div className="relative pt-4 pb-8">
                 <div className="absolute top-6 left-0 right-0 h-1 bg-gray-200 rounded-full" />
                 <div
-                  className="absolute top-6 left-0 h-1 bg-[#E63946] rounded-full transition-all duration-1000"
+                  className="absolute top-6 left-0 h-1 bg-[#1D3557] rounded-full transition-all duration-1000"
                   style={{ width: `${(currentStep / (statusSteps.length - 1)) * 100}%` }}
                 />
                 <div className="flex justify-between relative px-1">
                   {statusSteps.map((step, i) => (
                     <div key={step} className="flex flex-col items-center">
                       <div className={`w-5 h-5 rounded-full border-4 flex items-center justify-center transition-all duration-500 z-10 ${
-                        i <= currentStep ? "bg-[#E63946] border-[#F1FAEE] scale-110 shadow-lg shadow-[#E63946]/20" : "bg-white border-gray-200"
+                        i <= currentStep ? "bg-[#1D3557] border-[#F1FAEE] scale-110 shadow-lg shadow-[#1D3557]/20" : "bg-white border-gray-200"
                       }`} />
                       <span className={`mt-3 text-[10px] font-black uppercase tracking-widest ${i <= currentStep ? "text-gray-900" : "text-gray-300"}`}>
                         {step}
@@ -317,7 +317,7 @@ function Card({ data, clerkId }) {
                   </div>
                   <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
                     <p className="text-[9px] font-bold text-gray-400 uppercase mb-1">Monthly Billing</p>
-                    <p className="text-sm font-black text-[#E63946]">₹{data.price}</p>
+                    <p className="text-sm font-black text-[#1D3557]">₹{data.price}</p>
                   </div>
                   {data.pickupDate && (
                     <div className="bg-orange-50 p-5 rounded-2xl border border-orange-100 shadow-sm col-span-2">
@@ -365,7 +365,7 @@ function Card({ data, clerkId }) {
                       <button
                         onClick={handleCancelReturn}
                         disabled={isSubmitting}
-                        className="w-full bg-[#E63946] text-white font-black py-3.5 rounded-xl uppercase tracking-widest text-[10px] hover:bg-[#c1121f] transition-all shadow-lg shadow-[#E63946]/20 disabled:opacity-50"
+                        className="w-full bg-[#1D3557] text-white font-black py-3.5 rounded-xl uppercase tracking-widest text-[10px] hover:bg-[#457B9D] transition-all shadow-lg shadow-[#1D3557]/20 disabled:opacity-50"
                       >
                         {isSubmitting ? "Processing..." : "Confirm Request"}
                       </button>
@@ -375,7 +375,7 @@ function Card({ data, clerkId }) {
                     {data.status === "ordered" ? (
                       <button 
                         onClick={() => setShowCancelReturn(true)}
-                        className="flex-1 bg-white border-2 border-[#E63946] text-[#E63946] font-black py-4 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-[#F1FAEE] transition-all"
+                        className="flex-1 bg-white border-2 border-[#1D3557] text-[#1D3557] font-black py-4 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-[#F1FAEE] transition-all"
                       >
                         Cancel Order
                       </button>
@@ -421,7 +421,7 @@ function Card({ data, clerkId }) {
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#E63946] transition"
+                className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#1D3557] transition"
               >
                 <X size={18} />
               </button>

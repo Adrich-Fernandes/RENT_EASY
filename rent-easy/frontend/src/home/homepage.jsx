@@ -46,7 +46,7 @@ export default function Homepage() {
     <h1 className="text-8xl md:text-6xl font-extrabold text-center md:text-left leading-tight mb-4">
         Rent. Live.
         <br />
-        <span className="text-[#E63946]">Repeat</span>
+        <span className="text-[#1D3557]">Repeat</span>
     </h1>
 
     <p className="text-center md:text-left text-lg max-w-lg text-gray-600">
@@ -59,7 +59,7 @@ export default function Homepage() {
         
         <button 
             onClick={() => navigate('/productlist')}
-            className="bg-[#E63946] hover:bg-[#c1121f] text-white font-semibold px-6 py-3 rounded-lg transition shadow-md"
+            className="bg-[#1D3557] hover:bg-[#457B9D] text-white font-semibold px-6 py-3 rounded-lg transition shadow-md"
         >
             Browse Products →
         </button>
@@ -132,7 +132,7 @@ export default function Homepage() {
             />
             <div>
                 <p className="font-semibold">3-Seater Sofa</p>
-                <p className="text-[#E63946] font-semibold">₹899/mo</p>
+                <p className="text-[#1D3557] font-semibold">₹899/mo</p>
             </div>
         </motion.div>
 
@@ -146,7 +146,7 @@ export default function Homepage() {
             </div>
             <div>
                 <p className="font-semibold">Smart TV 43"</p>
-                <p className="text-[#E63946] font-semibold">₹699/mo</p>
+                <p className="text-[#1D3557] font-semibold">₹699/mo</p>
             </div>
         </motion.div>
 
@@ -219,7 +219,7 @@ export default function Homepage() {
             <div id="how-it-works" className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-6 bg-white">
                 {/* TOP CENTER CONTENT */}
                 <div className="text-center max-w-2xl mb-14">
-                    <span className="text-[#E63946] font-bold text-lg">
+                    <span className="text-[#1D3557] font-bold text-lg">
                         Process
                     </span>
 

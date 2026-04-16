@@ -58,8 +58,8 @@ const AdminNavBar = () => {
                 `flex items-center gap-1.5 font-medium text-[0.95rem]
                 px-4 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-[#E63946] bg-[#E63946]/10 shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
-                    : "text-[#1D3557] hover:text-[#E63946] hover:bg-[#E63946]/10 hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
+                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
+                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
                 }`
               }
             >
@@ -132,13 +132,13 @@ const AdminNavBar = () => {
               `flex items-center gap-3 px-4 py-3 rounded-xl font-medium
               transition-all duration-200 ${
                 isActive
-                  ? "bg-[#E63946]/10 text-[#E63946] shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
-                  : "text-[#1D3557] hover:bg-[#E63946]/10 hover:text-[#E63946] hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
+                  ? "bg-[#1D3557]/10 text-[#1D3557] shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
+                  : "text-[#1D3557] hover:bg-[#1D3557]/10 hover:text-[#1D3557] hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
               }`
             }
             onClick={() => setMenuOpen(false)}
           >
-            <span className="text-[#E63946]">{item.icon}</span>
+            <span className="text-[#1D3557]">{item.icon}</span>
             {item.label}
           </NavLink>
         ))}

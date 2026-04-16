@@ -21,7 +21,7 @@ export default function TabBar() {
       <div className="md:hidden sticky top-16 z-40 flex items-center gap-3 px-6 py-4 border-b border-[#F1FAEE] bg-white/80 backdrop-blur-md">
         <button 
           onClick={() => setMobileOpen(!mobileOpen)} 
-          className="p-2 -ml-2 rounded-xl hover:bg-[#F1FAEE] text-[#E63946] transition-colors"
+          className="p-2 -ml-2 rounded-xl hover:bg-[#F1FAEE] text-[#1D3557] transition-colors"
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>

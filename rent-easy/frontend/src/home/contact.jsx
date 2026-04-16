@@ -95,7 +95,7 @@ export default function Contact() {
               animate={{ opacity: 1, y: 0 }}
               className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6"
             >
-              Get in <span className="text-[#E63946]">Touch</span>
+              Get in <span className="text-[#1D3557]">Touch</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
@@ -192,7 +192,7 @@ export default function Contact() {
                     <div className="flex flex-col gap-4 items-center">
                       <button 
                         onClick={() => setStatus("idle")}
-                        className="bg-[#E63946] text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-[#E63946]/20 hover:bg-[#c1121f] transition-all"
+                        className="bg-[#1D3557] text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-[#1D3557]/20 hover:bg-[#457B9D] transition-all"
                       >
                         Send another message
                       </button>
@@ -281,7 +281,7 @@ export default function Contact() {
                     <button 
                       type="submit"
                       disabled={status === "sending"}
-                      className="w-full bg-[#E63946] hover:bg-[#c1121f] text-white font-bold py-5 rounded-2xl shadow-lg shadow-[#E63946]/20 transition-all flex items-center justify-center gap-2 group disabled:bg-gray-400 disabled:shadow-none"
+                      className="w-full bg-[#1D3557] hover:bg-[#457B9D] text-white font-bold py-5 rounded-2xl shadow-lg shadow-[#1D3557]/20 transition-all flex items-center justify-center gap-2 group disabled:bg-gray-400 disabled:shadow-none"
                     >
                       {status === "sending" ? "Sending..." : "Send Message"}
                       <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -301,7 +301,7 @@ export default function Contact() {
                <div className="absolute inset-0 flex items-center justify-center">
                  <div className="text-center">
                    <div className="bg-white p-6 rounded-3xl shadow-xl inline-block mb-4">
-                     <MapPin size={40} className="text-[#E63946] mx-auto" />
+                     <MapPin size={40} className="text-[#1D3557] mx-auto" />
                    </div>
                    <p className="font-bold text-xl text-gray-800">Our Main Hub</p>
                    <p className="text-gray-500">Mumbai, Maharashtra</p>

@@ -84,16 +84,16 @@ export default function AdminIssues() {
     switch (status) {
       case "Pending": return "bg-amber-100 text-amber-700 border-amber-200";
       case "In Progress": return "bg-blue-100 text-blue-700 border-blue-200";
-      case "Resolved": return "bg-[#E63946]/10 text-[#E63946] border-[#E63946]/20";
+      case "Resolved": return "bg-[#1D3557]/10 text-[#1D3557] border-[#1D3557]/20";
       default: return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
 
   const getPriorityStyle = (priority) => {
     switch (priority) {
-      case "High": return "text-[#E63946]";
+      case "High": return "text-[#1D3557]";
       case "Medium": return "text-amber-600";
-      case "Low": return "text-[#E63946]";
+      case "Low": return "text-[#1D3557]";
       default: return "text-gray-600";
     }
   };
@@ -106,7 +106,7 @@ export default function AdminIssues() {
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
             <div>
-              <h1 className="text-3xl font-extrabold text-gray-900">User <span className="text-[#E63946]">Issues</span></h1>
+              <h1 className="text-3xl font-extrabold text-gray-900">User <span className="text-[#1D3557]">Issues</span></h1>
               <p className="text-gray-500 mt-1">Manage and respond to support tickets from users.</p>
             </div>
             
@@ -146,7 +146,7 @@ export default function AdminIssues() {
             <div className="xl:col-span-2">
               {loading ? (
                 <div className="flex items-center justify-center h-64 bg-white rounded-3xl border border-gray-100">
-                  <div className="w-10 h-10 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-10 h-10 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : filteredIssues.length === 0 ? (
                 <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm">
@@ -171,7 +171,7 @@ export default function AdminIssues() {
                     >
                       <div className="flex items-start gap-4">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                          iss.status === 'Resolved' ? "bg-[#E63946]/10 text-[#E63946]" : "bg-amber-50 text-amber-600"
+                          iss.status === 'Resolved' ? "bg-[#1D3557]/10 text-[#1D3557]" : "bg-amber-50 text-amber-600"
                         }`}>
                           {iss.status === 'Resolved' ? <CheckCircle2 size={24} /> : <AlertTriangle size={24} />}
                         </div>
@@ -181,7 +181,7 @@ export default function AdminIssues() {
                             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{iss.category}</span>
                             <span className="text-[10px] text-gray-400">{new Date(iss.createdAt).toLocaleDateString()}</span>
                           </div>
-                          <h3 className="font-bold text-gray-900 truncate group-hover:text-[#E63946] transition-colors uppercase">{iss.subject}</h3>
+                          <h3 className="font-bold text-gray-900 truncate group-hover:text-[#1D3557] transition-colors uppercase">{iss.subject}</h3>
                           <div className="flex items-center gap-3 mt-3">
                             <div className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${getStatusStyle(iss.status)}`}>
                               {iss.status.toUpperCase()}
@@ -307,7 +307,7 @@ export default function AdminIssues() {
                            </button>
                            <button
                              onClick={() => handleDelete(selectedIssue._id)}
-                             className="p-3 bg-gray-100 hover:bg-[#E63946]/10 hover:text-[#E63946] rounded-xl text-gray-400 transition-all"
+                             className="p-3 bg-gray-100 hover:bg-[#1D3557]/10 hover:text-[#1D3557] rounded-xl text-gray-400 transition-all"
                            >
                              <Trash2 size={18} />
                            </button>

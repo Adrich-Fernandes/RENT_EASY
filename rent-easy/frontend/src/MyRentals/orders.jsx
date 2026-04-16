@@ -109,7 +109,7 @@ export default function Orders() {
         <div className="flex-1 md:ml-64 px-4 py-10 sm:px-8">
           <div className="max-w-5xl mx-auto">
 
-            <h1 className="text-3xl font-black text-zinc-800 mb-8 tracking-tight">Your <span className="text-[#E63946]">Orders</span></h1>
+            <h1 className="text-3xl font-black text-zinc-800 mb-8 tracking-tight">Your <span className="text-[#1D3557]">Orders</span></h1>
 
             {/* Tabs */}
             <div className="flex gap-6 mb-8 border-b border-zinc-200">
@@ -117,7 +117,7 @@ export default function Orders() {
                 onClick={() => setActiveTab("active")}
                 className={`pb-4 text-xs font-black uppercase tracking-widest transition-all ${
                     activeTab === "active"
-                    ? "border-b-4 border-[#E63946] text-[#E63946]"
+                    ? "border-b-4 border-[#1D3557] text-[#1D3557]"
                     : "border-b-4 border-transparent text-zinc-400 hover:text-zinc-600"
                 }`}
               >
@@ -127,7 +127,7 @@ export default function Orders() {
                 onClick={() => setActiveTab("past")}
                 className={`pb-4 text-xs font-black uppercase tracking-widest transition-all ${
                     activeTab === "past"
-                    ? "border-b-4 border-[#E63946] text-[#E63946]"
+                    ? "border-b-4 border-[#1D3557] text-[#1D3557]"
                     : "border-b-4 border-transparent text-zinc-400 hover:text-zinc-600"
                 }`}
               >
@@ -183,13 +183,13 @@ function ProductCard({ rental, isPast, onClick }) {
       case "order conformed":  return "bg-[#A8DADC]/30 text-[#457B9D]";
       case "shiped":           return "bg-[#A8DADC]/40 text-[#457B9D]";
       case "out for delivery": return "bg-[#1D3557]/10 text-[#1D3557]";
-      case "delivered":        return "bg-[#E63946]/10 text-[#E63946]";
-      case "active":           return "bg-[#E63946]/10 text-[#E63946]";
+      case "delivered":        return "bg-[#1D3557]/10 text-[#1D3557]";
+      case "active":           return "bg-[#1D3557]/10 text-[#1D3557]";
       case "cancelled":        return "bg-gray-100 text-gray-400 line-through";
       case "return requested": return "bg-orange-100 text-orange-700";
       case "request conformed":return "bg-[#A8DADC]/30 text-[#457B9D] font-bold";
       case "out for pickup":   return "bg-[#A8DADC]/50 text-[#457B9D]";
-      case "pickup complete":  return "bg-[#E63946]/10 text-[#E63946]";
+      case "pickup complete":  return "bg-[#1D3557]/10 text-[#1D3557]";
       default:                 return "bg-gray-100 text-gray-600";
     }
   };
@@ -317,7 +317,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
                 key={step}
                 className={`capitalize font-medium ${
                   index === currentStep
-                    ? "text-[#E63946]"
+                    ? "text-[#1D3557]"
                     : index < currentStep
                     ? "text-[#457B9D]"
                     : "text-zinc-400"
@@ -329,7 +329,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
           </div>
           <div className="relative h-2 bg-zinc-200 rounded">
             <div
-              className="absolute top-0 left-0 h-2 bg-[#E63946] rounded transition-all duration-500"
+              className="absolute top-0 left-0 h-2 bg-[#1D3557] rounded transition-all duration-500"
               style={{ width: `${progressWidth}%` }}
             />
           </div>
@@ -340,7 +340,7 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
           <button
             onClick={() => setShowForm(true)}
             className={`mt-6 w-full py-2 rounded-lg font-medium text-white ${
-              (isPast || rental.status === "complete" || rental.status === "active") ? "bg-[#457B9D] hover:bg-[#1D3557]" : "bg-[#E63946] hover:bg-[#c1121f]"
+              (isPast || rental.status === "complete" || rental.status === "active") ? "bg-[#457B9D] hover:bg-[#1D3557]" : "bg-[#1D3557] hover:bg-[#457B9D]"
             }`}
           >
             {(isPast || rental.status === "complete" || rental.status === "active") ? "Return Product" : "Request Cancellation"}

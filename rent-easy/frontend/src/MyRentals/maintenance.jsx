@@ -28,7 +28,7 @@ export default function Maintain() {
     requested:   { label: "Requested",   color: "bg-amber-50 text-amber-700 border border-amber-200",   dot: "bg-amber-400",   icon: <AlertCircle size={14} /> },
     approved:    { label: "Approved",    color: "bg-blue-50 text-blue-700 border border-blue-200",       dot: "bg-blue-400",    icon: <CheckCircle2 size={14} /> },
     "in progress":{ label: "In Progress", color: "bg-violet-50 text-violet-700 border border-violet-200", dot: "bg-violet-400",  icon: <Loader2 size={14} className="animate-spin" /> },
-    completed:   { label: "Completed",   color: "bg-[#E63946]/10 text-[#E63946] border border-[#E63946]/20", dot: "bg-[#E63946]", icon: <CheckCircle2 size={14} /> },
+    completed:   { label: "Completed",   color: "bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20", dot: "bg-[#1D3557]", icon: <CheckCircle2 size={14} /> },
   };
 
   const getConfig = (status) => statusConfig[status] || { label: status, color: "bg-gray-100 text-gray-600 border border-gray-200", dot: "bg-gray-400", icon: null };
@@ -41,7 +41,7 @@ export default function Maintain() {
       <div className="min-h-screen bg-zinc-50">
         <TabBar />
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -58,11 +58,11 @@ export default function Maintain() {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <h1 className="text-3xl font-black text-gray-900 tracking-tight">Maintenance <span className="text-[#E63946]">Status</span></h1>
+              <h1 className="text-3xl font-black text-gray-900 tracking-tight">Maintenance <span className="text-[#1D3557]">Status</span></h1>
               <p className="text-sm text-gray-400 mt-2 font-medium">Track your service tickets and repair protocols</p>
             </div>
             <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm text-gray-900 text-[11px] font-black uppercase tracking-widest px-5 py-2.5 rounded-2xl self-start">
-              <div className="w-2 h-2 rounded-full bg-[#E63946] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#1D3557] animate-pulse" />
               <span>{requests.length} active Ticket{requests.length !== 1 ? "s" : ""}</span>
             </div>
           </div>
@@ -97,7 +97,7 @@ export default function Maintain() {
                       <div className="flex flex-col md:flex-row items-start justify-between gap-6 mb-8">
                         <div className="flex items-start gap-4">
                           <div className="w-14 h-14 rounded-2xl bg-[#F1FAEE] flex items-center justify-center flex-shrink-0 group-hover:bg-[#A8DADC] transition-colors duration-500">
-                            <Wrench size={24} className="text-[#E63946]" />
+                            <Wrench size={24} className="text-[#1D3557]" />
                           </div>
                           <div>
                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#457B9D] mb-1">Service Protocol</p>
@@ -120,26 +120,26 @@ export default function Maintain() {
                           {/* connector line */}
                           <div className="absolute top-2 left-0 right-0 h-[3px] bg-gray-100 z-0 rounded-full" />
                           <div
-                            className="absolute top-2 left-0 h-[3px] bg-[#E63946] z-0 transition-all duration-1000 ease-out rounded-full"
+                            className="absolute top-2 left-0 h-[3px] bg-[#1D3557] z-0 transition-all duration-1000 ease-out rounded-full"
                             style={{ width: stepIndex >= 0 ? `${(stepIndex / (steps.length - 1)) * 100}%` : "0%" }}
                           />
                           {steps.map((step, idx) => (
                             <div key={step} className="flex flex-col items-center gap-3 z-10">
                               <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-500 shadow-sm ${
-                                idx < stepIndex  ? "bg-[#E63946] border-[#E63946]"
-                                : idx === stepIndex && step === "completed" ? "bg-[#E63946] border-[#E63946] scale-125" 
-                                : idx === stepIndex ? "bg-white border-[#E63946] ring-4 ring-[#E63946]/20 scale-125"
+                                idx < stepIndex  ? "bg-[#1D3557] border-[#1D3557]"
+                                : idx === stepIndex && step === "completed" ? "bg-[#1D3557] border-[#1D3557] scale-125" 
+                                : idx === stepIndex ? "bg-white border-[#1D3557] ring-4 ring-[#1D3557]/20 scale-125"
                                 : "bg-white border-gray-200"
                               }`}>
                                 {(idx < stepIndex || (idx === stepIndex && step === "completed")) && (
                                   <div className="w-1.5 h-1.5 rounded-full bg-white" />
                                 )}
                                 {idx === stepIndex && step !== "completed" && (
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#E63946]" />
+                                  <div className="w-1.5 h-1.5 rounded-full bg-[#1D3557]" />
                                 )}
                               </div>
                               <span className={`text-[10px] font-black uppercase tracking-[0.15em] hidden sm:block transition-colors duration-500 ${
-                                idx <= stepIndex ? "text-[#E63946]" : "text-gray-300"
+                                idx <= stepIndex ? "text-[#1D3557]" : "text-gray-300"
                               }`}>
                                 {step}
                               </span>
@@ -161,8 +161,8 @@ export default function Maintain() {
                           </div>
                         )}
                         {req.expectedCompletionDate && (
-                          <div className="flex items-center gap-2 text-[#E63946]">
-                            <div className="bg-[#E63946]/10 p-1.5 rounded-lg text-[#E63946]"><CheckCircle2 size={12} /></div>
+                          <div className="flex items-center gap-2 text-[#1D3557]">
+                            <div className="bg-[#1D3557]/10 p-1.5 rounded-lg text-[#1D3557]"><CheckCircle2 size={12} /></div>
                             <span>Expected by {new Date(req.expectedCompletionDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
                           </div>
                         )}
