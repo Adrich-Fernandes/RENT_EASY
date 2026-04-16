@@ -83,12 +83,12 @@ export default function IssueStatus() {
     requested: { label: "Request Received", color: "text-amber-600 bg-amber-50 border-amber-100", icon: <Clock size={16} />, btnColor: "bg-amber-600 shadow-amber-200" },
     approved:  { label: "Approved", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <CheckCircle2 size={16} />, btnColor: "bg-blue-600 shadow-blue-200" },
     "in progress": { label: "In Progress", color: "text-violet-600 bg-violet-50 border-violet-100", icon: <Loader2 size={16} className="animate-spin" />, btnColor: "bg-violet-600 shadow-violet-200" },
-    completed: { label: "Resolved", color: "text-red-600 bg-red-50 border-red-100", icon: <CheckCircle2 size={16} />, btnColor: "bg-red-600 shadow-red-200" },
+    completed: { label: "Resolved", color: "text-[#E63946] bg-[#F1FAEE] border-[#457B9D]/20", icon: <CheckCircle2 size={16} />, btnColor: "bg-[#1D3557] shadow-[#1D3557]/20" },
     
     // General Issue Statuses (Normalizing case and names)
     Pending:     { label: "Pending", color: "text-amber-600 bg-amber-50 border-amber-100", icon: <Clock size={16} />, btnColor: "bg-amber-600 shadow-amber-200" },
     "In Progress": { label: "In Progress", color: "text-blue-600 bg-blue-50 border-blue-100", icon: <Loader2 size={16} className="animate-spin" />, btnColor: "bg-blue-600 shadow-blue-200" },
-    Resolved:    { label: "Resolved", color: "text-red-600 bg-red-50 border-red-100", icon: <CheckCircle2 size={16} />, btnColor: "bg-red-600 shadow-red-200" },
+    Resolved:    { label: "Resolved", color: "text-[#E63946] bg-[#F1FAEE] border-[#457B9D]/20", icon: <CheckCircle2 size={16} />, btnColor: "bg-[#1D3557] shadow-[#1D3557]/20" },
   };
 
   const getStatusInfo = (status) => statusConfig[status] || { 
@@ -105,7 +105,7 @@ export default function IssueStatus() {
       <div className="min-h-screen bg-gray-50">
         <UserNavBar />
         <div className="flex flex-col items-center justify-center h-[60vh]">
-          <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4" />
+          <div className="w-12 h-12 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin mb-4" />
           <p className="text-gray-500 font-medium">Loading your issue history...</p>
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function IssueStatus() {
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2 text-red-600 font-bold mb-2"
+                className="flex items-center gap-2 text-[#E63946] font-bold mb-2"
               >
                 <History size={18} />
                 <span className="uppercase tracking-wider text-xs">Support Center</span>
@@ -134,7 +134,7 @@ export default function IssueStatus() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-4xl md:text-5xl font-extrabold text-gray-900"
               >
-                Issue <span className="text-red-600">Status</span>
+                Issue <span className="text-[#E63946]">Status</span>
               </motion.h1>
               <p className="text-gray-500 mt-2 text-lg">Tracks and manage your reported issues in real-time.</p>
             </div>
@@ -145,7 +145,7 @@ export default function IssueStatus() {
                   <p className="text-[10px] uppercase text-gray-400 font-bold">Total Issues</p>
                </div>
                <div className="px-4 py-2 text-center">
-                  <p className="text-2xl font-bold text-rose-600">
+                  <p className="text-2xl font-bold text-[#E63946]">
                     {requests.filter(r => r.status === 'completed').length}
                   </p>
                   <p className="text-[10px] uppercase text-gray-400 font-bold">Resolved</p>
@@ -160,14 +160,14 @@ export default function IssueStatus() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-xl"
               >
-                <div className="bg-red-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                  <MessageSquare size={32} className="text-red-600" />
+                <div className="bg-[#E63946]/10 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                  <MessageSquare size={32} className="text-[#E63946]" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">No Issues Reported</h2>
                 <p className="text-gray-500 mt-2 mb-8 max-w-sm mx-auto">It looks like everything is running smoothly! If you ever have a problem, report it via the Support section.</p>
                 <button 
                   onClick={() => navigate('/contact')}
-                  className="bg-red-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-red-200 hover:bg-red-700 transition-all">
+                  className="bg-[#E63946] text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-[#E63946]/20 hover:bg-[#c1121f] transition-all">
                   Contact Support
                 </button>
               </motion.div>
@@ -183,7 +183,7 @@ export default function IssueStatus() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-red-100 transition-all group"
+                      className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#E63946]/20 transition-all group"
                     >
                       <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
                         
@@ -200,7 +200,7 @@ export default function IssueStatus() {
                             )}
                           </div>
 
-                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 group-hover:text-red-700 transition-colors uppercase">
+                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 group-hover:text-[#E63946] transition-colors uppercase">
                             {req.title}
                           </h3>
                           <p className="text-gray-600 line-clamp-2 md:line-clamp-none leading-relaxed">
@@ -209,11 +209,11 @@ export default function IssueStatus() {
 
                           {/* Admin Reply for General Issues */}
                           {req.type === "general" && req.adminReply && (
-                            <div className="mt-4 bg-red-50 p-4 rounded-2xl border border-red-100">
-                               <p className="text-xs font-bold text-red-700 mb-1 flex items-center gap-2">
+                            <div className="mt-4 bg-[#F1FAEE] p-4 rounded-2xl border border-[#A8DADC]/50">
+                               <p className="text-xs font-bold text-[#E63946] mb-1 flex items-center gap-2">
                                  <MessageSquare size={14} /> Admin Response:
                                </p>
-                               <p className="text-sm text-red-800 italic">"{req.adminReply}"</p>
+                               <p className="text-sm text-[#1D3557] italic">"{req.adminReply}"</p>
                             </div>
                           )}
 

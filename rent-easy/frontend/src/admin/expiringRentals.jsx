@@ -71,7 +71,7 @@ export default function ExpiringRentals() {
       
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <div className="w-full p-4 md:p-8 space-y-8">
@@ -83,11 +83,11 @@ export default function ExpiringRentals() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* OVERDUE TABLE */}
-            <div className="bg-white rounded-xl shadow-[0_0_20px_2px_rgba(2ef,68,68,0.05)] border border-red-100 overflow-hidden">
-              <div className="p-5 border-b border-red-50 bg-red-50/30 flex items-center gap-3">
-                <AlertTriangle size={20} className="text-red-500" />
-                <h2 className="font-semibold text-red-900">Overdue Subscriptions</h2>
-                <div className="ml-auto bg-red-100 text-red-700 text-xs font-bold px-2.5 py-0.5 rounded-full">
+            <div className="bg-white rounded-xl shadow-[0_0_20px_2px_rgba(230,57,70,0.05)] border border-[#E63946]/20 overflow-hidden">
+              <div className="p-5 border-b border-[#F1FAEE] bg-[#F1FAEE]/30 flex items-center gap-3">
+                <AlertTriangle size={20} className="text-[#E63946]" />
+                <h2 className="font-semibold text-[#1D3557]">Overdue Subscriptions</h2>
+                <div className="ml-auto bg-[#E63946]/10 text-[#E63946] text-xs font-bold px-2.5 py-0.5 rounded-full">
                   {overdueRents.length}
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function ExpiringRentals() {
                           {r.product?.title || r.product?.name || "—"}
                         </td>
                         <td className="px-5 py-4">
-                          <span className="px-2.5 py-1 text-xs rounded-full font-bold bg-red-100 text-red-600 border border-red-200 shadow-sm whitespace-nowrap">
+                          <span className="px-2.5 py-1 text-xs rounded-full font-bold bg-[#E63946]/10 text-[#E63946] border border-[#E63946]/20 shadow-sm whitespace-nowrap">
                             {Math.abs(r.daysLeft)} {Math.abs(r.daysLeft) === 1 ? 'day' : 'days'}
                           </span>
                         </td>
@@ -123,7 +123,7 @@ export default function ExpiringRentals() {
                     )) : (
                       <tr>
                         <td colSpan={3} className="px-5 py-8 text-center text-gray-400">
-                          <CheckCircle className="mx-auto mb-2 text-red-300" size={24} />
+                          <CheckCircle className="mx-auto mb-2 text-[#E63946]/50" size={24} />
                           No overdue rentals
                         </td>
                       </tr>
@@ -233,7 +233,7 @@ function RentalPreviewModal({ rental, onClose, onCloseSubscription }) {
             )}
             <div>
               <p className="font-bold text-gray-800">{product?.title || product?.name || "Unknown Product"}</p>
-              <p className="text-sm font-bold text-red-600 mt-1">₹{rental.price} <span className="text-gray-400 font-normal">/ mo</span></p>
+              <p className="text-sm font-bold text-[#E63946] mt-1">₹{rental.price} <span className="text-gray-400 font-normal">/ mo</span></p>
             </div>
           </div>
 
@@ -252,8 +252,8 @@ function RentalPreviewModal({ rental, onClose, onCloseSubscription }) {
             </div>
           </div>
           
-          <div className={`p-4 rounded-xl border ${rental.daysLeft < 0 ? 'bg-red-50 border-red-100' : 'bg-orange-50 border-orange-100'}`}>
-            <p className={`text-sm font-bold flex items-center gap-2 ${rental.daysLeft < 0 ? 'text-red-700' : 'text-orange-700'}`}>
+          <div className={`p-4 rounded-xl border ${rental.daysLeft < 0 ? 'bg-[#F1FAEE] border-[#457B9D]/30' : 'bg-orange-50 border-orange-100'}`}>
+            <p className={`text-sm font-bold flex items-center gap-2 ${rental.daysLeft < 0 ? 'text-[#E63946]' : 'text-orange-700'}`}>
               <Clock size={16} />
               {rental.daysLeft < 0 
                 ? `Overdue by ${Math.abs(rental.daysLeft)} ${Math.abs(rental.daysLeft) === 1 ? 'day' : 'days'}`
@@ -272,7 +272,7 @@ function RentalPreviewModal({ rental, onClose, onCloseSubscription }) {
           </button>
           <button 
             onClick={onCloseSubscription}
-            className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition shadow-lg shadow-red-200"
+            className="flex-1 py-3 bg-[#E63946] hover:bg-[#c1121f] text-white font-bold rounded-xl transition shadow-lg shadow-[#E63946]/20"
           >
             Close Subscription
           </button>

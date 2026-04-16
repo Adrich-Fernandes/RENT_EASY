@@ -46,7 +46,7 @@ export default function Homepage() {
     <h1 className="text-8xl md:text-6xl font-extrabold text-center md:text-left leading-tight mb-4">
         Rent. Live.
         <br />
-        <span className="text-red-600">Repeat</span>
+        <span className="text-[#E63946]">Repeat</span>
     </h1>
 
     <p className="text-center md:text-left text-lg max-w-lg text-gray-600">
@@ -59,14 +59,14 @@ export default function Homepage() {
         
         <button 
             onClick={() => navigate('/productlist')}
-            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition shadow-md"
+            className="bg-[#E63946] hover:bg-[#c1121f] text-white font-semibold px-6 py-3 rounded-lg transition shadow-md"
         >
             Browse Products →
         </button>
 
         <button 
             onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-            className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-6 py-3 rounded-lg transition"
+            className="border border-[#457B9D] text-[#457B9D] hover:bg-[#457B9D] hover:text-white font-semibold px-6 py-3 rounded-lg transition"
         >
             How It Works
         </button>
@@ -77,8 +77,8 @@ export default function Homepage() {
     <div className="mt-8 flex gap-6 flex-wrap justify-center md:justify-start">
 
         {/* Card 1 */}
-        <div className="flex items-center gap-3 bg-red-100/60 px-4 py-3 rounded-xl">
-            <div className="bg-red-200 p-3 rounded-lg">
+        <div className="flex items-center gap-3 bg-[#A8DADC]/20 px-4 py-3 rounded-xl">
+            <div className="bg-[#A8DADC]/40 p-3 rounded-lg">
                 🚚
             </div>
             <div>
@@ -88,8 +88,8 @@ export default function Homepage() {
         </div>
 
         {/* Card 2 */}
-        <div className="flex items-center gap-3 bg-red-100/60 px-4 py-3 rounded-xl">
-            <div className="bg-red-200 p-3 rounded-lg">
+        <div className="flex items-center gap-3 bg-[#A8DADC]/20 px-4 py-3 rounded-xl">
+            <div className="bg-[#A8DADC]/40 p-3 rounded-lg">
                 🛋
             </div>
             <div>
@@ -111,7 +111,7 @@ export default function Homepage() {
     <div className="relative w-full max-w-4xl">
 
         {/* Background Glow */}
-        <div className="absolute inset-0 bg-red-400/20 blur-3xl rounded-3xl -z-10"></div>
+        <div className="absolute inset-0 bg-[#457B9D]/20 blur-3xl rounded-3xl -z-10"></div>
 
         {/* Main Image */}
         <img
@@ -132,7 +132,7 @@ export default function Homepage() {
             />
             <div>
                 <p className="font-semibold">3-Seater Sofa</p>
-                <p className="text-red-600 font-semibold">₹899/mo</p>
+                <p className="text-[#E63946] font-semibold">₹899/mo</p>
             </div>
         </motion.div>
 
@@ -141,12 +141,12 @@ export default function Homepage() {
             whileHover={{ y: -6, scale: 1.02 }}
             className="absolute -right-10 bottom-16 bg-white rounded-2xl shadow-xl px-5 py-4 flex items-center gap-4"
         >
-            <div className="bg-red-100 p-3 rounded-xl text-red-600 text-xl">
+            <div className="bg-[#A8DADC]/30 p-3 rounded-xl text-[#457B9D] text-xl">
                 📺
             </div>
             <div>
                 <p className="font-semibold">Smart TV 43"</p>
-                <p className="text-red-600 font-semibold">₹699/mo</p>
+                <p className="text-[#E63946] font-semibold">₹699/mo</p>
             </div>
         </motion.div>
 
@@ -158,7 +158,7 @@ export default function Homepage() {
 {/* additional info about the company */}
             <div className="h-[40vh] flex flex-col items-center justify-center text-center px-6">
 
-                <span className="text-red-600 text-sm font-medium">Why RentEase</span>
+                <span className="text-[#457B9D] text-sm font-medium">Why RentEase</span>
                 <h1 className="text-4xl font-bold mt-3">Renting Made Simple</h1>
                 <p className="text-base mt-3 text-gray-600 max-w-2xl">Experience the freedom of flexibility without the burden of ownership</p>
 
@@ -184,7 +184,7 @@ export default function Homepage() {
 
                 {/* Left Content */}
                 <div>
-                    <span className="text-red-600 font-medium">Categories</span>
+                    <span className="text-[#457B9D] font-medium">Categories</span>
 
                     <h2 className="text-4xl font-bold mt-2">Browse by Category</h2>
                 </div>
@@ -193,7 +193,7 @@ export default function Homepage() {
                 <div className="mt-4 md:mt-0">
                     <button 
                         onClick={() => navigate('/productlist')}
-                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-md transition"
+                        className="bg-[#1D3557] hover:bg-[#457B9D] text-white font-semibold px-6 py-2 rounded-md transition"
                     >
                         All Products
                     </button>
@@ -219,7 +219,7 @@ export default function Homepage() {
             <div id="how-it-works" className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-6 bg-white">
                 {/* TOP CENTER CONTENT */}
                 <div className="text-center max-w-2xl mb-14">
-                    <span className="text-red-600 font-bold text-lg">
+                    <span className="text-[#E63946] font-bold text-lg">
                         Process
                     </span>
 
@@ -294,7 +294,7 @@ function Featurecard({ data }) {
             variants={fadeUp}
             transition={{ duration: 0.6 }}
             whileHover={{ y: -8, scale: 1.02 }}
-            className="w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] p-6 rounded-xl border border-red-500/80 flex flex-col"
+            className="w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] p-6 rounded-xl border border-[#457B9D]/50 flex flex-col"
         >
 
             <img src={data.img} alt="logo" className="w-15 h-15 mb-4 rounded-2xl" />

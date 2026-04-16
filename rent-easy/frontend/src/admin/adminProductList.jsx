@@ -64,7 +64,7 @@ export default function AdminProductList() {
               <p className="text-sm text-gray-500">{previewProduct.description}</p>
 
               <div className="flex gap-2 flex-wrap">
-                <span className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full">{previewProduct.category}</span>
+                <span className="px-3 py-1 text-xs bg-[#E63946]/10 text-[#E63946] rounded-full">{previewProduct.category}</span>
                 {previewProduct.subcategory && (
                   <span className="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">{previewProduct.subcategory}</span>
                 )}
@@ -73,7 +73,7 @@ export default function AdminProductList() {
               <div className="flex gap-6">
                 <div>
                   <p className="text-xs text-gray-400">Monthly Rent</p>
-                  <p className="text-lg font-semibold text-red-600">₹{previewProduct.rent}</p>
+                  <p className="text-lg font-semibold text-[#E63946]">₹{previewProduct.rent}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-400">Security Deposit</p>
@@ -88,7 +88,7 @@ export default function AdminProductList() {
                     setPreviewProduct(null)
                     setShowAdd(false)
                   }}
-                  className="flex-1 py-2 text-sm border border-red-500 text-red-600 rounded-lg hover:bg-red-50 transition"
+                  className="flex-1 py-2 text-sm border border-[#457B9D] text-[#457B9D] rounded-lg hover:bg-[#F1FAEE] transition"
                 >Edit</button>
                 <button
                   onClick={() => {
@@ -98,7 +98,7 @@ export default function AdminProductList() {
                         .catch((err) => console.error(err))
                     }
                   }}
-                  className="flex-1 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
+                  className="flex-1 py-2 text-sm border border-[#E63946] text-[#E63946] rounded-lg hover:bg-[#F1FAEE] transition"
                 >Delete</button>
               </div>
             </div>
@@ -144,12 +144,12 @@ export default function AdminProductList() {
               placeholder="Search by name or category..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent"
+              className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC] focus:border-transparent"
             />
           </div>
           <button
             onClick={() => { setShowAdd(!showAdd); setEditProduct(null) }}
-            className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition whitespace-nowrap"
+            className="px-6 py-2 bg-[#1D3557] text-white rounded-lg hover:bg-[#457B9D] transition whitespace-nowrap"
           >
             Add New Product
           </button>
@@ -172,7 +172,7 @@ export default function AdminProductList() {
               {filteredRents.length > 0 ? (
                 filteredRents.map((v, i) => (
                   <tr key={i} onClick={() => setPreviewProduct(v)}
-                    className="border-t hover:bg-red-50 cursor-pointer transition"
+                    className="border-t hover:bg-[#F1FAEE] cursor-pointer transition"
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-4">
@@ -181,14 +181,14 @@ export default function AdminProductList() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">{v.category}</span>
+                      <span className="px-3 py-1 text-sm bg-[#E63946]/10 text-[#E63946] rounded-full">{v.category}</span>
                     </td>
                     <td className="p-4">₹ {v.rent}</td>
                     <td className="p-4">₹ {v.deposit}</td>
                     <td className="p-4">
                       <button
                         onClick={(e) => { e.stopPropagation(); setEditProduct(v); setShowAdd(false) }}
-                        className="px-4 py-2 text-sm border border-red-500 text-red-600 rounded-lg hover:bg-red-50 transition"
+                        className="px-4 py-2 text-sm border border-[#457B9D] text-[#457B9D] rounded-lg hover:bg-[#F1FAEE] transition"
                       >Edit</button>
                     </td>
                     <td className="p-4">
@@ -201,7 +201,7 @@ export default function AdminProductList() {
                               .catch((err) => console.error(err))
                           }
                         }}
-                        className="px-4 py-2 text-sm border border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition"
+                        className="px-4 py-2 text-sm border border-[#E63946] text-[#E63946] rounded-lg hover:bg-[#F1FAEE] transition"
                       >Delete</button>
                     </td>
                   </tr>
@@ -264,7 +264,7 @@ function ImageUploader({ imgs, onChange }) {
       )}
 
       {/* Upload button */}
-      <label className={`flex items-center gap-2 cursor-pointer w-fit px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-red-400 transition text-sm text-gray-500 hover:text-red-600 ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+      <label className={`flex items-center gap-2 cursor-pointer w-fit px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-[#A8DADC] transition text-sm text-gray-500 hover:text-[#457B9D] ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4" />
         </svg>
@@ -318,20 +318,20 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">Product Name</label>
           <input type="text" name="title" value={formData.title} onChange={handleChange} required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
         </div>
 
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
           <textarea name="description" value={formData.description} onChange={handleChange} rows={3} required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
             <select name="category" value={formData.category} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]">
               <option value="">Select a category</option>
               <option value="Furniture">Furniture</option>
               <option value="Appliance">Appliance</option>
@@ -340,7 +340,7 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Subcategory</label>
             <input type="text" name="subcategory" value={formData.subcategory} onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
           </div>
         </div>
 
@@ -348,12 +348,12 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Monthly Rent (₹)</label>
             <input type="number" name="rent" value={formData.rent} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
           </div>
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Security Deposit (₹)</label>
             <input type="number" name="deposit" value={formData.deposit} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
           </div>
         </div>
 
@@ -363,7 +363,7 @@ function EditProduct({ product, setEditProduct, onSuccess }) {
         </div>
 
         <button type="submit"
-          className="w-full bg-red-600 text-white py-2.5 rounded-lg font-medium hover:bg-red-700 transition">
+          className="w-full bg-[#1D3557] text-white py-2.5 rounded-lg font-medium hover:bg-[#457B9D] transition">
           Update Product
         </button>
       </form>
@@ -400,20 +400,20 @@ function AddProduct({ setShowAdd, onSuccess }) {
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">Product Name</label>
           <input type="text" name="title" value={formData.title} onChange={handleChange} required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
         </div>
 
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
           <textarea name="description" value={formData.description} onChange={handleChange} rows={3} required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
             <select name="category" value={formData.category} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]">
               <option value="">Select a category</option>
               <option value="Furniture">Furniture</option>
               <option value="Appliance">Appliance</option>
@@ -422,7 +422,7 @@ function AddProduct({ setShowAdd, onSuccess }) {
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Subcategory</label>
             <input type="text" name="subcategory" value={formData.subcategory} onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
           </div>
         </div>
 
@@ -430,12 +430,12 @@ function AddProduct({ setShowAdd, onSuccess }) {
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Monthly Rent (₹)</label>
             <input type="number" name="rent" value={formData.rent} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
           </div>
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Security Deposit (₹)</label>
             <input type="number" name="deposit" value={formData.deposit} onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400" />
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#A8DADC]" />
           </div>
         </div>
 
@@ -445,7 +445,7 @@ function AddProduct({ setShowAdd, onSuccess }) {
         </div>
 
         <button type="submit"
-          className="w-full bg-red-600 text-white py-2.5 rounded-lg font-medium hover:bg-red-700 transition">
+          className="w-full bg-[#1D3557] text-white py-2.5 rounded-lg font-medium hover:bg-[#457B9D] transition">
           Create Product
         </button>
       </form>

@@ -80,7 +80,7 @@ export default function ReportIssue() {
             <motion.div 
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest mb-4"
+              className="inline-flex items-center gap-2 bg-[#E63946]/10 text-[#E63946] px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest mb-4"
             >
               <AlertCircle size={14} />
               Support Center
@@ -90,7 +90,7 @@ export default function ReportIssue() {
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4"
             >
-              Report an <span className="text-red-600">Issue</span>
+              Report an <span className="text-[#E63946]">Issue</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
@@ -108,7 +108,7 @@ export default function ReportIssue() {
             <div className="lg:col-span-1 space-y-8">
               <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <ShieldCheck size={20} className="text-red-600" />
+                  <ShieldCheck size={20} className="text-[#E63946]" />
                   Our Guarantee
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
@@ -116,15 +116,15 @@ export default function ReportIssue() {
                 </p>
               </div>
 
-              <div className="bg-red-50 p-6 rounded-3xl border border-red-100">
-                <h3 className="text-lg font-bold text-red-900 mb-4 flex items-center gap-2">
-                  <HelpCircle size={20} className="text-red-600" />
+              <div className="bg-[#1D3557] p-6 rounded-3xl border border-[#A8DADC]/20">
+                <h3 className="text-lg font-bold text-[#F1FAEE] mb-4 flex items-center gap-2">
+                  <HelpCircle size={20} className="text-[#A8DADC]" />
                   Quick Tips
                 </h3>
-                <ul className="text-sm text-red-800 space-y-3 opacity-80">
-                  <li className="flex gap-2"><span>•</span> Be as descriptive as possible.</li>
-                  <li className="flex gap-2"><span>•</span> Mention any error codes you saw.</li>
-                  <li className="flex gap-2"><span>•</span> Check your internet connection first.</li>
+                <ul className="text-sm text-[#A8DADC] space-y-3 opacity-90">
+                  <li className="flex gap-2 text-white"><span>•</span> Be as descriptive as possible.</li>
+                  <li className="flex gap-2 text-white"><span>•</span> Mention any error codes you saw.</li>
+                  <li className="flex gap-2 text-white"><span>•</span> Check your internet connection first.</li>
                 </ul>
               </div>
             </div>
@@ -138,20 +138,20 @@ export default function ReportIssue() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="bg-white border-2 border-rose-100 rounded-3xl p-12 text-center shadow-xl shadow-rose-50"
+                    className="bg-white border-2 border-[#A8DADC] rounded-3xl p-12 text-center shadow-xl shadow-[#A8DADC]/20"
                   >
-                    <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 size={40} className="text-rose-600" />
+                    <div className="w-20 h-20 bg-[#F1FAEE] rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle2 size={40} className="text-[#E63946]" />
                     </div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">Issue Reported!</h2>
                     <p className="text-gray-600 mb-8">Your ticket has been created successfully. Redirecting you to your issue history...</p>
                     <div className="flex justify-center">
-                      <div className="w-12 h-1 bg-rose-100 rounded-full overflow-hidden">
+                      <div className="w-12 h-1 bg-[#F1FAEE] rounded-full overflow-hidden">
                         <motion.div 
                           initial={{ x: "-100%" }}
                           animate={{ x: "0%" }}
                           transition={{ duration: 3 }}
-                          className="w-full h-full bg-rose-500"
+                          className="w-full h-full bg-[#E63946]"
                         />
                       </div>
                     </div>
@@ -164,7 +164,7 @@ export default function ReportIssue() {
                     animate={{ opacity: 1, x: 0 }}
                     className="bg-white border border-gray-100 rounded-3xl p-8 shadow-2xl relative overflow-hidden"
                   >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -z-10 opacity-50"></div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#E63946]/5 rounded-bl-full -z-10 opacity-50"></div>
                     
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -174,7 +174,7 @@ export default function ReportIssue() {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium appearance-none"
+                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium appearance-none"
                           >
                             {categories.map(c => <option key={c} value={c}>{c}</option>)}
                           </select>
@@ -185,7 +185,7 @@ export default function ReportIssue() {
                             name="priority"
                             value={formData.priority}
                             onChange={handleChange}
-                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium appearance-none"
+                            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium appearance-none"
                           >
                             {priorities.map(p => <option key={p} value={p}>{p}</option>)}
                           </select>
@@ -201,7 +201,7 @@ export default function ReportIssue() {
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="Briefly describe the problem"
-                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium"
+                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium"
                         />
                       </div>
 
@@ -214,14 +214,14 @@ export default function ReportIssue() {
                           onChange={handleChange}
                           rows="6"
                           placeholder="Provide as much detail as possible..."
-                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-red-400/50 transition-all font-medium resize-none"
+                          className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all font-medium resize-none"
                         ></textarea>
                       </div>
 
                       <button 
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 group disabled:bg-gray-400 active:scale-95"
+                        className="w-full bg-[#E63946] hover:bg-[#c1121f] text-white font-bold py-5 rounded-2xl shadow-lg shadow-[#E63946]/20 transition-all flex items-center justify-center gap-2 group disabled:bg-gray-400 active:scale-95"
                       >
                         {loading ? (
                           <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />

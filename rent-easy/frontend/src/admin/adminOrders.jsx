@@ -21,11 +21,11 @@ const statusStyle = (status) => {
     case "order conformed":  return "bg-amber-100 text-amber-700";
     case "shiped":           return "bg-blue-100 text-blue-700";
     case "out for delivery": return "bg-purple-100 text-purple-700";
-    case "delivered":        return "bg-red-100 text-red-700";
+    case "delivered":        return "bg-[#E63946]/10 text-[#E63946]";
     case "return requested": return "bg-orange-100 text-orange-700";
-    case "request conformed":return "bg-amber-100 text-amber-700 font-bold";
-    case "out for pickup":   return "bg-cyan-100 text-cyan-700";
-    case "pickup complete":  return "bg-red-100 text-red-700";
+    case "request conformed":return "bg-[#A8DADC]/30 text-[#457B9D] font-bold";
+    case "out for pickup":   return "bg-[#A8DADC]/40 text-[#457B9D]";
+    case "pickup complete":  return "bg-[#E63946]/10 text-[#E63946]";
     default:                 return "bg-gray-100 text-gray-600";
   }
 };
@@ -265,11 +265,11 @@ export default function AdminOrders() {
                                 : updateDeliveryDate(order._id, e.target.value);
                             }
                           }}
-                          className={`border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 ${title.includes("Returns") ? "focus:ring-orange-400 border-orange-200" : "focus:ring-red-400 border-gray-300"}`}
+                          className={`border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 ${title.includes("Returns") ? "focus:ring-orange-400 border-orange-200" : "focus:ring-[#E63946] border-gray-300"}`}
                         />
                       </td>
                       <td className="px-5 py-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${order.paymentType === "Online" ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${order.paymentType === "Online" ? "bg-[#E63946]/10 text-[#E63946]" : "bg-blue-100 text-blue-700"}`}>
                           {order.paymentType || "—"}
                         </span>
                       </td>
@@ -305,7 +305,7 @@ export default function AdminOrders() {
 
         {/* ── Search Bar with Field Selector ── */}
         <div className="flex flex-wrap items-center gap-3 mb-8 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-          <div className="relative flex-1 min-w-[260px] flex rounded-lg border border-gray-300 overflow-visible focus-within:ring-2 focus-within:ring-red-400 focus-within:border-transparent bg-white">
+          <div className="relative flex-1 min-w-[260px] flex rounded-lg border border-gray-300 overflow-visible focus-within:ring-2 focus-within:ring-[#E63946] focus-within:border-transparent bg-white">
             <div ref={searchFieldRef} className="relative flex-shrink-0">
               <button
                 onClick={() => setSearchFieldOpen((v) => !v)}
@@ -321,7 +321,7 @@ export default function AdminOrders() {
                     <button
                       key={f.value}
                       onClick={() => { setSearchField(f.value); setSearchFieldOpen(false); }}
-                      className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm transition hover:bg-gray-50 ${searchField === f.value ? "font-bold text-red-600" : "text-gray-700"}`}
+                      className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm transition hover:bg-gray-50 ${searchField === f.value ? "font-bold text-[#E63946]" : "text-gray-700"}`}
                     >
                       {f.label}
                     </button>
@@ -345,7 +345,7 @@ export default function AdminOrders() {
 
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-[#E63946] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <>
@@ -380,7 +380,7 @@ export default function AdminOrders() {
               <button
                 key={option}
                 onClick={() => updateStatus(order._id, option)}
-                className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${order.status === option ? "font-bold text-red-600" : "text-gray-700"}`}
+                className={`flex items-center gap-2 w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 capitalize transition ${order.status === option ? "font-bold text-[#E63946]" : "text-gray-700"}`}
               >
                 <span className={`w-2 h-2 rounded-full ${statusStyle(option).split(" ")[0]}`} />
                 {option}
@@ -453,7 +453,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
             )}
             <div>
               <p className="font-bold text-gray-800 text-lg">{product?.title || "—"}</p>
-              <p className="text-red-600 font-semibold">₹{order.price} / month</p>
+              <p className="text-[#E63946] font-semibold">₹{order.price} / month</p>
               <span className={`mt-1 inline-block px-3 py-0.5 text-xs font-semibold rounded-full capitalize ${statusStyle(order.status)}`}>
                 {order.status}
               </span>
@@ -480,11 +480,11 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
 
           {/* Cancellation / Return Reason */}
           {(order.cancelReason || order.returnReason) && (
-            <div className={`p-4 rounded-xl border ${order.cancelReason ? "bg-red-50 border-red-100" : "bg-orange-50 border-orange-100"}`}>
-              <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${order.cancelReason ? "text-red-400" : "text-orange-400"}`}>
+            <div className={`p-4 rounded-xl border ${order.cancelReason ? "bg-[#F1FAEE] border-[#457B9D]/30" : "bg-orange-50 border-orange-100"}`}>
+              <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${order.cancelReason ? "text-[#E63946]" : "text-orange-400"}`}>
                 {order.cancelReason ? "Cancellation Reason" : "Return Reason"}
               </p>
-              <p className={`text-sm font-medium ${order.cancelReason ? "text-red-700" : "text-orange-700"}`}>
+              <p className={`text-sm font-medium ${order.cancelReason ? "text-[#E63946]" : "text-orange-700"}`}>
                 {order.cancelReason || order.returnReason}
               </p>
             </div>
@@ -540,7 +540,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-gray-400 text-xs mb-1">Monthly Rent</p>
-                <p className="font-bold text-red-600 text-lg">₹{order.price}</p>
+                <p className="font-bold text-[#E63946] text-lg">₹{order.price}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-gray-400 text-xs mb-1">Security Deposit</p>
@@ -548,7 +548,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
               </div>
               <div className="bg-gray-50 rounded-lg p-3 col-span-2">
                 <p className="text-gray-400 text-xs mb-1">Payment Method</p>
-                <p className={`font-bold ${order.paymentType === "Online" ? "text-red-600" : "text-blue-600"}`}>{order.paymentType || "—"}</p>
+                <p className={`font-bold ${order.paymentType === "Online" ? "text-[#E63946]" : "text-blue-600"}`}>{order.paymentType || "—"}</p>
               </div>
             </div>
           </div>
@@ -565,11 +565,11 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
                   type="date"
                   value={localDate}
                   onChange={(e) => setLocalDate(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#E63946]"
                 />
                 <button
                   onClick={() => localDate && onDateChange(order._id, localDate)}
-                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition"
+                  className="px-4 py-2 bg-[#E63946] hover:bg-[#c1121f] text-white text-sm font-semibold rounded-lg transition"
                 >
                   Save
                 </button>
@@ -611,8 +611,8 @@ function OrderDetailModal({ order, onClose, onStatusChange, onDateChange, onPick
                   onClick={() => onStatusChange(order._id, option)}
                   className={`py-2.5 rounded-xl text-sm font-semibold capitalize transition border-2 ${
                     order.status === option
-                      ? "border-red-500 bg-red-50 text-red-700"
-                      : "border-gray-200 hover:border-red-300 text-gray-600 hover:bg-gray-50"
+                      ? "border-[#E63946] bg-[#F1FAEE] text-[#E63946]"
+                      : "border-gray-200 hover:border-[#A8DADC] text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   {option}

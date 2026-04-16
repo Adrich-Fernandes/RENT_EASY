@@ -243,7 +243,7 @@ export default function Layout() {
                             <div
                                 key={v._id}
                                 onClick={() => navigate("/productview", { state: { product: v } })}
-                                className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-[0_20px_60px_rgba(34,197,94,0.35)] hover:-translate-y-2 group"
+                                className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-[0_20px_60px_rgba(69,123,157,0.30)] hover:-translate-y-2 group"
                             >
                                 <div className="relative overflow-hidden">
                                     <img
@@ -267,7 +267,7 @@ export default function Layout() {
                                     <div className="flex justify-between items-start mb-3">
                                         <div>
                                             <span className="text-base font-medium text-gray-700">Monthly Rent</span>
-                                            <div className="text-xl font-bold text-red-600">₹{v.rent}</div>
+                                            <div className="text-xl font-bold text-[#E63946]">₹{v.rent}</div>
                                         </div>
                                         <div className="text-right">
                                             <span className="text-base font-medium text-gray-700">Deposit</span>
@@ -276,9 +276,9 @@ export default function Layout() {
                                     </div>
 
                                     <div className="flex gap-2 mt-3">
-                                        <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">3mo</span>
-                                        <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">6mo</span>
-                                        <span className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">12mo</span>
+                                        <span className="px-3 py-1 text-sm bg-[#A8DADC]/20 text-[#457B9D] rounded-full">3mo</span>
+                                        <span className="px-3 py-1 text-sm bg-[#A8DADC]/20 text-[#457B9D] rounded-full">6mo</span>
+                                        <span className="px-3 py-1 text-sm bg-[#A8DADC]/20 text-[#457B9D] rounded-full">12mo</span>
                                     </div>
                                 </div>
                             </div>

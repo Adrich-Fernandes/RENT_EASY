@@ -195,11 +195,11 @@ export default function Cart() {
           {selectedAddressIdx !== null && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-3">
               <div className="flex items-center gap-2">
-                <Calendar className="text-red-600" size={20} />
+                <Calendar className="text-[#E63946]" size={20} />
                 <span className="font-bold text-lg">Select Delivery Date</span>
               </div>
               <div className="flex items-center gap-3">
-                <button type="button" onClick={openCalendar} className="px-4 py-2 border border-red-400 border-opacity-40 rounded-lg hover:bg-gray-50 text-sm">
+                <button type="button" onClick={openCalendar} className="px-4 py-2 border border-[#A8DADC] rounded-lg hover:bg-gray-50 text-sm">
                   {date ? date : "Pick a date"}
                 </button>
                 <input
@@ -210,7 +210,7 @@ export default function Cart() {
                   onChange={(e) => setDate(e.target.value)}
                   className="absolute opacity-0 pointer-events-none"
                 />
-                {date && <span className="text-red-600 text-sm font-medium">✓ {date}</span>}
+                {date && <span className="text-[#E63946] text-sm font-medium">✓ {date}</span>}
               </div>
             </div>
           )}
@@ -218,18 +218,18 @@ export default function Cart() {
           {date && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <IndianRupee className="text-red-600" size={20} />
+                <IndianRupee className="text-[#E63946]" size={20} />
                 <span className="font-bold text-lg">Select Payment Method</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div
                   onClick={() => setPaymentType("Online")}
                   className={`border rounded-xl p-4 flex items-center justify-between cursor-pointer transition ${
-                    paymentType === "Online" ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-red-300"
+                    paymentType === "Online" ? "border-[#A8DADC] bg-[#F1FAEE]" : "border-gray-200 hover:border-[#A8DADC]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 transition ${paymentType === "Online" ? "border-red-500 bg-red-500" : "border-gray-400"}`} />
+                    <div className={`w-4 h-4 rounded-full border-2 transition ${paymentType === "Online" ? "border-[#457B9D] bg-[#457B9D]" : "border-gray-400"}`} />
                     <span className="font-medium text-gray-800">Online Payment</span>
                   </div>
                   <ArrowRight size={16} className="text-gray-400" />
@@ -238,11 +238,11 @@ export default function Cart() {
                 <div
                   onClick={() => setPaymentType("Cash")}
                   className={`border rounded-xl p-4 flex items-center justify-between cursor-pointer transition ${
-                    paymentType === "Cash" ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-red-300"
+                    paymentType === "Cash" ? "border-[#A8DADC] bg-[#F1FAEE]" : "border-gray-200 hover:border-[#A8DADC]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 transition ${paymentType === "Cash" ? "border-red-500 bg-red-500" : "border-gray-400"}`} />
+                    <div className={`w-4 h-4 rounded-full border-2 transition ${paymentType === "Cash" ? "border-[#457B9D] bg-[#457B9D]" : "border-gray-400"}`} />
                     <span className="font-medium text-gray-800">Cash on Delivery</span>
                   </div>
                   <IndianRupee size={16} className="text-gray-400" />
@@ -253,7 +253,7 @@ export default function Cart() {
 
           <button
             onClick={() => setShowDelivery(!showDelivery)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-xl transition"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1D3557] hover:bg-[#457B9D] text-white text-sm font-medium rounded-xl transition"
           >
             {showDelivery ? <ChevronUp size={18} /> : <Plus size={18} />}
             {showDelivery ? "Cancel" : "Add New Address"}
@@ -262,7 +262,7 @@ export default function Cart() {
           {showDelivery && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="text-red-600" size={20} />
+                <MapPin className="text-[#E63946]" size={20} />
                 <span className="font-bold text-lg">New Delivery Address</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -279,12 +279,12 @@ export default function Cart() {
                     <label className="block text-sm text-gray-600 mb-1">{label}</label>
                     <input
                       type="text" name={name} value={form[name]} onChange={handleForm} placeholder={placeholder}
-                      className="w-full border border-red-400 border-opacity-40 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
+                      className="w-full border border-[#457B9D]/30 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#A8DADC] text-sm"
                     />
                   </div>
                 ))}
               </div>
-              <button onClick={handleAddAddress} className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2.5 rounded-xl text-sm transition">
+              <button onClick={handleAddAddress} className="w-full bg-[#1D3557] hover:bg-[#457B9D] text-white font-medium py-2.5 rounded-xl text-sm transition">
                 Save Address
               </button>
             </div>
@@ -293,7 +293,7 @@ export default function Cart() {
           {savedAddresses.length > 0 && (
             <div className="bg-white shadow-md rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="text-red-600" size={20} />
+                <MapPin className="text-[#E63946]" size={20} />
                 <span className="font-bold text-lg">Select Delivery Address</span>
               </div>
               {savedAddresses.map((addr, i) => (
@@ -301,11 +301,11 @@ export default function Cart() {
                   key={addr._id || i}
                   onClick={() => setSelectedAddressIdx(i)}
                   className={`border rounded-xl p-4 flex justify-between items-start gap-4 cursor-pointer transition ${
-                    selectedAddressIdx === i ? "border-red-500 bg-red-50" : "border-gray-200 hover:border-red-300"
+                    selectedAddressIdx === i ? "border-[#457B9D] bg-[#F1FAEE]" : "border-gray-200 hover:border-[#A8DADC]"
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${selectedAddressIdx === i ? "border-red-500 bg-red-500" : "border-gray-400"}`} />
+                    <div className={`mt-1 w-4 h-4 rounded-full border-2 flex-shrink-0 transition ${selectedAddressIdx === i ? "border-[#457B9D] bg-[#457B9D]" : "border-gray-400"}`} />
                     <div className="space-y-1 text-sm text-gray-700">
                       <p className="font-semibold text-gray-900">{addr.fullname} · {addr.phone}</p>
                       <p>{addr.addressline1}{addr.addressline2 ? `, ${addr.addressline2}` : ""}</p>
@@ -313,7 +313,7 @@ export default function Cart() {
                     </div>
                   </div>
                   <Trash2
-                    className="text-red-400 hover:text-red-600 cursor-pointer flex-shrink-0 transition"
+                    className="text-[#E63946] hover:text-[#c1121f] cursor-pointer flex-shrink-0 transition"
                     size={18}
                     onClick={(e) => { e.stopPropagation(); handleDeleteAddress(addr._id, i); }}
                   />
@@ -359,13 +359,13 @@ export default function Cart() {
 
             <div className="flex justify-between items-center">
               <span className="font-semibold text-lg">Total Payable</span>
-              <span className="font-bold text-lg text-red-600">₹{totalPayable}</span>
+              <span className="font-bold text-lg text-[#E63946]">₹{totalPayable}</span>
             </div>
 
             <button
               onClick={handlePlaceOrder}
               disabled={placingOrder || cartItems.length === 0 || !paymentType || !date || selectedAddressIdx === null}
-              className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
+              className="w-full bg-[#1D3557] hover:bg-[#457B9D] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition"
             >
               {placingOrder ? (
                 <><Loader2 size={18} className="animate-spin" /> Placing Order...</>
@@ -404,7 +404,7 @@ function CartItemCard({ data, tenure, onRemove }) {
         <div className="flex items-center gap-6">
           <div>
             <span className="block text-sm text-gray-500">Monthly Rent</span>
-            <span className="block text-red-600 font-bold text-lg">₹{data?.rent}</span>
+            <span className="block text-[#E63946] font-bold text-lg">₹{data?.rent}</span>
           </div>
           <div>
             <span className="block text-sm text-gray-500">Tenure</span>
@@ -417,7 +417,7 @@ function CartItemCard({ data, tenure, onRemove }) {
         </div>
       </div>
       <div className="flex flex-col items-end justify-between gap-4">
-        <Trash2 className="text-red-500 cursor-pointer hover:text-red-600 transition" size={20} onClick={onRemove} />
+        <Trash2 className="text-[#E63946] cursor-pointer hover:text-[#c1121f] transition" size={20} onClick={onRemove} />
         <div className="text-right">
           <span className="block text-gray-400 text-sm">Total</span>
           <span className="block font-bold text-xl text-gray-800">₹{cardTotal}</span>
