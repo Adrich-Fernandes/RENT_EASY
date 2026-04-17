@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Home, Package, ClipboardList, X, Menu, ShoppingCartIcon } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+import axios from "axios";
 
 const navItems = [
   { label: "Home", icon: <Home size={18} />, path: "/" },
@@ -20,6 +21,19 @@ const UserNavBar = () => {
   const { openSignIn } = useClerk();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      axios.get(`http://localhost:4000/api/user/${user.id}`)
+        .then(res => {
+          if (res.data?.cart) {
+            setCartCount(res.data.cart.length);
+          }
+        })
+        .catch(err => console.error("Error fetching cart count:", err));
+    }
+  }, [user]);
 
   return (
     <>
@@ -118,8 +132,13 @@ const UserNavBar = () => {
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          <Link to="/cart">
-            <ShoppingCartIcon className="h-6 cursor-pointer text-[#1D3557] hover:text-[#457B9D]" />
+          <Link to="/cart" className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#1D3557]/10 transition-colors">
+            <ShoppingCartIcon className="h-6 w-6 cursor-pointer text-[#1D3557]" />
+            {cartCount > 0 && (
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 border-2 border-white rounded-full translate-x-1 -translate-y-1">
+                {cartCount}
+              </span>
+            )}
           </Link>
 
           {!user ? (
@@ -161,11 +180,11 @@ const UserNavBar = () => {
               className="h-8 w-auto"
             />
             <span className="font-extrabold text-[1.1rem] text-gray-900">
-              <span className="text-red-600">Rent</span>Ease
+              <span className="text-[#1D3557]">Rent</span>Ease
             </span>
           </div>
           <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
-            <X size={22} className="text-gray-500 hover:text-gray-700" />
+            <X size={22} className="text-gray-500 hover:text-[#1D3557]" />
           </button>
         </div>
 
