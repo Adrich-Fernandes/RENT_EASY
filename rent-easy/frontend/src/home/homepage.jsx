@@ -262,6 +262,9 @@ function Workcard({ item }) {
         hidden: { opacity: 0, y: 40 },
         visible: { opacity: 1, y: 0 }
     }
+    
+    // Extract the icon component
+    const Icon = item.icon;
 
     return (
         <motion.div
@@ -271,7 +274,13 @@ function Workcard({ item }) {
             className="relative bg-white border border-gray-100 rounded-3xl p-8 shadow-md transition-all duration-300"
         >
 
-            <img src={item.img} alt="step icon" className="w-18 h-18 mb-6 rounded-2xl object-cover" />
+            {Icon ? (
+                <div className="w-16 h-16 mb-6 rounded-2xl bg-[#A8DADC]/30 flex items-center justify-center text-[#1D3557]">
+                    <Icon className="w-8 h-8" />
+                </div>
+            ) : (
+                <img src={item.img} alt="step icon" className="w-16 h-16 mb-6 rounded-2xl object-cover" />
+            )}
             <p className="text-5xl font-extrabold text-gray-300/70">{item.count}</p>
             <h2 className="text-xl font-bold mt-4">{item.title}</h2>
             <p className="text-gray-500 mt-3 leading-relaxed">{item.description}</p>
@@ -288,16 +297,25 @@ function Featurecard({ data }) {
         hidden: { opacity: 0, y: 40 },
         visible: { opacity: 1, y: 0 }
     }
+    
+    // Extract the icon component
+    const Icon = data.icon;
 
     return (
         <motion.div
             variants={fadeUp}
             transition={{ duration: 0.6 }}
             whileHover={{ y: -8, scale: 1.02 }}
-            className="w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] p-6 rounded-xl border border-[#457B9D]/50 flex flex-col"
+            className="w-[90%] sm:w-[45%] md:w-[30%] h-[35vh] p-6 rounded-xl border border-[#457B9D]/50 flex flex-col bg-white shadow-sm hover:shadow-md transition-shadow"
         >
 
-            <img src={data.img} alt="logo" className="w-15 h-15 mb-4 rounded-2xl" />
+            {Icon ? (
+                <div className="w-12 h-12 mb-4 rounded-xl bg-[#1D3557]/10 flex items-center justify-center text-[#1D3557]">
+                    <Icon className="w-6 h-6" />
+                </div>
+            ) : (
+                <img src={data.img} alt="logo" className="w-12 h-12 mb-4 rounded-xl object-cover" />
+            )}
             <h2 className="text-2xl font-bold mb-2">{data.title}</h2>
             <p className="text-lg text-gray-600">{data.description}</p>
 
