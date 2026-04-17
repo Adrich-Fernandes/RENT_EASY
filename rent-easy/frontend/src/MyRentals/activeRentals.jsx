@@ -28,15 +28,9 @@ export default function ActiveRents() {
 
   if (!isLoaded) {
     return (
-      <>
-        <UserNavBar />
-        <div className="flex flex-col md:flex-row min-h-screen bg-[#fafafa]">
-          <TabBar />
-          <div className="flex-1 md:ml-64 p-6 md:p-12 flex items-center justify-center">
-            <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
-          </div>
-        </div>
-      </>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
 
@@ -72,15 +66,9 @@ export default function ActiveRents() {
 
   if (loading) {
     return (
-      <>
-        <UserNavBar />
-        <div className="flex flex-col md:flex-row min-h-screen bg-[#fafafa]">
-          <TabBar />
-          <div className="flex-1 md:ml-64 p-6 md:p-12 flex items-center justify-center">
-            <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
-          </div>
-        </div>
-      </>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
 

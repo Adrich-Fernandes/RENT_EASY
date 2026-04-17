@@ -38,15 +38,12 @@ export default function Maintain() {
 
   if (!isLoaded || loading) {
     return (
-      <>
-        <UserNavBar />
-        <div className="flex flex-col md:flex-row min-h-screen bg-zinc-50">
-          <TabBar />
-          <div className="flex-1 md:ml-64 flex items-center justify-center min-h-screen">
-            <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
-          </div>
+      <div className="min-h-screen bg-zinc-50">
+        <TabBar />
+        <div className="flex items-center justify-center h-64">
+          <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
         </div>
-      </>
+      </div>
     );
   }
 
