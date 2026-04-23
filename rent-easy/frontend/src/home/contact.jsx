@@ -88,7 +88,7 @@ export default function Contact() {
     <>
       <UserNavBar />
       <div className="min-h-screen bg-white pt-16">
-        <section className="bg-[#F1FAEE] py-20 px-6">
+        <section className="bg-[#F8FAFC] py-20 px-6">
           <div className="max-w-7xl mx-auto text-center">
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
@@ -180,7 +180,7 @@ export default function Contact() {
                 viewport={{ once: true }}
                 className="bg-white border border-gray-100 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#F1FAEE] rounded-bl-full -z-10"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#1D3557]/5 rounded-bl-full -z-10"></div>
                 
                 {status === "success" ? (
                   <div className="text-center py-10">

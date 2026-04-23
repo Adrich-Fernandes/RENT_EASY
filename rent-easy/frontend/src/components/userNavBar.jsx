@@ -116,8 +116,8 @@ const UserNavBar = () => {
                       className={({ isActive }) =>
                         `block px-4 py-3 text-sm font-medium transition-colors duration-150 ${
                           isActive
-                            ? "text-[#1D3557] bg-[#F1FAEE]"
-                            : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#F1FAEE]"
+                            ? "text-[#1D3557] bg-[#1D3557]/10"
+                            : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10"
                         }`
                       }
                     >
