@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { LayoutDashboard, Package, Wrench, X, Menu, ShoppingBag, Clock, MessageSquare } from "lucide-react";
 import { useUser, UserButton } from "@clerk/clerk-react";
 
@@ -33,18 +33,20 @@ const AdminNavBar = () => {
             <Menu size={24} className="text-red-600" />
           </button>
 
-          <img
-            src="https://cdn-icons-png.freepik.com/256/5729/5729756.png?semt=ais_white_label"
-            alt="RentEase"
-            className="hidden md:block h-9 w-auto"
-          />
+          <Link to="/" className="flex items-center gap-2">
+            <img
+              src="https://www.shutterstock.com/image-vector/house-cleaning-abstract-logo-modern-260nw-2678741729.jpg"
+              alt="RentEase"
+              className="hidden md:block h-9 w-auto rounded-lg"
+            />
 
-          <span className="font-extrabold text-[1.2rem] text-gray-900">
-            <span className="text-red-600">Rent</span>Ease
-            <span className="ml-2 text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-              Admin
+            <span className="font-extrabold text-[1.2rem] text-gray-900 flex items-center">
+              <span className="text-[#1D3557]">Rent</span>Ease
+              <span className="ml-2 text-[10px] font-bold bg-[#1D3557]/10 text-[#1D3557] px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                Admin
+              </span>
             </span>
-          </span>
+          </Link>
         </div>
 
         {/* CENTER */}
@@ -104,19 +106,19 @@ const AdminNavBar = () => {
           shadow-[4px_0_32px_0_rgba(29,53,87,0.15)]`}
       >
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
             <img
-              src="https://cdn-icons-png.freepik.com/256/5729/5729756.png?semt=ais_white_label"
+              src="https://www.shutterstock.com/image-vector/house-cleaning-abstract-logo-modern-260nw-2678741729.jpg"
               alt="RentEase"
-              className="h-8 w-auto"
+              className="h-8 w-auto rounded-lg"
             />
-            <span className="font-extrabold text-[1.1rem] text-gray-900">
-              <span className="text-red-600">Rent</span>Ease
+            <span className="font-extrabold text-[1.1rem] text-gray-900 flex items-center">
+              <span className="text-[#1D3557]">Rent</span>Ease
+              <span className="ml-2 text-[10px] font-bold bg-[#1D3557]/10 text-[#1D3557] px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                Admin
+              </span>
             </span>
-            <span className="text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-              Admin
-            </span>
-          </div>
+          </Link>
 
           <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
             <X size={22} className="text-gray-500 hover:text-gray-700" />

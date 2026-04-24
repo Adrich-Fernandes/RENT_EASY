@@ -9,10 +9,12 @@ const footer = () => {
 
         {/* LEFT SECTION */}
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">
-            <span className="text-[#A8DADC]">Rent</span>
-            <span className="text-white">Ease</span>
-          </h2>
+          <Link to="/" className="inline-block">
+            <h2 className="text-2xl font-bold tracking-tight">
+              <span className="text-[#A8DADC]">Rent</span>
+              <span className="text-white">Ease</span>
+            </h2>
+          </Link>
 
           <span className="block mt-4 text-gray-400 max-w-sm">
             Premium furniture & appliances on flexible monthly rentals.
