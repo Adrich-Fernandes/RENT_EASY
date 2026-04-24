@@ -3,6 +3,7 @@ import { Trash2, MapPin, Calendar, ArrowRight, Plus, ChevronUp, Loader2, IndianR
 import UserNavBar from "../components/userNavBar";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
+import Skeleton from "../components/Skeleton";
 
 const API = "http://localhost:4000/api/user";
 
@@ -145,15 +146,53 @@ export default function Cart() {
 
   if (!isLoaded || pageLoading) {
     return (
-      <>
+      <div className="min-h-screen bg-gray-100">
         <UserNavBar />
-        <div className="flex items-center justify-center h-64">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-400 text-sm">Loading cart...</p>
+        <div className="w-full flex flex-col lg:flex-row items-start gap-6 p-6">
+          <div className="w-full lg:flex-[7] space-y-6">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="bg-white shadow-md rounded-xl p-6 flex gap-6">
+                <Skeleton width="112px" height="112px" borderRadius="0.5rem" />
+                <div className="flex-1 space-y-4">
+                  <div className="space-y-2">
+                    <Skeleton width="200px" height="1.5rem" />
+                    <Skeleton width="100%" height="1rem" />
+                  </div>
+                  <div className="flex gap-8">
+                    <div className="space-y-1"><Skeleton width="60px" height="0.75rem" /><Skeleton width="40px" height="1rem" /></div>
+                    <div className="space-y-1"><Skeleton width="60px" height="0.75rem" /><Skeleton width="40px" height="1rem" /></div>
+                    <div className="space-y-1"><Skeleton width="60px" height="0.75rem" /><Skeleton width="40px" height="1rem" /></div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end justify-between">
+                  <Skeleton width="20px" height="20px" />
+                  <Skeleton width="60px" height="1.5rem" />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="w-full lg:flex-[3]">
+            <div className="bg-white rounded-2xl shadow-md p-6 space-y-6">
+              <Skeleton width="120px" height="1.5rem" />
+              <div className="space-y-3">
+                <Skeleton width="100%" height="1rem" />
+                <Skeleton width="100%" height="1rem" />
+              </div>
+              <Skeleton height="1px" />
+              <div className="space-y-3">
+                <Skeleton width="100%" height="1rem" />
+                <Skeleton width="100%" height="1rem" />
+              </div>
+              <Skeleton height="1px" />
+              <div className="flex justify-between">
+                <Skeleton width="100px" height="1.5rem" />
+                <Skeleton width="80px" height="1.5rem" />
+              </div>
+              <Skeleton width="100%" height="3rem" borderRadius="0.75rem" />
+            </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 

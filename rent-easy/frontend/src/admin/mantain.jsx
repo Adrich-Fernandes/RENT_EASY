@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import AdminNavBar from "../components/adminNavBar";
 import { Search, Calendar, ChevronDown, Wrench } from "lucide-react";
+import Skeleton from "../components/Skeleton";
 
 export default function MaintenanceRequests() {
   const [requests, setRequests]       = useState([]);
@@ -121,8 +122,19 @@ export default function MaintenanceRequests() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="bg-gray-50 border-b p-4"><Skeleton height="1rem" /></div>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="border-b p-4 flex gap-6">
+                <Skeleton width="120px" height="1rem" />
+                <Skeleton width="100px" height="1rem" />
+                <Skeleton width="150px" height="1rem" />
+                <Skeleton width="80px" height="1rem" />
+                <Skeleton width="100px" height="1rem" />
+                <Skeleton width="100px" height="1rem" />
+                <Skeleton width="80px" height="1rem" />
+              </div>
+            ))}
           </div>
         ) : (
           <div className="w-full overflow-x-auto">

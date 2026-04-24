@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import AdminNavBar from '../components/adminNavBar'
+import Skeleton from '../components/Skeleton'
 
 
 const CLOUD_NAME = "dhajogfcx"    
@@ -23,11 +24,14 @@ export default function AdminProductList() {
   const [products, setProducts] = useState([])
   const [editProduct, setEditProduct] = useState(null)
   const [previewProduct, setPreviewProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const fetchProducts = () => {
+    setLoading(true)
     axios.get("http://localhost:4000/api/product/allProducts")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => { fetchProducts() }, [])
@@ -169,7 +173,23 @@ export default function AdminProductList() {
               </tr>
             </thead>
             <tbody className="text-gray-700">
-              {filteredRents.length > 0 ? (
+              {loading ? (
+                [...Array(5)].map((_, i) => (
+                  <tr key={i} className="border-t">
+                    <td className="p-4">
+                      <div className="flex items-center gap-4">
+                        <Skeleton width="56px" height="56px" borderRadius="0.5rem" />
+                        <Skeleton width="150px" height="1.25rem" />
+                      </div>
+                    </td>
+                    <td className="p-4"><Skeleton width="100px" height="1.5rem" borderRadius="1rem" /></td>
+                    <td className="p-4"><Skeleton width="80px" height="1.25rem" /></td>
+                    <td className="p-4"><Skeleton width="80px" height="1.25rem" /></td>
+                    <td className="p-4"><Skeleton width="80px" height="2.5rem" borderRadius="0.5rem" /></td>
+                    <td className="p-4"><Skeleton width="80px" height="2.5rem" borderRadius="0.5rem" /></td>
+                  </tr>
+                ))
+              ) : filteredRents.length > 0 ? (
                 filteredRents.map((v, i) => (
                   <tr key={i} onClick={() => setPreviewProduct(v)}
                     className="border-t hover:bg-[#F1FAEE] cursor-pointer transition"

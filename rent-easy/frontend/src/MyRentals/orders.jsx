@@ -3,6 +3,7 @@ import TabBar from "./tabBar";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import UserNavBar from "../components/userNavBar";
+import Skeleton from "../components/Skeleton";
 
 export default function Orders() {
   const { user, isLoaded } = useUser();
@@ -59,11 +60,32 @@ export default function Orders() {
   if (!isLoaded || loading) {
     return (
       <div className="min-h-screen bg-zinc-100">
-        <TabBar />
-        <div className="flex items-center justify-center h-64">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-zinc-400 text-sm">Loading orders...</p>
+        <UserNavBar />
+        <div className="flex flex-col md:flex-row">
+          <TabBar />
+          <div className="flex-1 md:ml-64 px-4 py-10 sm:px-8">
+            <div className="max-w-5xl mx-auto">
+              <Skeleton width="40%" height="2.5rem" className="mb-8" />
+              <div className="flex gap-6 mb-8 border-b border-zinc-200">
+                <Skeleton width="100px" height="2rem" className="mb-2" />
+                <Skeleton width="100px" height="2rem" className="mb-2" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-2xl overflow-hidden border border-zinc-200 p-0">
+                    <Skeleton height="14rem" className="rounded-none" />
+                    <div className="p-4 space-y-3">
+                      <Skeleton width="70%" height="1.25rem" />
+                      <Skeleton width="40%" height="1.5rem" />
+                      <div className="space-y-1 pt-2">
+                        <Skeleton width="80%" height="0.75rem" />
+                        <Skeleton width="80%" height="0.75rem" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

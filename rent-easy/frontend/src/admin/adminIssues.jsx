@@ -17,6 +17,7 @@ import {
   X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Skeleton from "../components/Skeleton";
 
 export default function AdminIssues() {
   const [issues, setIssues] = useState([]);
@@ -145,8 +146,23 @@ export default function AdminIssues() {
             {/* List Section */}
             <div className="xl:col-span-2">
               {loading ? (
-                <div className="flex items-center justify-center h-64 bg-white rounded-3xl border border-gray-100">
-                  <div className="w-10 h-10 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+                <div className="space-y-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="bg-white p-5 rounded-3xl border border-gray-100 flex gap-4">
+                      <Skeleton width="48px" height="48px" borderRadius="1rem" />
+                      <div className="flex-1 space-y-3">
+                        <div className="flex justify-between">
+                          <Skeleton width="80px" height="0.75rem" />
+                          <Skeleton width="60px" height="0.75rem" />
+                        </div>
+                        <Skeleton width="60%" height="1.5rem" />
+                        <div className="flex gap-3">
+                          <Skeleton width="100px" height="1.5rem" borderRadius="1rem" />
+                          <Skeleton width="100px" height="1.5rem" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : filteredIssues.length === 0 ? (
                 <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm">

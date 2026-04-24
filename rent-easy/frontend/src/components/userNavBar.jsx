@@ -52,15 +52,17 @@ const UserNavBar = () => {
             <Menu size={24} className="text-[#1D3557]" />
           </button>
 
-          <img
-            src="https://cdn-icons-png.freepik.com/256/5729/5729756.png?semt=ais_white_label"
-            alt="RentEase"
-            className="hidden md:block h-9 w-auto"
-          />
+          <Link to="/" className="flex items-center gap-2">
+            <img
+              src="https://www.shutterstock.com/image-vector/house-cleaning-abstract-logo-modern-260nw-2678741729.jpg"
+              alt="RentEase"
+              className="hidden md:block h-9 w-auto rounded-lg"
+            />
 
-          <span className="font-extrabold text-[1.2rem] text-gray-900">
-            <span className="text-[#1D3557]">Rent</span>Ease
-          </span>
+            <span className="font-extrabold text-[1.2rem] text-gray-900">
+              <span className="text-[#1D3557]">Rent</span>Ease
+            </span>
+          </Link>
         </div>
 
         {/* CENTER — desktop */}
@@ -173,16 +175,16 @@ const UserNavBar = () => {
           shadow-[4px_0_32px_0_rgba(29,53,87,0.15)]`}
       >
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
             <img
-              src="https://cdn-icons-png.freepik.com/256/5729/5729756.png?semt=ais_white_label"
+              src="https://www.shutterstock.com/image-vector/house-cleaning-abstract-logo-modern-260nw-2678741729.jpg"
               alt="RentEase"
-              className="h-8 w-auto"
+              className="h-8 w-auto rounded-lg"
             />
             <span className="font-extrabold text-[1.1rem] text-gray-900">
               <span className="text-[#1D3557]">Rent</span>Ease
             </span>
-          </div>
+          </Link>
           <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
             <X size={22} className="text-gray-500 hover:text-[#1D3557]" />
           </button>

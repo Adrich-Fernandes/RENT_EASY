@@ -4,6 +4,7 @@ import axios from "axios";
 import { useUser } from "@clerk/clerk-react";
 import { Wrench, Clock, CheckCircle2, AlertCircle, Loader2, PlusCircle } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
+import Skeleton from "../components/Skeleton";
 
 export default function Maintain() {
   const { user, isLoaded } = useUser();
@@ -39,9 +40,40 @@ export default function Maintain() {
   if (!isLoaded || loading) {
     return (
       <div className="min-h-screen bg-zinc-50">
-        <TabBar />
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+        <UserNavBar />
+        <div className="flex flex-col md:flex-row">
+          <TabBar />
+          <div className="flex-1 md:ml-64 max-w-4xl mx-auto px-4 py-10 md:px-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+              <div className="space-y-2">
+                <Skeleton width="200px" height="2rem" />
+                <Skeleton width="300px" height="1rem" />
+              </div>
+              <Skeleton width="150px" height="2.5rem" borderRadius="1rem" />
+            </div>
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-8 space-y-6">
+                  <div className="flex justify-between items-start">
+                    <div className="flex gap-4">
+                      <Skeleton width="56px" height="56px" borderRadius="1rem" />
+                      <div className="space-y-2">
+                        <Skeleton width="100px" height="0.75rem" />
+                        <Skeleton width="200px" height="1.5rem" />
+                        <Skeleton width="250px" height="1rem" />
+                      </div>
+                    </div>
+                    <Skeleton width="100px" height="2rem" borderRadius="1rem" />
+                  </div>
+                  <Skeleton height="3px" borderRadius="1rem" />
+                  <div className="flex gap-6">
+                    <Skeleton width="120px" height="1rem" />
+                    <Skeleton width="120px" height="1rem" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );

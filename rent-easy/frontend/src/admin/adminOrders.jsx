@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import AdminNavBar from "../components/adminNavBar";
 import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, MapPin } from "lucide-react";
+import Skeleton from "../components/Skeleton";
 
 const API = "http://localhost:4000/api/rent";
 
@@ -344,8 +345,27 @@ export default function AdminOrders() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <div className="w-10 h-10 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+          <div className="space-y-10">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="space-y-4">
+                <div className="flex gap-3">
+                  <Skeleton width="150px" height="1.75rem" />
+                  <Skeleton width="40px" height="1.25rem" variant="circle" />
+                </div>
+                <div className="bg-white shadow rounded-xl border border-gray-200 overflow-hidden">
+                  <div className="bg-gray-50 border-b p-4"><Skeleton height="1rem" /></div>
+                  {[...Array(3)].map((_, j) => (
+                    <div key={j} className="border-b p-4 flex gap-6">
+                      <Skeleton width="100px" height="1rem" />
+                      <Skeleton width="150px" height="1rem" />
+                      <Skeleton width="120px" height="1rem" />
+                      <Skeleton width="120px" height="1rem" />
+                      <Skeleton width="80px" height="1rem" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <>

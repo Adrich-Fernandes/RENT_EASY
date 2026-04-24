@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import UserNavBar from "../components/userNavBar";
 import Footer from "../components/footer";
+import Skeleton from "../components/Skeleton";
 
 export default function IssueStatus() {
   const { user, isLoaded } = useUser();
@@ -104,9 +105,35 @@ export default function IssueStatus() {
     return (
       <div className="min-h-screen bg-gray-50">
         <UserNavBar />
-        <div className="flex flex-col items-center justify-center h-[60vh]">
-          <div className="w-12 h-12 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-gray-500 font-medium">Loading your issue history...</p>
+        <div className="max-w-4xl mx-auto px-6 pt-24 pb-20 space-y-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="space-y-4">
+              <Skeleton width="150px" height="1rem" />
+              <Skeleton width="300px" height="3rem" />
+              <Skeleton width="400px" height="1.5rem" />
+            </div>
+            <Skeleton width="200px" height="5rem" borderRadius="1.5rem" />
+          </div>
+          <div className="grid gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm space-y-6">
+                <div className="flex flex-col md:flex-row gap-6 justify-between">
+                  <div className="flex-1 space-y-4">
+                    <div className="flex gap-3">
+                      <Skeleton width="120px" height="2rem" borderRadius="1rem" />
+                      <Skeleton width="100px" height="1.5rem" />
+                    </div>
+                    <Skeleton width="80%" height="2rem" />
+                    <Skeleton width="100%" height="3rem" />
+                  </div>
+                  <div className="space-y-3 min-w-[200px]">
+                    <Skeleton width="100%" height="3.5rem" borderRadius="1.5rem" />
+                    <Skeleton width="100%" height="1rem" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );

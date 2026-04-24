@@ -3,6 +3,7 @@ import { SlidersHorizontal } from "lucide-react";
 import axios from "axios";
 import UserNavBar from "../components/userNavBar";
 import { useNavigate } from "react-router-dom";
+import Skeleton from "../components/Skeleton";
 
 export default function Layout() {
 
@@ -227,11 +228,20 @@ export default function Layout() {
 
                 {/* Loading */}
                 {loading && (
-                    <div className="flex items-center justify-center h-64">
-                        <div className="flex flex-col items-center gap-3">
-                            <div className="w-10 h-10 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
-                            <p className="text-gray-500 text-sm font-medium">Loading premium products...</p>
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden p-0">
+                                <Skeleton height="14rem" className="rounded-none" />
+                                <div className="p-5 space-y-4">
+                                    <div className="space-y-2">
+                                        <Skeleton width="80%" height="1.25rem" />
+                                        <Skeleton width="100%" height="2.5rem" />
+                                    </div>
+                                    <Skeleton height="5rem" borderRadius="0.75rem" />
+                                    <Skeleton height="2.5rem" borderRadius="0.75rem" />
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
 

@@ -5,6 +5,7 @@ import { useUser, SignUp } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
 import { CalendarIcon, MapPinIcon, X, Sofa, ChevronRight, Clock, AlertCircle } from "lucide-react";
 import UserNavBar from "../components/userNavBar";
+import Skeleton from "../components/Skeleton";
 
 export default function ActiveRents() {
   const { user, isLoaded } = useUser();
@@ -28,8 +29,45 @@ export default function ActiveRents() {
 
   if (!isLoaded) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+      <div className="flex flex-col min-h-screen">
+        <UserNavBar />
+        <div className="flex bg-[#fafafa] flex-1">
+          <TabBar />
+          <div className="flex-1 md:ml-64 p-6 md:p-12 space-y-8">
+            <div className="flex items-center justify-between">
+              <Skeleton width="200px" height="2.5rem" />
+              <Skeleton width="100px" height="1.5rem" borderRadius="1rem" />
+            </div>
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm flex h-[220px]">
+                  <Skeleton width="208px" height="100%" className="rounded-none" />
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex justify-between">
+                      <div className="space-y-2">
+                        <Skeleton width="150px" height="0.75rem" />
+                        <Skeleton width="250px" height="1.5rem" />
+                        <div className="flex gap-4">
+                          <Skeleton width="120px" height="1.5rem" borderRadius="1rem" />
+                          <Skeleton width="120px" height="1.5rem" borderRadius="1rem" />
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                         <Skeleton width="100px" height="1.5rem" borderRadius="1rem" />
+                         <Skeleton width="80px" height="1.5rem" />
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-4 border-t border-gray-50">
+                      <Skeleton width="120px" height="2.5rem" borderRadius="1rem" />
+                      <Skeleton width="120px" height="2.5rem" borderRadius="1rem" />
+                      <Skeleton width="100px" height="1.5rem" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -66,8 +104,45 @@ export default function ActiveRents() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin" />
+      <div className="flex flex-col min-h-screen">
+        <UserNavBar />
+        <div className="flex bg-[#fafafa] flex-1">
+          <TabBar />
+          <div className="flex-1 md:ml-64 p-6 md:p-12 space-y-8">
+            <div className="flex items-center justify-between">
+              <Skeleton width="200px" height="2.5rem" />
+              <Skeleton width="100px" height="1.5rem" borderRadius="1rem" />
+            </div>
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm flex h-[220px]">
+                  <Skeleton width="208px" height="100%" className="rounded-none" />
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex justify-between">
+                      <div className="space-y-2">
+                        <Skeleton width="150px" height="0.75rem" />
+                        <Skeleton width="250px" height="1.5rem" />
+                        <div className="flex gap-4">
+                          <Skeleton width="120px" height="1.5rem" borderRadius="1rem" />
+                          <Skeleton width="120px" height="1.5rem" borderRadius="1rem" />
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                         <Skeleton width="100px" height="1.5rem" borderRadius="1rem" />
+                         <Skeleton width="80px" height="1.5rem" />
+                      </div>
+                    </div>
+                    <div className="flex gap-3 pt-4 border-t border-gray-50">
+                      <Skeleton width="120px" height="2.5rem" borderRadius="1rem" />
+                      <Skeleton width="120px" height="2.5rem" borderRadius="1rem" />
+                      <Skeleton width="100px" height="1.5rem" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

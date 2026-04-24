@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Package, ClipboardList, Wrench, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react'
 import AdminNavBar from '../components/adminNavBar'
+import Skeleton from '../components/Skeleton'
 
 export default function AdminDashboard() {
 
@@ -71,8 +72,37 @@ export default function AdminDashboard() {
       <AdminNavBar />
 
       {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-full p-4 md:p-8 space-y-8">
+          <div>
+            <Skeleton width="150px" height="2rem" />
+            <Skeleton width="120px" height="1rem" className="mt-2" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
+                <Skeleton width="46px" height="46px" borderRadius="0.5rem" />
+                <div className="space-y-2">
+                  <Skeleton width="60px" height="0.75rem" />
+                  <Skeleton width="40px" height="1.5rem" />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+                <Skeleton width="18px" height="18px" variant="circle" />
+                <div className="space-y-1">
+                  <Skeleton width="50px" height="0.75rem" />
+                  <Skeleton width="30px" height="1rem" />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Skeleton height="300px" borderRadius="1rem" />
+            <Skeleton height="300px" borderRadius="1rem" />
+          </div>
         </div>
       ) : (
         <div className="w-full p-4 md:p-8 space-y-8">

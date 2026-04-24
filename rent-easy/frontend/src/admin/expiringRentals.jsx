@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Clock, AlertTriangle, CheckCircle, Package, X } from 'lucide-react';
 import AdminNavBar from '../components/adminNavBar';
+import Skeleton from '../components/Skeleton';
 
 export default function ExpiringRentals() {
   const [expiringRents, setExpiringRents] = useState([]);
@@ -70,8 +71,27 @@ export default function ExpiringRentals() {
       <AdminNavBar />
       
       {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-[#1D3557] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-full p-4 md:p-8 space-y-8">
+          <div>
+            <Skeleton width="250px" height="2rem" />
+            <Skeleton width="300px" height="1rem" className="mt-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+                <div className="p-5 border-b bg-gray-50/50"><Skeleton width="200px" height="1.5rem" /></div>
+                <div className="p-4 space-y-4">
+                  {[...Array(3)].map((_, j) => (
+                    <div key={j} className="flex justify-between border-b pb-4 last:border-0 last:pb-0">
+                      <div className="space-y-1"><Skeleton width="100px" height="1rem" /><Skeleton width="150px" height="0.75rem" /></div>
+                      <Skeleton width="100px" height="1rem" />
+                      <Skeleton width="60px" height="1.5rem" borderRadius="1rem" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         <div className="w-full p-4 md:p-8 space-y-8">
