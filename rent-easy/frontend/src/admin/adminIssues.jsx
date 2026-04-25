@@ -221,15 +221,20 @@ export default function AdminIssues() {
             </div>
 
             {/* Detail Section */}
-            <div className="xl:col-span-1">
+            <div className={`xl:col-span-1 ${selectedIssue ? 'fixed inset-0 z-[500] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 xl:relative xl:inset-auto xl:bg-transparent xl:backdrop-none xl:p-0 xl:z-0 xl:flex' : 'hidden xl:block'}`}>
+              {/* Mobile overlay for closing */}
+              {selectedIssue && (
+                 <div className="absolute inset-0 xl:hidden" onClick={() => setSelectedIssue(null)}></div>
+              )}
+
               <AnimatePresence mode="wait">
                 {selectedIssue ? (
                   <motion.div
                     key="detail"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    className="bg-white rounded-3xl border border-gray-100 shadow-2xl sticky top-24 overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    className="relative bg-white rounded-3xl border border-gray-100 shadow-2xl xl:sticky xl:top-24 overflow-hidden w-full max-w-[550px] xl:max-w-none max-h-[95vh] xl:max-h-none overflow-y-auto"
                   >
                     {/* Header */}
                     <div className="p-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
@@ -252,13 +257,13 @@ export default function AdminIssues() {
 
                     <div className="p-6 space-y-6">
                       {/* Contact Info */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-3 bg-gray-50 rounded-2xl flex items-center gap-3">
-                          <Mail size={16} className="text-gray-400" />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="p-3 bg-gray-50 rounded-2xl flex items-center gap-3 overflow-hidden">
+                          <Mail size={16} className="text-gray-400 flex-shrink-0" />
                           <span className="text-xs font-medium text-gray-700 truncate">{selectedIssue.userEmail}</span>
                         </div>
-                        <div className="p-3 bg-gray-50 rounded-2xl flex items-center gap-3">
-                          <User size={16} className="text-gray-400" />
+                        <div className="p-3 bg-gray-50 rounded-2xl flex items-center gap-3 overflow-hidden">
+                          <User size={16} className="text-gray-400 flex-shrink-0" />
                           <span className="text-xs font-medium text-gray-700 truncate">ID: {selectedIssue.clerkId.slice(0, 10)}...</span>
                         </div>
                       </div>
@@ -272,22 +277,24 @@ export default function AdminIssues() {
                       </div>
 
                       {/* Status Control */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-gray-500 mr-2">Status:</span>
-                        {["Pending", "In Progress", "Resolved"].map(s => (
-                          <button
-                            key={s}
-                            disabled={updating}
-                            onClick={() => handleUpdate(selectedIssue._id, s, selectedIssue.adminReply)}
-                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all ${
-                              selectedIssue.status === s 
-                              ? "bg-gray-900 text-white ring-2 ring-gray-900 ring-offset-2" 
-                              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                            }`}
-                          >
-                            {s}
-                          </button>
-                        ))}
+                      <div className="space-y-3">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Update Status</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {["Pending", "In Progress", "Resolved"].map(s => (
+                            <button
+                              key={s}
+                              disabled={updating}
+                              onClick={() => handleUpdate(selectedIssue._id, s, selectedIssue.adminReply)}
+                              className={`px-2 py-2 rounded-xl text-[10px] font-bold transition-all border-2 ${
+                                selectedIssue.status === s 
+                                ? "bg-gray-900 text-white border-gray-900 shadow-md" 
+                                : "bg-white text-gray-500 border-gray-100 hover:border-gray-200"
+                              }`}
+                            >
+                              {s}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       <hr className="border-gray-50" />

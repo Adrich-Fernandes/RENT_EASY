@@ -30,7 +30,7 @@ const AdminNavBar = () => {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
-            <Menu size={24} className="text-red-600" />
+            <Menu size={24} className="text-[#1D3557]" />
           </button>
 
           <Link to="/" className="flex items-center gap-2">
@@ -60,8 +60,8 @@ const AdminNavBar = () => {
                 `flex items-center gap-1.5 font-medium text-[0.95rem]
                 px-4 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
-                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
+                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_12px_2px_rgba(168,218,220,0.35)]"
+                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_12px_2px_rgba(168,218,220,0.35)]"
                 }`
               }
             >
@@ -134,8 +134,8 @@ const AdminNavBar = () => {
               `flex items-center gap-3 px-4 py-3 rounded-xl font-medium
               transition-all duration-200 ${
                 isActive
-                  ? "bg-[#1D3557]/10 text-[#1D3557] shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
-                  : "text-[#1D3557] hover:bg-[#1D3557]/10 hover:text-[#1D3557] hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
+                  ? "bg-[#1D3557]/10 text-[#1D3557] shadow-[0_0_12px_2px_rgba(168,218,220,0.30)]"
+                  : "text-[#1D3557] hover:bg-[#1D3557]/10 hover:text-[#1D3557] hover:shadow-[0_0_12px_2px_rgba(168,218,220,0.30)]"
               }`
             }
             onClick={() => setMenuOpen(false)}

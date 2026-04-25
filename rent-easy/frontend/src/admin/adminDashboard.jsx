@@ -45,16 +45,16 @@ export default function AdminDashboard() {
         }
 
         try {
-          const maintenanceRes = await axios.get("http://localhost:4000/api/maintenance/allRequests")
+          const maintenanceRes = await axios.get("http://localhost:4000/api/issue/all")
           const maintenance = maintenanceRes.data
           setStats(prev => ({
             ...prev,
-            openMaintenance: maintenance.filter(m => m.status === "open").length,
-            resolvedMaintenance: maintenance.filter(m => m.status === "resolved").length,
+            openMaintenance: maintenance.filter(m => m.status !== "Resolved").length,
+            resolvedMaintenance: maintenance.filter(m => m.status === "Resolved").length,
           }))
           setRecentMaintenance(maintenance.slice(0, 5))
         } catch (e) {
-          console.warn("Maintenance API failed:", e.message)
+          console.warn("Issue API failed:", e.message)
         }
 
       } catch (err) {
@@ -114,45 +114,45 @@ export default function AdminDashboard() {
           </div>
 
           {/* STAT CARDS */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
 
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-[#1D3557]/10 p-3 rounded-lg">
+            <div className="bg-white rounded-2xl shadow-sm p-4 md:p-5 flex items-center gap-4 border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="bg-[#1D3557]/10 p-3 rounded-xl">
                 <Package size={22} className="text-[#1D3557]" />
               </div>
-              <div>
-                <p className="text-xs text-gray-400">Total Products</p>
-                <p className="text-2xl font-bold text-gray-800">{stats.totalProducts}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider font-bold">Total Products</p>
+                <p className="text-xl md:text-2xl font-extrabold text-gray-800">{stats.totalProducts}</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-[#A8DADC]/30 p-3 rounded-lg">
+            <div className="bg-white rounded-2xl shadow-sm p-4 md:p-5 flex items-center gap-4 border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="bg-[#A8DADC]/30 p-3 rounded-xl">
                 <ClipboardList size={22} className="text-[#457B9D]" />
               </div>
-              <div>
-                <p className="text-xs text-gray-400">Total Rents</p>
-                <p className="text-2xl font-bold text-gray-800">{stats.totalRents}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider font-bold">Total Rents</p>
+                <p className="text-xl md:text-2xl font-extrabold text-gray-800">{stats.totalRents}</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-[#A8DADC]/20 p-3 rounded-lg">
+            <div className="bg-white rounded-2xl shadow-sm p-4 md:p-5 flex items-center gap-4 border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="bg-[#A8DADC]/20 p-3 rounded-xl">
                 <TrendingUp size={22} className="text-[#1D3557]" />
               </div>
-              <div>
-                <p className="text-xs text-gray-400">Active Rents</p>
-                <p className="text-2xl font-bold text-gray-800">{stats.activeRents}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider font-bold">Active Rents</p>
+                <p className="text-xl md:text-2xl font-extrabold text-gray-800">{stats.activeRents}</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 border border-gray-100">
-              <div className="bg-[#1D3557]/10 p-3 rounded-lg">
+            <div className="bg-white rounded-2xl shadow-sm p-4 md:p-5 flex items-center gap-4 border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="bg-[#1D3557]/10 p-3 rounded-xl">
                 <Wrench size={22} className="text-[#1D3557]" />
               </div>
-              <div>
-                <p className="text-xs text-gray-400">Open Maintenance</p>
-                <p className="text-2xl font-bold text-gray-800">{stats.openMaintenance}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider font-bold">Open Maintenance</p>
+                <p className="text-xl md:text-2xl font-extrabold text-gray-800">{stats.openMaintenance}</p>
               </div>
             </div>
 
@@ -161,35 +161,35 @@ export default function AdminDashboard() {
           {/* RENT STATUS BREAKDOWN */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <Clock size={18} className="text-yellow-500" />
-              <div>
-                <p className="text-xs text-gray-400">Pending</p>
-                <p className="text-lg font-semibold text-gray-700">{stats.pendingRents}</p>
+            <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <Clock size={16} className="text-amber-500" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Pending</p>
+                <p className="text-lg font-bold text-gray-700">{stats.pendingRents}</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <TrendingUp size={18} className="text-[#457B9D]" />
-              <div>
-                <p className="text-xs text-gray-400">Active</p>
-                <p className="text-lg font-semibold text-gray-700">{stats.activeRents}</p>
+            <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <TrendingUp size={16} className="text-[#457B9D]" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Active</p>
+                <p className="text-lg font-bold text-gray-700">{stats.activeRents}</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <CheckCircle size={18} className="text-[#1D3557]" />
-              <div>
-                <p className="text-xs text-gray-400">Returned</p>
-                <p className="text-lg font-semibold text-gray-700">{stats.returnedRents}</p>
+            <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <CheckCircle size={16} className="text-[#1D3557]" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Returned</p>
+                <p className="text-lg font-bold text-gray-700">{stats.returnedRents}</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
-              <XCircle size={18} className="text-[#1D3557]" />
-              <div>
-                <p className="text-xs text-gray-400">Cancelled</p>
-                <p className="text-lg font-semibold text-gray-700">{stats.cancelledRents}</p>
+            <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100 flex items-center gap-3">
+              <XCircle size={16} className="text-[#1D3557]" />
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Cancelled</p>
+                <p className="text-lg font-bold text-gray-700">{stats.cancelledRents}</p>
               </div>
             </div>
 
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-800">Recent Rents</h2>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table className="w-full text-sm text-left min-w-[450px]">
                   <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                     <tr>
                       <th className="px-4 py-3">User</th>
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-800">Recent Maintenance</h2>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table className="w-full text-sm text-left min-w-[450px]">
                   <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                     <tr>
                       <th className="px-4 py-3">User</th>
@@ -256,13 +256,13 @@ export default function AdminDashboard() {
                   <tbody>
                     {recentMaintenance.length > 0 ? recentMaintenance.map((m, i) => (
                       <tr key={i} className="border-t hover:bg-gray-50 transition">
-                        <td className="px-4 py-3 font-medium text-gray-700">{m.user?.name || "—"}</td>
-                        <td className="px-4 py-3 text-gray-500 truncate max-w-[150px]">{m.issue}</td>
+                        <td className="px-4 py-3 font-medium text-gray-700">{m.userName || "—"}</td>
+                        <td className="px-4 py-3 text-gray-500 truncate max-w-[150px]">{m.subject}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            m.status === "open" ? "bg-[#F1FAEE] text-[#1D3557]" :
-                            m.status === "in-progress" ? "bg-yellow-100 text-yellow-600" :
-                            "bg-[#1D3557]/10 text-[#1D3557]"
+                            m.status === "Pending" ? "bg-red-50 text-red-600 ring-1 ring-red-200" :
+                            m.status === "In Progress" ? "bg-yellow-50 text-yellow-600 ring-1 ring-yellow-200" :
+                            "bg-[#F1FAEE] text-[#457B9D] ring-1 ring-[#A8DADC]"
                           }`}>
                             {m.status}
                           </span>

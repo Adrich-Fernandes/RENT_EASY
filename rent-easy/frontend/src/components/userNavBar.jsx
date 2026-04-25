@@ -76,8 +76,8 @@ const UserNavBar = () => {
                 `flex items-center gap-1.5 font-medium text-[0.95rem]
                 px-4 py-2 rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
-                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
+                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_12px_2px_rgba(168,218,220,0.35)]"
+                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_12px_2px_rgba(168,218,220,0.35)]"
                 }`
               }
             >
@@ -93,8 +93,8 @@ const UserNavBar = () => {
               className={`flex items-center gap-1.5 font-medium text-[0.95rem]
                 px-4 py-2 rounded-lg transition-all duration-200 ${
                   moreOpen
-                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
-                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_10px_2px_rgba(230,57,70,0.18)]"
+                    ? "text-[#1D3557] bg-[#1D3557]/10 shadow-[0_0_12px_2px_rgba(168,218,220,0.35)]"
+                    : "text-[#1D3557] hover:text-[#1D3557] hover:bg-[#1D3557]/10 hover:shadow-[0_0_12px_2px_rgba(168,218,220,0.35)]"
                 }`}
             >
               More
@@ -147,7 +147,7 @@ const UserNavBar = () => {
             <button
               onClick={openSignIn}
               className="px-4 py-2 rounded-lg bg-[#1D3557] text-white font-semibold text-sm
-                hover:bg-[#457B9D] transition shadow-[0_0_12px_2px_rgba(230,57,70,0.30)]"
+                hover:bg-[#457B9D] transition shadow-[0_0_15px_3px_rgba(29,53,87,0.20)]"
             >
               Sign Up
             </button>
@@ -199,7 +199,7 @@ const UserNavBar = () => {
               `flex items-center gap-3 px-4 py-3 rounded-xl font-medium
               transition-all duration-200 ${
                 isActive
-                  ? "bg-[#1D3557]/10 text-[#1D3557] shadow-[0_0_10px_2px_rgba(230,57,70,0.15)]"
+                  ? "bg-[#1D3557]/10 text-[#1D3557] shadow-[0_0_12px_2px_rgba(168,218,220,0.30)]"
                   : "text-[#1D3557] hover:bg-[#1D3557]/10 hover:text-[#1D3557]"
               }`
             }
