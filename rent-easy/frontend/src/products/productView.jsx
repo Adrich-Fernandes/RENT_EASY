@@ -168,16 +168,18 @@ export default function ProductView() {
                     <button
                       key={months}
                       onClick={() => setSelectedTenure(months)}
-                      className={`rounded-xl py-3 text-center transition border-2 ${
+                      className={`rounded-xl py-3 text-center transition-all duration-300 border-2 ${
                         selectedTenure === months
-                          ? "border-[#1D3557] bg-[#F1FAEE] shadow-sm"
-                          : "border-gray-200 hover:border-[#A8DADC] bg-white"
+                          ? "border-[#1D3557] bg-[#1D3557] text-white shadow-lg -translate-y-1"
+                          : "border-gray-100 hover:border-[#A8DADC] bg-white text-gray-600"
                       }`}
                     >
-                      <span className={`block text-lg font-bold ${selectedTenure === months ? "text-[#1D3557]" : "text-gray-800"}`}>
+                      <span className="block text-xl font-bold">
                         {months}
                       </span>
-                      <span className="block text-[10px] text-gray-400">mo</span>
+                      <span className={`block text-[10px] uppercase font-bold tracking-tight ${selectedTenure === months ? "text-[#A8DADC]" : "text-gray-400"}`}>
+                        mo
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -185,7 +187,7 @@ export default function ProductView() {
                 {selectedTenure >= 6 && (
                   <div className="mt-3 flex items-center gap-2 bg-[#F1FAEE] border border-[#A8DADC] rounded-xl px-4 py-2">
                     <span className="text-[#457B9D] text-sm font-semibold">
-                      🎉 {selectedTenure === 12 ? "Best value!" : "Great choice!"} {selectedTenure} months selected
+                      {selectedTenure === 12 ? "Best value!" : "Great choice!"} {selectedTenure} months selected
                     </span>
                   </div>
                 )}

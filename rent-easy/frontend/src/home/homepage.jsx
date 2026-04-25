@@ -216,9 +216,9 @@ export default function Homepage() {
 
 
             {/* workflow */}
-            <div id="how-it-works" className="w-full min-h-[50vh] flex flex-col items-center justify-center px-6 py-6 bg-white">
+            <div id="how-it-works" className="w-full flex flex-col items-center px-6 pt-16 bg-white">
                 {/* TOP CENTER CONTENT */}
-                <div className="text-center max-w-2xl mb-14">
+                <div className="text-center max-w-2xl mb-6">
                     <span className="text-[#1D3557] font-bold text-lg">
                         Process
                     </span>
@@ -234,7 +234,7 @@ export default function Homepage() {
                 </div>
             </div>
             <motion.div 
-                className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 py-16"
+                className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-16"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
