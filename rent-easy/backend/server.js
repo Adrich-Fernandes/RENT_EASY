@@ -9,16 +9,28 @@ const cors = require("cors");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5173",        // if using Vite
+    "https://your-frontend.vercel.app"  // ← add after frontend is deployed
+  ],
+  credentials: true
+}));
 
 app.use("/api/product", productRouts);
 app.use("/api/user", userRoutes);
 app.use("/api/rent", rentRouts);
 app.use("/api/issue", issueRouts);
 
-ConnectDB().then(() => {
-  const PORT = process.env.PORT || 4000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+// Connect to DB
+ConnectDB();
+
+// For local development
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
+// ✅ Required for Vercel
+module.exports = app;
