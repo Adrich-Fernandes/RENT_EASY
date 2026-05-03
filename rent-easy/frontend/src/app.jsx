@@ -12,7 +12,7 @@ import MaintenanceRequests from "./admin/mantain.jsx";
 import ActiveRents from "./MyRentals/activeRentals.jsx";
 import Maintain from "./MyRentals/maintenance.jsx";
 import Order from "./MyRentals/orders.jsx";
-import AdminOrders from "./admin/AdminOrders.jsx";
+import AdminOrders from "./admin/adminOrders.jsx";
 import ExpiringRentals from "./admin/expiringRentals.jsx";
 import Contact from "./home/contact.jsx";
 import IssueStatus from "./home/issueStatus.jsx";
