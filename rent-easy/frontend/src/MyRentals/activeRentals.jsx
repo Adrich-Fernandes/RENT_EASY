@@ -15,7 +15,7 @@ export default function ActiveRents() {
   useEffect(() => {
     const fetchUserRentals = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`);
         const allActive = res.data?.activeRentals || [];
         setRentals(allActive.filter(r => !["returned", "cancelled"].includes(r.status)));
       } catch (err) {
@@ -212,7 +212,7 @@ function Card({ data, clerkId }) {
     if (!issue.trim()) return alert("Please describe the issue");
     setIsSubmitting(true);
     try {
-      await axios.post(`http://localhost:4000/api/user/${clerkId}/maintenance`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/user/${clerkId}/maintenance`, {
         productId: product._id,
         issue,
       });
@@ -236,7 +236,7 @@ function Card({ data, clerkId }) {
         ? "return"
         : "cancel";
       
-      await axios.patch(`http://localhost:4000/api/user/${clerkId}/${endpoint}/${data._id}`, {
+      await axios.patch(`${import.meta.env.VITE_API_URL}/api/user/${clerkId}/${endpoint}/${data._id}`, {
         reason
       });
       

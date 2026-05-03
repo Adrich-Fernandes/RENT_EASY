@@ -14,7 +14,7 @@ export default function Maintain() {
   useEffect(() => {
     const fetchMaintenance = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`);
         setRequests(res.data?.maintenanceRequests || []);
       } catch (err) {
         console.error(err);

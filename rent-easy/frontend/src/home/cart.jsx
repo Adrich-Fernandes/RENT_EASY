@@ -5,7 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import Skeleton from "../components/Skeleton";
 
-const API = "http://localhost:4000/api/user";
+const API = import.meta.env.VITE_API_URL + "/api/user";
 
 export default function Cart() {
   const { user, isLoaded } = useUser();

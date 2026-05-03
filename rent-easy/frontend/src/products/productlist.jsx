@@ -18,7 +18,7 @@ export default function Layout() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get("http://localhost:4000/api/product/allProducts")
+        axios.get(import.meta.env.VITE_API_URL + "/api/product/allProducts")
             .then((res) => {
                 setProducts(res.data);
                 setError(null);

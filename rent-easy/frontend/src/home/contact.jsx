@@ -42,7 +42,7 @@ export default function Contact() {
     setStatus("sending");
     try {
       // 1. Save to internal Database
-      await axios.post("http://localhost:4000/api/issue/create", {
+      await axios.post(import.meta.env.VITE_API_URL + "/api/issue/create", {
         clerkId: user.id,
         userName: formData.name,
         userEmail: formData.email,

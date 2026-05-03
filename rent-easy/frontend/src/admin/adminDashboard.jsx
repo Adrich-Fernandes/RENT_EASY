@@ -24,12 +24,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const productsRes = await axios.get("http://localhost:4000/api/product/allProducts")
+        const productsRes = await axios.get(import.meta.env.VITE_API_URL + "/api/product/allProducts")
         const products = productsRes.data
         setStats(prev => ({ ...prev, totalProducts: products.length }))
 
         try {
-          const rentsRes = await axios.get("http://localhost:4000/api/rent/allRents")
+          const rentsRes = await axios.get(import.meta.env.VITE_API_URL + "/api/rent/allRents")
           const rents = rentsRes.data
           setStats(prev => ({
             ...prev,
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
         }
 
         try {
-          const maintenanceRes = await axios.get("http://localhost:4000/api/issue/all")
+          const maintenanceRes = await axios.get(import.meta.env.VITE_API_URL + "/api/issue/all")
           const maintenance = maintenanceRes.data
           setStats(prev => ({
             ...prev,

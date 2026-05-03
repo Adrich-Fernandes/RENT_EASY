@@ -4,7 +4,7 @@ import AdminNavBar from "../components/adminNavBar";
 import { X, ChevronDown, Calendar, Package, User, IndianRupee, Search, Filter, MapPin } from "lucide-react";
 import Skeleton from "../components/Skeleton";
 
-const API = "http://localhost:4000/api/rent";
+const API = import.meta.env.VITE_API_URL + "/api/rent";
 
 const SEARCH_FIELDS = [
   { label: "All", value: "all" },

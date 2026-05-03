@@ -20,7 +20,7 @@ export default function Orders() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:4000/api/user/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`);
         const allActive = res.data?.activeRentals || [];
         setActiveRentals(allActive.filter(r => r.status !== "complete"));
         setPastRentals(res.data?.pastRentals || []);
@@ -39,7 +39,7 @@ export default function Orders() {
   const handleCompleteRental = async (rentalId) => {
     try {
       await axios.patch(
-        `http://localhost:4000/api/user/${user.id}/rental/${rentalId}`
+        `${import.meta.env.VITE_API_URL}/api/user/${user.id}/rental/${rentalId}`
       );
       // Move from active to past locally
       const completed = activeRentals.find((r) => r._id === rentalId);
@@ -277,13 +277,13 @@ function OrderDetails({ rental, isPast, close, onComplete, clerkId }) {
     try {
       if (isPast || rental.status === "complete" || rental.status === "active") {
         // Return request
-        await axios.patch(`http://localhost:4000/api/user/${clerkId}/return/${rental._id}`, {
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/user/${clerkId}/return/${rental._id}`, {
           reason: submitReason
         });
         alert("Return request submitted successfully");
       } else {
         // Cancel request
-        await axios.patch(`http://localhost:4000/api/user/${clerkId}/cancel/${rental._id}`, {
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/user/${clerkId}/cancel/${rental._id}`, {
           reason: submitReason
         });
         alert("Cancellation request submitted successfully");

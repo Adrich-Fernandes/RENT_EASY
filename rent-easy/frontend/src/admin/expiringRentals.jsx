@@ -13,7 +13,7 @@ export default function ExpiringRentals() {
   const handleCloseSubscription = async () => {
     if (!selectedRental) return;
     try {
-      await axios.put(`http://localhost:4000/api/rent/updateStatus/${selectedRental._id}`, { status: "complete" });
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/rent/updateStatus/${selectedRental._id}`, { status: "complete" });
       
       setExpiringRents(prev => prev.filter(r => r._id !== selectedRental._id));
       setOverdueRents(prev => prev.filter(r => r._id !== selectedRental._id));
@@ -27,7 +27,7 @@ export default function ExpiringRentals() {
   useEffect(() => {
     const fetchExpiringRents = async () => {
       try {
-        const rentsRes = await axios.get("http://localhost:4000/api/rent/allRents");
+        const rentsRes = await axios.get(import.meta.env.VITE_API_URL + "/api/rent/allRents");
         const rents = rentsRes.data;
 
         const expiring = [];

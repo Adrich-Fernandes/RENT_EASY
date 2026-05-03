@@ -34,7 +34,7 @@ export default function AdminIssues() {
 
   const fetchIssues = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/issue/all");
+      const res = await axios.get(import.meta.env.VITE_API_URL + "/api/issue/all");
       setIssues(res.data);
     } catch (err) {
       console.error("Failed to fetch issues:", err);
@@ -46,7 +46,7 @@ export default function AdminIssues() {
   const handleUpdate = async (issueId, status, reply) => {
     setUpdating(true);
     try {
-      const res = await axios.put(`http://localhost:4000/api/issue/update/${issueId}`, { status, adminReply: reply });
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/issue/update/${issueId}`, { status, adminReply: reply });
       setIssues(prev => prev.map(iss => iss._id === issueId ? res.data : iss));
       if (selectedIssue?._id === issueId) {
         setSelectedIssue(res.data);
@@ -62,7 +62,7 @@ export default function AdminIssues() {
   const handleDelete = async (issueId) => {
     if (!window.confirm("Are you sure you want to delete this issue?")) return;
     try {
-      await axios.delete(`http://localhost:4000/api/issue/${issueId}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/issue/${issueId}`);
       setIssues(prev => prev.filter(iss => iss._id !== issueId));
       setSelectedIssue(null);
     } catch (err) {

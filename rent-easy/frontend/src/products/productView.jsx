@@ -6,7 +6,7 @@ import { X, ChevronLeft, ChevronRight, ShoppingCart, Check, Loader2 } from "luci
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 
-const API = "http://localhost:4000/api/user";
+const API = import.meta.env.VITE_API_URL + "/api/user";
 
 export default function ProductView() {
 

@@ -32,12 +32,12 @@ function UserSync({ setRole, setRoleLoaded }) {
     }
 
     axios
-      .post("http://localhost:4000/api/user/create", {
+      .post(import.meta.env.VITE_API_URL + "/api/user/create", {
         clerkId: user.id,
         name: user.fullName || user.firstName || "User",
         email: user.primaryEmailAddress?.emailAddress,
       })
-      .then(() => axios.get(`http://localhost:4000/api/user/${user.id}`))
+      .then(() => axios.get(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`))
       .then((res) => setRole(res.data?.role || "user"))
       .catch((err) => {
         console.error("Failed to sync user:", err);

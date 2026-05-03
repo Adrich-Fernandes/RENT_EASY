@@ -26,7 +26,7 @@ export default function IssueStatus() {
   const fetchIssues = async () => {
     try {
       // 1. Fetch Maintenance Requests (from User Model)
-      const userRes = await axios.get(`http://localhost:4000/api/user/${user.id}`);
+      const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`);
       const maintenance = (userRes.data?.maintenanceRequests || []).map(item => ({
         ...item,
         type: "maintenance",
@@ -35,7 +35,7 @@ export default function IssueStatus() {
       }));
 
       // 2. Fetch General Issues (from Issue Model)
-      const issueRes = await axios.get(`http://localhost:4000/api/issue/user/${user.id}`);
+      const issueRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/issue/user/${user.id}`);
       const general = (issueRes.data || []).map(item => ({
         ...item,
         type: "general",
@@ -65,7 +65,7 @@ export default function IssueStatus() {
     setUpdatingId(req._id);
     try {
       if (req.type === "maintenance") {
-        await axios.patch(`http://localhost:4000/api/user/${user.id}/maintenance/${req._id}/reply-request`);
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/user/${user.id}/maintenance/${req._id}/reply-request`);
       }
       // General issues might not have a manual "reply request" button since admins can reply anytime
       

@@ -25,7 +25,7 @@ const UserNavBar = () => {
 
   useEffect(() => {
     if (user) {
-      axios.get(`http://localhost:4000/api/user/${user.id}`)
+      axios.get(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`)
         .then(res => {
           if (res.data?.cart) {
             setCartCount(res.data.cart.length);
