@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "http://localhost:5173",        // if using Vite
-    "https://your-frontend.vercel.app"  // ← add after frontend is deployed
+    "http://localhost:5173",
+    "https://rent-easy-fe.vercel.app/" //frontend url
   ],
   credentials: true
 }));
