@@ -14,7 +14,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://rent-easy-fe.vercel.app/" //frontend url
+    "https://rent-easy-fe.vercel.app" //frontend url
   ],
   credentials: true
 }));
