@@ -54,7 +54,7 @@ const UserNavBar = () => {
 
           <Link to="/" className="flex items-center gap-2">
             <img
-              src="https://www.shutterstock.com/image-vector/house-cleaning-abstract-logo-modern-260nw-2678741729.jpg"
+              src="/logo.png"
               alt="RentEase"
               className="hidden md:block h-9 w-auto rounded-lg"
             />
@@ -177,7 +177,7 @@ const UserNavBar = () => {
         <div className="flex items-center justify-between mb-4">
           <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
             <img
-              src="https://www.shutterstock.com/image-vector/house-cleaning-abstract-logo-modern-260nw-2678741729.jpg"
+              src="/logo.png"
               alt="RentEase"
               className="h-8 w-auto rounded-lg"
             />
